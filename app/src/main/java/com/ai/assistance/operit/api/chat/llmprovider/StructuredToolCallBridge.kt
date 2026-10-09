@@ -103,21 +103,21 @@ internal object StructuredToolCallBridge {
      * that the user cancelled it.
      */
     fun unmatchedToolResultContent(reason: String, toolName: String?): String {
-        val toolLabel = toolName?.trim().orEmpty().ifEmpty { "未知工具" }
+        val toolLabel = toolName?.trim().orEmpty().ifEmpty { "unknown tool" }
         val detail =
             when (reason) {
                 "tool_result_partial_batch", "tool_result_without_structured_match" ->
-                    "没有匹配到执行结果"
-                "typed_tool_call_without_payload" -> "调用没有可执行参数"
-                "tool_call_api_disabled" -> "工具调用协议已关闭"
+                    "has no matching execution result"
+                "typed_tool_call_without_payload" -> "call has no executable arguments"
+                "tool_call_api_disabled" -> "tool-call protocol is disabled"
                 "user_boundary", "system_boundary", "assistant_boundary",
                 "assistant_tool_call_before_result", "typed_tool_call_before_result",
                 "typed_function_call_before_result", "typed_tool_use_before_result",
                 "assistant_function_call_before_result", "assistant_tool_use_before_result",
-                "history_end" -> "后续对话历史已到达，但未返回执行结果"
-                else -> "调用在未返回执行结果时结束"
+                "history_end" -> "later conversation history arrived without an execution result"
+                else -> "call ended without returning an execution result"
             }
-        return "工具结果缺失：$toolLabel $detail。这不是用户取消。"
+        return "Tool result missing: $toolLabel $detail. This is not a user cancellation."
     }
 
     fun buildToolsJson(toolPrompts: List<ToolPrompt>?): String? {

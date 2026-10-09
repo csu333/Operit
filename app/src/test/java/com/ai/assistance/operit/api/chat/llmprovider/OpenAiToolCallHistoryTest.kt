@@ -169,7 +169,7 @@ class OpenAiToolCallHistoryTest {
         assertEquals("proxy", proxyCall.getJSONObject("function").getString("name"))
         assertEquals(proxyCall.getString("id"), messages.at(2).getString("tool_call_id"))
         assertEquals("alpha", messages.at(2).getString("content"))
-        assertFalse(messages.toString().contains("工具结果缺失"))
+        assertFalse(messages.toString().contains("Tool result missing"))
     }
 
     @Test
@@ -224,8 +224,8 @@ class OpenAiToolCallHistoryTest {
         val historyEnd =
             StructuredToolCallBridge.unmatchedToolResultContent("history_end", "echo")
 
-        assertEquals("工具结果缺失：read_file 没有匹配到执行结果。这不是用户取消。", partialBatch)
-        assertEquals("工具结果缺失：echo 后续对话历史已到达，但未返回执行结果。这不是用户取消。", historyEnd)
+        assertEquals("Tool result missing: read_file has no matching execution result. This is not a user cancellation.", partialBatch)
+        assertEquals("Tool result missing: echo later conversation history arrived without an execution result. This is not a user cancellation.", historyEnd)
         assertFalse(partialBatch.contains("User cancelled"))
         assertFalse(historyEnd.contains("User cancelled"))
     }

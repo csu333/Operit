@@ -425,7 +425,11 @@ open class StandardUITools(protected val context: Context) : ToolImplementations
                 toolName = tool.name,
                 success = false,
                 result = StringResultData(""),
-                error = "当前 UI 控制器模型未启用识图能力，请在设置-功能模型中为 UI 控制器功能选择支持图片理解的模型后再试。"
+                error = if (LocaleUtils.usesChineseContent(context)) {
+                    "当前 UI 控制器模型未启用识图能力，请在设置-功能模型中为 UI 控制器功能选择支持图片理解的模型后再试。"
+                } else {
+                    "The current UI Controller model does not have image recognition enabled. Select a model that supports image understanding for the UI Controller function in Settings > Functional Models, then try again."
+                }
             )
         }
 

@@ -16,10 +16,10 @@ object AvatarEmotionManager {
      */
     fun inferEmotionFromText(text: String): AvatarEmotion {
         val t = text.lowercase()
-        val happyKeywords = listOf("开心", "高兴", "不错", "棒", "太好了", "😀", "🙂", "😊", "😄", "赞")
-        val angryKeywords = listOf("生气", "愤怒", "气死", "讨厌", "糟糕", "😡", "怒")
-        val cryKeywords = listOf("难过", "伤心", "沮丧", "忧伤", "哭", "😭", "😢")
-        val shyKeywords = listOf("害羞", "羞", "脸红", "不好意思", "///")
+        val happyKeywords = listOf("开心", "高兴", "不错", "棒", "太好了", "😀", "🙂", "😊", "😄", "赞", "happy", "glad", "great", "awesome", "wonderful", "yay")
+        val angryKeywords = listOf("生气", "愤怒", "气死", "讨厌", "糟糕", "😡", "怒", "angry", "furious", "annoyed", "hate", "terrible")
+        val cryKeywords = listOf("难过", "伤心", "沮丧", "忧伤", "哭", "😭", "😢", "sad", "upset", "unhappy", "crying", "depressed")
+        val shyKeywords = listOf("害羞", "羞", "脸红", "不好意思", "///", "shy", "blush", "embarrassed")
         
         fun containsAny(keys: List<String>): Boolean = 
             keys.any { t.contains(it) || text.contains(it) }

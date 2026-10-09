@@ -1165,7 +1165,7 @@ object AIMessageManager {
                                 stat.count
                             )
                         )
-                        appendLine("   已激活包：以下工具提示可以直接使用。")
+                        appendLine("   Package activated: the tool prompts below can be used directly.")
                     }
                     appendLine(indentBlock(resultText, "   "))
                     if (index != topPackages.lastIndex) {

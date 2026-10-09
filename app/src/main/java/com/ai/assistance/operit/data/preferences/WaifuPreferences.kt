@@ -48,7 +48,7 @@ class WaifuPreferences private constructor(private val context: Context) {
         const val DEFAULT_WAIFU_ENABLE_SELFIE = false // 默认不启用自拍功能
         const val DEFAULT_WAIFU_ENABLE_MERGE_SEND = false // 默认关闭合并发送
         const val DEFAULT_WAIFU_MERGE_SEND_DELAY_MS = 5000
-        const val DEFAULT_WAIFU_CUSTOM_PROMPT = "你必须遵守：禁止使用动作表情，禁止描述动作表情，只允许使用纯文本进行对话。" // 默认Waifu附加提示词
+        const val DEFAULT_WAIFU_CUSTOM_PROMPT = "You must follow this: do not use action emotes and do not describe actions or expressions; converse in plain text only." // 默认Waifu附加提示词
         const val DEFAULT_WAIFU_SELFIE_PROMPT = "kipfel vrchat, long hair, Matcha color hair, purple eyes, sweater vest, black skirt, black necktie, collared shirt, long sleeves, black headwear, beanie, pleated skirt, hair bun, white shirt, hair ribbon, hairclip, hair between eyes, black footwear, blush, hair ornament, cat hat, very long hair, sweater, animal ear headwear, bag, bandaid on leg, socks" // 默认外貌提示词
     }
 

@@ -19,35 +19,35 @@ object AvatarMoodTypes {
             AvatarMoodTypeDefinition(
                 key = "angry",
                 displayName = "Angry",
-                promptHint = "用户表达侮辱、不公、责备、生气或强烈不满时使用。",
+                promptHint = "Use when the user expresses insults, injustice, blame, anger or strong dissatisfaction.",
                 fallbackEmotion = AvatarEmotion.SAD,
                 builtIn = true
             ),
             AvatarMoodTypeDefinition(
                 key = "happy",
                 displayName = "Happy",
-                promptHint = "用户表达明确表扬、达成目标、收到礼物或明显开心时使用。",
+                promptHint = "Use when the user gives clear praise, achieves a goal, receives a gift or is obviously happy.",
                 fallbackEmotion = AvatarEmotion.HAPPY,
                 builtIn = true
             ),
             AvatarMoodTypeDefinition(
                 key = "shy",
                 displayName = "Shy",
-                promptHint = "用户夸奖、暧昧、戳中可爱点，角色表现害羞时使用。",
+                promptHint = "Use when the user compliments, flirts or hits a cute spot and the character acts shy.",
                 fallbackEmotion = AvatarEmotion.CONFUSED,
                 builtIn = true
             ),
             AvatarMoodTypeDefinition(
                 key = "aojiao",
                 displayName = "Aojiao",
-                promptHint = "用户调侃、轻微争执、角色嘴硬又软化时使用。",
+                promptHint = "Use when the user teases, there is a minor argument, or the character acts tough then softens.",
                 fallbackEmotion = AvatarEmotion.CONFUSED,
                 builtIn = true
             ),
             AvatarMoodTypeDefinition(
                 key = "cry",
                 displayName = "Cry",
-                promptHint = "用户失落、难过、受挫、哭诉或道歉后低落时使用。",
+                promptHint = "Use when the user is disappointed, sad, frustrated, venting, or low after apologizing.",
                 fallbackEmotion = AvatarEmotion.SAD,
                 builtIn = true
             )
