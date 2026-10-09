@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- operit-en fork strings: kept out of strings.xml to avoid upstream merge conflicts -->
+<resources>
+    <string name="thinking_control_levels">Multi-level slider</string>
+    <string name="thinking_control_toggle_only">Toggle only</string>
+    <string name="thinking_match_model_contains">Model contains</string>
+    <string name="thinking_match_model_prefix">Model prefix</string>
+    <string name="thinking_match_model_suffix">Model suffix</string>
+    <string name="thinking_match_model_regex">Model regex</string>
+    <string name="thinking_match_first_segment">Before slash</string>
+    <string name="thinking_match_last_segment_prefix">After slash: prefix</string>
+    <string name="thinking_match_last_segment_contains">After slash: contains</string>
+    <string name="thinking_match_last_segment_regex">After slash: regex</string>
+    <string name="thinking_match_endpoint_suffix">Endpoint suffix</string>
+    <string name="thinking_config_enabled_summary">%1$d/%2$d enabled · %3$s</string>
+    <string name="thinking_config_empty">This model configuration has no thinking rules.</string>
+    <string name="thinking_config_add">Add thinking configuration</string>
+    <string name="thinking_config_new">New thinking configuration</string>
+    <string name="thinking_config_all_models">All models</string>
+    <string name="thinking_config_list_separator">,\u0020</string>
+    <string name="thinking_config_level_count">%1$d levels</string>
+    <string name="thinking_config_toggle">Toggle</string>
+    <string name="thinking_config_no_request_path">No request path set</string>
+    <string name="thinking_config_enable_rule">Enable this configuration</string>
+    <string name="thinking_config_enable_rule_desc">Write thinking parameters when a model matches</string>
+    <string name="thinking_config_control">Control</string>
+    <string name="thinking_config_match_field">Match by</string>
+    <string name="thinking_config_match_models">Match models</string>
+    <string name="thinking_config_match_models_desc">Separate multiple values with commas</string>
+    <string name="thinking_config_default_path">Default request path</string>
+    <string name="thinking_config_default_path_placeholder">reasoning_effort or thinking.type</string>
+    <string name="thinking_config_always_on">Always enable thinking</string>
+    <string name="thinking_config_always_on_desc">Write the \"on\" parameters even when the slider is off</string>
+    <string name="thinking_config_on_off_writes">Values written when on / off</string>
+    <string name="thinking_config_on_off_writes_desc">Write fixed values at request paths</string>
+    <string name="thinking_config_write_when_on">Write when on</string>
+    <string name="thinking_config_write_when_off">Write when off</string>
+    <string name="thinking_config_levels">Slider levels</string>
+    <string name="thinking_config_levels_desc">%1$d levels; this sets the slider length</string>
+    <string name="thinking_config_request_param_path">Request parameter path</string>
+    <string name="thinking_config_value_to_write">Value to write</string>
+    <string name="thinking_config_add_level">Add level</string>
+    <string name="thinking_config_drag_to_reorder">Drag to reorder</string>
+    <string name="thinking_config_level_n">Level %1$d</string>
+    <string name="thinking_config_display_name">Display name</string>
+    <string name="thinking_config_display_name_placeholder">e.g. High</string>
+    <string name="thinking_config_write_path">Write path</string>
+    <string name="thinking_config_value_placeholder">e.g. high</string>
+</resources>
