@@ -114,11 +114,11 @@ const ticket12306 = (function () {
     let CITY_STATIONS = undefined;
     let CITY_CODES = undefined;
     let NAME_STATIONS = undefined;
-    const SEAT_SHORT_TYPES = { swz: '商务座', tz: '特等座', zy: '一等座', ze: '二等座', gr: '高软卧', srrb: '动卧', rw: '软卧', yw: '硬卧', rz: '软座', yz: '硬座', wz: '无座', qt: '其他', gg: '', yb: '' };
+    const SEAT_SHORT_TYPES = { swz: 'Business class', tz: 'Premium class', zy: 'First class', ze: 'Second class', gr: 'Deluxe soft sleeper', srrb: 'EMU sleeper', rw: 'Soft sleeper', yw: 'Hard sleeper', rz: 'Soft seat', yz: 'Hard seat', wz: 'Standing (no seat)', qt: 'Other', gg: '', yb: '' };
     const SEAT_TYPES = {
-        '9': { name: '商务座', short: 'swz' }, P: { name: '特等座', short: 'tz' }, M: { name: '一等座', short: 'zy' }, D: { name: '优选一等座', short: 'zy' }, O: { name: '二等座', short: 'ze' }, S: { name: '二等包座', short: 'ze' }, '6': { name: '高级软卧', short: 'gr' }, A: { name: '高级动卧', short: 'gr' }, '4': { name: '软卧', short: 'rw' }, I: { name: '一等卧', short: 'rw' }, F: { name: '动卧', short: 'rw' }, '3': { name: '硬卧', short: 'yw' }, J: { name: '二等卧', short: 'yw' }, '2': { name: '软座', short: 'rz' }, '1': { name: '硬座', short: 'yz' }, W: { name: '无座', short: 'wz' }, WZ: { name: '无座', short: 'wz' }, H: { name: '其他', short: 'qt' },
+        '9': { name: 'Business class', short: 'swz' }, P: { name: 'Premium class', short: 'tz' }, M: { name: 'First class', short: 'zy' }, D: { name: 'Preferred first class', short: 'zy' }, O: { name: 'Second class', short: 'ze' }, S: { name: 'Second-class compartment', short: 'ze' }, '6': { name: 'Deluxe soft sleeper', short: 'gr' }, A: { name: 'Deluxe EMU sleeper', short: 'gr' }, '4': { name: 'Soft sleeper', short: 'rw' }, I: { name: 'First-class sleeper', short: 'rw' }, F: { name: 'EMU sleeper', short: 'rw' }, '3': { name: 'Hard sleeper', short: 'yw' }, J: { name: 'Second-class sleeper', short: 'yw' }, '2': { name: 'Soft seat', short: 'rz' }, '1': { name: 'Hard seat', short: 'yz' }, W: { name: 'Standing (no seat)', short: 'wz' }, WZ: { name: 'Standing (no seat)', short: 'wz' }, H: { name: 'Other', short: 'qt' },
     };
-    const DW_FLAGS = ['智能动车组', '复兴号', '静音车厢', '温馨动卧', '动感号', '支持选铺', '老年优惠'];
+    const DW_FLAGS = ['Smart EMU', 'Fuxing', 'Quiet carriage', 'Comfort EMU sleeper', 'Donggan', 'Berth selection', 'Senior discount'];
     const client = OkHttp.newClient();
     let initPromise = undefined;
     // #region 辅助函数
@@ -322,26 +322,26 @@ const ticket12306 = (function () {
     function formatTicketStatus(num) {
         if (num.match(/^\d+$/)) {
             const count = parseInt(num);
-            return count === 0 ? '无票' : `剩余${count}张票`;
+            return count === 0 ? 'Sold out' : `${count} ticket(s) left`;
         }
         switch (num) {
             case '有':
-            case '充足': return '有票';
+            case '充足': return 'Available';
             case '无':
             case '--':
-            case '': return '无票';
-            case '候补': return '无票需候补';
-            default: return `${num}票`;
+            case '': return 'Sold out';
+            case '候补': return 'Sold out, waitlist only';
+            default: return `${num} ticket(s)`;
         }
     }
     function formatTicketsInfo(ticketsInfo) {
         if (ticketsInfo.length === 0)
-            return '没有查询到相关车次信息';
-        let result = '车次 | 出发站 -> 到达站 | 出发时间 -> 到达时间 | 历时\n';
+            return 'No matching trains found';
+        let result = 'Train | From -> To | Departure -> Arrival | Duration\n';
         ticketsInfo.forEach((ticketInfo) => {
-            let infoStr = `${ticketInfo.start_train_code}(实际车次train_no: ${ticketInfo.train_no}) ${ticketInfo.from_station}(telecode: ${ticketInfo.from_station_telecode}) -> ${ticketInfo.to_station}(telecode: ${ticketInfo.to_station_telecode}) ${ticketInfo.start_time} -> ${ticketInfo.arrive_time} 历时：${ticketInfo.lishi}`;
+            let infoStr = `${ticketInfo.start_train_code}(actual train_no: ${ticketInfo.train_no}) ${ticketInfo.from_station}(telecode: ${ticketInfo.from_station_telecode}) -> ${ticketInfo.to_station}(telecode: ${ticketInfo.to_station_telecode}) ${ticketInfo.start_time} -> ${ticketInfo.arrive_time} duration: ${ticketInfo.lishi}`;
             ticketInfo.prices.forEach((price) => {
-                infoStr += `\n- ${price.seat_name}: ${formatTicketStatus(price.num)} ${price.price}元`;
+                infoStr += `\n- ${price.seat_name}: ${formatTicketStatus(price.num)} ¥${price.price}`;
             });
             result += `${infoStr}\n`;
         });
@@ -354,8 +354,8 @@ const ticket12306 = (function () {
         T: (t) => t.start_train_code.startsWith('T'),
         K: (t) => t.start_train_code.startsWith('K'),
         O: (t) => !/^[GDZTK]/.test(t.start_train_code),
-        F: (t) => 'dw_flag' in t ? t.dw_flag.includes('复兴号') : t.ticketList[0].dw_flag.includes('复兴号'),
-        S: (t) => 'dw_flag' in t ? t.dw_flag.includes('智能动车组') : t.ticketList[0].dw_flag.includes('智能动车组'),
+        F: (t) => 'dw_flag' in t ? t.dw_flag.includes('Fuxing') : t.ticketList[0].dw_flag.includes('Fuxing'),
+        S: (t) => 'dw_flag' in t ? t.dw_flag.includes('Smart EMU') : t.ticketList[0].dw_flag.includes('Smart EMU'),
     };
     const TIME_COMPARETOR = {
         startTime: (a, b) => new Date(`${a.start_date} ${a.start_time}`).getTime() - new Date(`${b.start_date} ${b.start_time}`).getTime(),
@@ -442,12 +442,12 @@ const ticket12306 = (function () {
     }
     function formatInterlinesInfo(interlinesInfo) {
         if (interlinesInfo.length === 0)
-            return '没有查询到相关的中转车次信息';
-        let result = '出发时间 -> 到达时间 | 出发车站 -> 中转车站 -> 到达车站 | 换乘标志 | 换乘等待时间 | 总历时\n\n';
+            return 'No matching transfer trains found';
+        let result = 'Departure -> Arrival | From -> Transfer -> To | Transfer type | Transfer wait | Total duration\n\n';
         interlinesInfo.forEach((info) => {
             result += `${info.start_date} ${info.start_time} -> ${info.arrive_date} ${info.arrive_time} | `;
             result += `${info.from_station_name} -> ${info.middle_station_name} -> ${info.end_station_name} | `;
-            result += `${info.same_train ? '同车换乘' : info.same_station ? '同站换乘' : '换站换乘'} | ${info.wait_time} | ${info.lishi}\n\n`;
+            result += `${info.same_train ? 'Same-train transfer' : info.same_station ? 'Same-station transfer' : 'Change stations'} | ${info.wait_time} | ${info.lishi}\n\n`;
             result += '\t' + formatTicketsInfo(info.ticketList).replace(/\n/g, '\n\t') + '\n';
         });
         return result;
@@ -550,7 +550,7 @@ const ticket12306 = (function () {
         let result = {};
         for (const city of params.citys.split('|')) {
             if (!(city in CITY_CODES)) {
-                result[city] = { error: '未检索到城市。' };
+                result[city] = { error: 'City not found.' };
             }
             else {
                 result[city] = CITY_CODES[city];
@@ -564,7 +564,7 @@ const ticket12306 = (function () {
         for (let stationName of params.station_names.split('|')) {
             stationName = stationName.endsWith('站') ? stationName.slice(0, -1) : stationName;
             if (!(stationName in NAME_STATIONS)) {
-                result[stationName] = { error: '未检索到车站。' };
+                result[stationName] = { error: 'Station not found.' };
             }
             else {
                 result[stationName] = NAME_STATIONS[stationName];
@@ -630,7 +630,7 @@ const ticket12306 = (function () {
             if (!response)
                 throw new Error('Request interline tickets data failed.');
             if (typeof response.data === 'string')
-                return `很抱歉，未查到相关的列车余票。(${response.errorMsg})`;
+                return `Sorry, no remaining tickets were found for the requested trains. (${response.errorMsg})`;
             interlineData.push(...response.data.middleList);
             if (response.data.can_query === 'N' || !response.data.middleList || response.data.middleList.length === 0)
                 break;
@@ -657,7 +657,7 @@ const ticket12306 = (function () {
             throw new Error('Get train route stations failed.');
         const routeStationsInfo = parseRouteStationsInfo(response.data.data);
         if (routeStationsInfo.length === 0)
-            return '未查询到相关车次信息。';
+            return 'No matching train information found.';
         return routeStationsInfo;
     }
     // #endregion
@@ -731,21 +731,21 @@ const ticket12306 = (function () {
         }
         catch (e) {
             console.error("测试主函数出现错误:", e.message, e.stack);
-            complete({ success: false, message: `测试失败: ${e.message}` });
+            complete({ success: false, message: `Test failed: ${e.message}` });
             return;
         }
         console.log("\n--- 12306 工具包测试完成 ---");
-        complete({ success: true, message: "所有测试已成功或已记录错误。" });
+        complete({ success: true, message: "All tests passed or their errors were recorded." });
     }
     return {
-        get_current_date: (p) => wrap(get_current_date, p, '获取当前日期成功', '获取当前日期失败'),
-        get_stations_code_in_city: (p) => wrap(get_stations_code_in_city, p, '查询成功', '查询失败'),
-        get_station_code_of_citys: (p) => wrap(get_station_code_of_citys, p, '查询成功', '查询失败'),
-        get_station_code_by_names: (p) => wrap(get_station_code_by_names, p, '查询成功', '查询失败'),
-        get_station_by_telecode: (p) => wrap(get_station_by_telecode, p, '查询成功', '查询失败'),
-        get_tickets: (p) => wrap(get_tickets, p, '查询余票成功', '查询余票失败'),
-        get_interline_tickets: (p) => wrap(get_interline_tickets, p, '查询中转票成功', '查询中转票失败'),
-        get_train_route_stations: (p) => wrap(get_train_route_stations, p, '查询经停站成功', '查询经停站失败'),
+        get_current_date: (p) => wrap(get_current_date, p, 'Got current date', 'Failed to get current date'),
+        get_stations_code_in_city: (p) => wrap(get_stations_code_in_city, p, 'Query succeeded', 'Query failed'),
+        get_station_code_of_citys: (p) => wrap(get_station_code_of_citys, p, 'Query succeeded', 'Query failed'),
+        get_station_code_by_names: (p) => wrap(get_station_code_by_names, p, 'Query succeeded', 'Query failed'),
+        get_station_by_telecode: (p) => wrap(get_station_by_telecode, p, 'Query succeeded', 'Query failed'),
+        get_tickets: (p) => wrap(get_tickets, p, 'Ticket availability query succeeded', 'Ticket availability query failed'),
+        get_interline_tickets: (p) => wrap(get_interline_tickets, p, 'Transfer ticket query succeeded', 'Transfer ticket query failed'),
+        get_train_route_stations: (p) => wrap(get_train_route_stations, p, 'Stop list query succeeded', 'Stop list query failed'),
         main: main,
     };
 })();
