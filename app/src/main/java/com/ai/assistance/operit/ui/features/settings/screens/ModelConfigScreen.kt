@@ -189,6 +189,8 @@ fun ModelConfigScreen(
         }
     var hasInitializedSelection by remember { mutableStateOf(false) }
     var isCompletingOnboarding by remember { mutableStateOf(false) }
+    // Opening the MNN download page from onboarding must not require a finished config.
+    var allowLeaveForModelDownload by remember { mutableStateOf(false) }
 
     // 配置名称映射
     val configNameMap = remember { mutableStateMapOf<String, String>() }
@@ -259,6 +261,10 @@ fun ModelConfigScreen(
 
     if (entryMode == ModelConfigEntryMode.CHAT_ONBOARDING) {
         RegisterRouteBackGuard {
+            if (allowLeaveForModelDownload) {
+                allowLeaveForModelDownload = false
+                return@RegisterRouteBackGuard true
+            }
             if (!hasInitializedSelection || isCompletingOnboarding) {
                 return@RegisterRouteBackGuard false
             }
@@ -794,7 +800,13 @@ fun ModelConfigScreen(
                         configManager = configManager,
                         saveCoordinator = saveCoordinator,
                         showNotification = { message -> showNotification(message) },
-                        navigateToMnnModelDownload = navigateToMnnModelDownload
+                        navigateToMnnModelDownload =
+                            navigateToMnnModelDownload?.let { navigate ->
+                                {
+                                    allowLeaveForModelDownload = true
+                                    navigate()
+                                }
+                            }
                     )
                 }
 
