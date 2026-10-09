@@ -15,7 +15,7 @@ export function SummaryMessageComposable({
           <span className="summary-message-line" />
           <span className="summary-message-badge">
             <span className="summary-message-badge-icon">i</span>
-            <span>系统摘要</span>
+            <span>System summary</span>
           </span>
           <span className="summary-message-line" />
         </button>
@@ -29,7 +29,7 @@ export function SummaryMessageComposable({
             role="dialog"
           >
             <header className="summary-message-dialog-header">
-              <strong>系统摘要</strong>
+              <strong>System summary</strong>
             </header>
             <div className="summary-message-dialog-divider" />
             <div className="summary-message-dialog-body">
@@ -37,7 +37,7 @@ export function SummaryMessageComposable({
             </div>
             <footer className="summary-message-dialog-footer">
               <button className="summary-message-dialog-button" onClick={() => setOpen(false)} type="button">
-                关闭
+                Close
               </button>
             </footer>
           </section>

@@ -27,7 +27,7 @@ export function PendingMessageQueuePanel({
         onClick={() => onExpandedChange(!expanded)}
         type="button"
       >
-        <strong>待发送队列</strong>
+        <strong>Pending queue</strong>
         <span>{queuedMessages.length}</span>
       </button>
 

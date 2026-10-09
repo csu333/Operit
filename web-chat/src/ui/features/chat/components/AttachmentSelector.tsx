@@ -72,14 +72,14 @@ export function AttachmentSelector({
   }
 
   const selectorItems: AttachmentSelectorItem[] = [
-    { title: '照片', onClick: () => imageInputRef.current?.click(), icon: ImageAttachmentIcon },
-    { title: '拍照', disabled: true, icon: PlusIcon },
-    { title: '记忆', disabled: true, icon: DataObjectIcon },
-    { title: '文件', onClick: () => fileInputRef.current?.click(), icon: DescriptionAttachmentIcon },
-    { title: '屏幕内容', disabled: true, icon: ScreenshotMonitorIcon },
-    { title: '通知', disabled: true, icon: PlusIcon },
-    { title: '定位', disabled: true, icon: PlusIcon },
-    { title: '包', disabled: true, icon: PlusIcon }
+    { title: 'Photo', onClick: () => imageInputRef.current?.click(), icon: ImageAttachmentIcon },
+    { title: 'Take photo', disabled: true, icon: PlusIcon },
+    { title: 'Memory', disabled: true, icon: DataObjectIcon },
+    { title: 'File', onClick: () => fileInputRef.current?.click(), icon: DescriptionAttachmentIcon },
+    { title: 'Screen content', disabled: true, icon: ScreenshotMonitorIcon },
+    { title: 'Notifications', disabled: true, icon: PlusIcon },
+    { title: 'Location', disabled: true, icon: PlusIcon },
+    { title: 'Package', disabled: true, icon: PlusIcon }
   ];
 
   const fileInputs = (

@@ -115,7 +115,7 @@ function CharacterGroupRow({
       <SelectorAvatar avatarUrl={group.avatar_url} fallback="group" label={group.name} />
       <span className="character-selector-item-copy">
         <strong>{group.name}</strong>
-        <small>{`成员：${group.member_count}`}</small>
+        <small>{`Members: ${group.member_count}`}</small>
       </span>
       {selected ? <CheckIcon size={16} /> : null}
     </button>
@@ -185,8 +185,8 @@ export function CharacterSelectorPanel({
         <div className="character-selector-panel-shell" onClick={(event) => event.stopPropagation()}>
           <header className="character-selector-panel-header">
             <span className="character-selector-panel-title">
-              <strong>选择角色</strong>
-              <small>{`${totalCount} 个角色`}</small>
+              <strong>Select character</strong>
+              <small>{`${totalCount} characters`}</small>
             </span>
 
             <div className="character-selector-panel-actions">
@@ -202,9 +202,9 @@ export function CharacterSelectorPanel({
                 {sortMenuOpen ? (
                   <div className="character-selector-sort-menu" role="menu">
                     {[
-                      { key: 'DEFAULT' as const, label: '默认顺序' },
-                      { key: 'NAME_ASC' as const, label: '按名称' },
-                      { key: 'UPDATED_DESC' as const, label: '按最近更新时间' }
+                      { key: 'DEFAULT' as const, label: 'Default order' },
+                      { key: 'NAME_ASC' as const, label: 'By name' },
+                      { key: 'UPDATED_DESC' as const, label: 'By last updated' }
                     ].map((option) => {
                       const selected = sortOption === option.key;
                       return (
@@ -229,14 +229,14 @@ export function CharacterSelectorPanel({
           <div className="character-selector-panel-list">
             {loading && !selector ? (
               <div className="character-selector-empty">
-                <strong>正在加载角色</strong>
-                <span>稍等一下，角色卡和群组马上就绪。</span>
+                <strong>Loading characters</strong>
+                <span>One moment, character cards and groups are almost ready.</span>
               </div>
             ) : selector ? (
               <>
                 {selector.groups.length ? (
                   <section className="character-selector-section">
-                    <span className="character-selector-section-title">群组</span>
+                    <span className="character-selector-section-title">Groups</span>
                     <div className="character-selector-section-list">
                       {selector.groups.map((group) => (
                         <CharacterGroupRow
@@ -255,7 +255,7 @@ export function CharacterSelectorPanel({
                 ) : null}
 
                 <section className="character-selector-section">
-                  <span className="character-selector-section-title">角色卡</span>
+                  <span className="character-selector-section-title">Character cards</span>
                   <div className="character-selector-section-list">
                     {sortedCards.map((card) => (
                       <CharacterCardRow
@@ -274,8 +274,8 @@ export function CharacterSelectorPanel({
               </>
             ) : (
               <div className="character-selector-empty">
-                <strong>暂时没有可用角色</strong>
-                <span>当前没有拿到角色卡或群组数据。</span>
+                <strong>No characters available yet</strong>
+                <span>No character card or group data was received.</span>
               </div>
             )}
           </div>

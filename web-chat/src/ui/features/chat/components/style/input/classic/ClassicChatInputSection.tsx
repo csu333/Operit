@@ -19,9 +19,9 @@ import type {
 } from '../../../../util/chatTypes';
 
 function processingLabel(stage: InputProcessingStage) {
-  if (stage === 'connecting') return '正在同步会话与主题';
-  if (stage === 'uploading') return '正在上传附件';
-  if (stage === 'streaming') return '正在接收回复';
+  if (stage === 'connecting') return 'Syncing chat and theme';
+  if (stage === 'uploading') return 'Uploading attachments';
+  if (stage === 'streaming') return 'Receiving reply';
   return '';
 }
 
@@ -142,7 +142,7 @@ export function ClassicChatInputSection({
                 submitCurrentAction();
               }
             }}
-            placeholder="发消息给当前会话..."
+            placeholder="Message the current chat..."
             ref={textareaRef}
             rows={1}
             value={messageInput}
@@ -157,7 +157,7 @@ export function ClassicChatInputSection({
           onClick={() => {
             onAttachmentPanelChange(!attachmentPanelOpen);
           }}
-          title="附件"
+          title="Attachments"
           type="button"
         >
           <PlusIcon size={18} />

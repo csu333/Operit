@@ -925,7 +925,7 @@ export function useChatViewModel(): ChatViewModel {
       return true;
     }
     return window.confirm(
-      `当前消息可能超过上下文上限（${projectedTokens} / ${inputSettings.max_window_tokens}）。仍要发送吗？`
+      `This message may exceed the context limit (${projectedTokens} / ${inputSettings.max_window_tokens}). Send anyway?`
     );
   }
 
@@ -992,7 +992,7 @@ export function useChatViewModel(): ChatViewModel {
       }
 
       if (!targetChatId) {
-        throw new Error('无法创建会话');
+        throw new Error('Unable to create chat');
       }
 
       const optimisticUserMessage: WebChatMessage = {
@@ -1091,7 +1091,7 @@ export function useChatViewModel(): ChatViewModel {
   function submitToken() {
     const normalizedToken = tokenDraft.trim();
     if (!normalizedToken) {
-      setError('请输入 Bearer Token');
+      setError('Enter a Bearer Token');
       return;
     }
 
@@ -1638,7 +1638,7 @@ export function useChatViewModel(): ChatViewModel {
   const activeChatStyle: ChatStyle = theme?.chat_style === 'bubble' ? 'bubble' : 'cursor';
   const activeInputStyle: InputStyle = theme?.input.style === 'agent' ? 'agent' : 'classic';
 
-  const activeCharacterName = characterSelector?.active_prompt.name ?? '当前角色';
+  const activeCharacterName = characterSelector?.active_prompt.name ?? 'Current character';
   const activeCharacterAvatarUrl = characterSelector?.active_prompt.avatar_url ?? null;
 
   const activeStreamingCount = useMemo(

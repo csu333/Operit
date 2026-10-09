@@ -32,14 +32,14 @@ function MarkdownCodeBlock({
             onClick={() => setAutoWrapEnabled((value) => !value)}
             type="button"
           >
-            自动换行
+            Word wrap
           </button>
           <button
             className="markdown-code-action"
             onClick={() => copyText(code)}
             type="button"
           >
-            复制
+            Copy
           </button>
         </div>
       </header>

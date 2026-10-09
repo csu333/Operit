@@ -14,7 +14,7 @@ interface ChatMessageLocatorEntry {
 
 const LOCATOR_PREVIEW_CHAR_COUNT = 48;
 const LOCATOR_HIDE_DELAY_MS = 650;
-const HIDDEN_PLACEHOLDER_TEXT = '自动触发用户消息（内容已隐藏）';
+const HIDDEN_PLACEHOLDER_TEXT = 'Auto-triggered user message (content hidden)';
 
 function resolveCenteredMessageIndex(
   scrollElement: HTMLDivElement | null,
@@ -125,22 +125,22 @@ function buildMessagePreview(
 
 function senderLabel(sender: string) {
   if (sender === 'user') {
-    return '用户';
+    return 'User';
   }
   if (sender === 'assistant') {
     return 'AI';
   }
   if (sender === 'summary') {
-    return '总结';
+    return 'Summary';
   }
   if (sender === 'system') {
-    return '系统';
+    return 'System';
   }
   if (sender === 'think') {
-    return '思考';
+    return 'Thinking';
   }
 
-  return '其他';
+  return 'Other';
 }
 
 function ChatMessageLocatorDialog({
@@ -296,11 +296,11 @@ function ChatMessageLocatorDialog({
         <div className="chat-message-locator-content">
           <div className="chat-message-locator-header">
             <div className="chat-message-locator-header-copy">
-              <strong>跳转到消息</strong>
-              <span>{`当前定位：第 ${Math.max(currentMessageIndex + 1, 0)} / ${locatorEntries.length} 条`}</span>
+              <strong>Jump to message</strong>
+              <span>{`Current position: ${Math.max(currentMessageIndex + 1, 0)} / ${locatorEntries.length}`}</span>
             </div>
             <button className="chat-message-locator-close" onClick={onDismiss} type="button">
-              关闭
+              Close
             </button>
           </div>
 
@@ -313,13 +313,13 @@ function ChatMessageLocatorDialog({
                   searchFocused || searchQuery.length > 0 ? 'is-floating' : ''
                 }`}
               >
-                搜索消息
+                Search messages
               </span>
               <input
                 onChange={(event) => setSearchQuery(event.target.value)}
                 onBlur={() => setSearchFocused(false)}
                 onFocus={() => setSearchFocused(true)}
-                placeholder={searchFocused ? '输入消息内容关键词' : ''}
+                placeholder={searchFocused ? 'Enter keywords from the message' : ''}
                 value={searchQuery}
               />
             </label>
@@ -334,17 +334,17 @@ function ChatMessageLocatorDialog({
           </div>
 
           {normalizedSearchQuery.length === 0 && !favoritesOnly ? (
-            <div className="chat-message-locator-hint">点击任意一条消息即可快速跳转</div>
+            <div className="chat-message-locator-hint">Tap any message to jump to it</div>
           ) : filteredEntries.length > 0 ? (
-            <div className="chat-message-locator-hint">{`找到 ${filteredEntries.length} 条结果，点击即可跳转`}</div>
+            <div className="chat-message-locator-hint">{`Found ${filteredEntries.length} result(s); tap to jump`}</div>
           ) : null}
 
           {combinedLoading ? (
-            <div className="chat-message-locator-empty">正在加载...</div>
+            <div className="chat-message-locator-empty">Loading...</div>
           ) : combinedLoadFailed ? (
-            <div className="chat-message-locator-empty">加载失败: 跳转到消息</div>
+            <div className="chat-message-locator-empty">Failed to load: Jump to message</div>
           ) : filteredEntries.length === 0 ? (
-            <div className="chat-message-locator-empty">没有找到匹配的消息</div>
+            <div className="chat-message-locator-empty">No matching messages found</div>
           ) : (
             <div className="chat-message-locator-list" ref={listRef}>
               {filteredEntries.map((entry, visibleIndex) => {
@@ -370,7 +370,7 @@ function ChatMessageLocatorDialog({
                       <div className="chat-message-locator-index-top">
                         <strong>{entry.index + 1}</strong>
                         <button
-                          aria-label={isFavorite ? '取消收藏消息' : '收藏消息'}
+                          aria-label={isFavorite ? 'Unfavorite message' : 'Favorite message'}
                           className="chat-message-locator-favorite-toggle"
                           onClick={(event) => {
                             event.preventDefault();
@@ -716,7 +716,7 @@ export function ChatScrollNavigator({
       {shouldShowNavigatorControl ? (
         <div className="chat-scroll-navigator-chip">
           <button
-            aria-label="跳转到消息"
+            aria-label="Jump to message"
             className="chat-scroll-navigator-locator-button"
             onClick={() => {
               setShowLocatorDialog(true);
@@ -738,7 +738,7 @@ export function ChatScrollNavigator({
             <span className="chat-scroll-navigator-arrow" />
           </button>
           <button
-            aria-label="滚动到底部"
+            aria-label="Scroll to bottom"
             className="chat-scroll-navigator-bottom-button"
             onClick={() => {
               if (hasNewerDisplayHistory && onRequestLatestMessages) {

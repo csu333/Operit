@@ -13,7 +13,7 @@ import type {
 import { CharacterCardModelBindingSwitchConfirmDialog } from './CharacterCardModelBindingSwitchConfirmDialog';
 
 const AUTO_GLM_WARNING =
-  '禁止使用autoglm作为对话主模型。对话模型和ui控制模型是分离的，请选择任意一个别的聪明的大模型。如有疑问，请仔细阅读文档学习软件的模型配置机制。';
+  'Do not use autoglm as the main chat model. The chat model and the UI controller model are separate; choose any other capable LLM. If in doubt, read the documentation on how model configuration works.';
 
 type PendingSelection = {
   configId: string;
@@ -22,14 +22,14 @@ type PendingSelection = {
 
 function currentModelName(selector: WebModelSelectorState | null) {
   const value = selector?.current_model_name?.trim();
-  return value ? value : '未选择';
+  return value ? value : 'None selected';
 }
 
 function configModelSummary(config: WebModelSelectorConfig) {
   if (config.models.length > 1) {
-    return `${config.models.length}个模型`;
+    return `${config.models.length} models`;
   }
-  return config.model_name || '未选择';
+  return config.model_name || 'None selected';
 }
 
 export function ModelSelectorPanel({
@@ -119,7 +119,7 @@ export function ModelSelectorPanel({
             type="button"
           >
             <span className="model-selector-summary-main">
-              <span className="model-selector-summary-label">模型:</span>
+              <span className="model-selector-summary-label">Model:</span>
               <span className="model-selector-summary-label-spacer" />
               <span className="model-selector-summary-value">{modelName}</span>
             </span>
@@ -131,10 +131,10 @@ export function ModelSelectorPanel({
 
         {expanded ? (
           <div className="model-selector-body">
-            {loading ? <div className="model-selector-empty">正在加载模型配置...</div> : null}
+            {loading ? <div className="model-selector-empty">Loading model configurations...</div> : null}
 
             {!loading && !selector?.configs.length ? (
-              <div className="model-selector-empty">没有可用的模型</div>
+              <div className="model-selector-empty">No models available</div>
             ) : null}
 
             {!loading
@@ -160,7 +160,7 @@ export function ModelSelectorPanel({
                         {hasMultipleModels ? (
                           <span className="model-selector-config-tail">
                             <span className="model-selector-config-count">
-                              {config.models.length}个模型
+                              {config.models.length} models
                             </span>
                             {isExpanded ? (
                               <ChevronUpIcon size={16} />
@@ -202,13 +202,13 @@ export function ModelSelectorPanel({
 
             {onManageModels ? (
               <button className="model-selector-manage-button" onClick={onManageModels} type="button">
-                管理配置
+                Manage configurations
               </button>
             ) : null}
 
             {selector?.locked_by_character_card ? (
               <div className="model-selector-lock-hint">
-                当前角色卡已固定模型: {selector.locked_character_card_name || '当前角色'}
+                The current character card has a fixed model: {selector.locked_character_card_name || 'Current character'}
               </div>
             ) : null}
 

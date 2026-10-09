@@ -45,7 +45,7 @@ export function ChatHeader({
   activeCharacterAvatarUrl?: string | null;
   onCharacterClick: () => void;
 }) {
-  const displayCharacterName = toChatHeaderName(activeCharacterName || '当前角色');
+  const displayCharacterName = toChatHeaderName(activeCharacterName || 'Current character');
 
   return (
     <div className="chat-header-row">

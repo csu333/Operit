@@ -45,7 +45,7 @@ export function ParamVisualizer({ xmlContent }: { xmlContent: string }) {
               onClick={() => copyText(param.value)}
               type="button"
             >
-              复制
+              Copy
             </button>
           </header>
           <pre className="param-visualizer-value">{param.value}</pre>

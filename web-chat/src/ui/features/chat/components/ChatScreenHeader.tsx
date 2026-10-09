@@ -64,12 +64,12 @@ export function ChatScreenHeader({
   const [showStats, setShowStats] = useState(false);
   const statusLabel = useMemo(() => {
     if (isConnecting) {
-      return '同步中';
+      return 'Syncing';
     }
     if (isStreaming) {
-      return '回复中';
+      return 'Replying';
     }
-    return '已连接';
+    return 'Connected';
   }, [isConnecting, isStreaming]);
   const totalTokens = contextCurrentValue;
   const ringTone =
@@ -102,15 +102,15 @@ export function ChatScreenHeader({
             <span>{statusLabel}</span>
             <strong>{contextLabel}</strong>
             <div className="chat-screen-header-stat-row">
-              <span>当前窗口</span>
+              <span>Current window</span>
               <strong>{contextCurrentValue}</strong>
             </div>
             <div className="chat-screen-header-stat-row">
-              <span>窗口上限</span>
+              <span>Window limit</span>
               <strong>{contextMaxValue}</strong>
             </div>
             <div className="chat-screen-header-stat-row is-highlight">
-              <span>总计估算</span>
+              <span>Estimated total</span>
               <strong>{totalTokens}</strong>
             </div>
           </div>

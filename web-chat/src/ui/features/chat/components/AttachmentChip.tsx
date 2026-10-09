@@ -34,7 +34,7 @@ export function AttachmentChip({
       </div>
       {removable && onRemove ? (
         <button onClick={() => onRemove(attachment.id)} type="button">
-          移除
+          Remove
         </button>
       ) : null}
     </div>

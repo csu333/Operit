@@ -603,13 +603,13 @@ const UIAutomationSubAgentTools = (function () {
                 advice: isMainScreen
                     ? ("Main-screen mode: agent_id is not supported and session reuse does not apply; parallel tools are not supported. Do one clear sub-goal at a time (split into multiple calls if needed).\n" +
                         "Screen selection: no agent_id or 'default' => main screen; any other value => virtual screen (ignored in main-screen mode, which forces the main screen).\n" +
-                        "Launch first (very important): the first time you need to operate an app, the intent must begin with "Launch the XXX app ..." so the subagent runs Launch directly instead of searching the home screen.\n" +
+                        "Launch first (very important): the first time you need to operate an app, the intent must begin with \"Launch the XXX app ...\" so the subagent runs Launch directly instead of searching the home screen.\n" +
                         "Stateless: each call is a new conversation, so the intent must state what is done, what is next, and the key information.\n" +
                         "Self-contained: don't say 'these five / continue / same as above'; for multiple items, either list them plus the current target, or first have the subagent identify and restate the list on the current page.\n" +
                         "Failure and completion: partial success is not completion; keep going until the goal is reached, and only stop after 2-3 consecutive failures, explaining why.")
                     : ("Virtual-screen mode: reuse agent_id where possible (keep using data.agentId) to stay on the same virtual screen / app context.\n" +
                         "Screen selection: no agent_id or 'default' => main screen; any other value => that virtual-screen session (a virtual screen must be available, otherwise the call fails). To avoid operating the main screen by mistake, pass agent_id explicitly on the first call in virtual-screen mode.\n" +
-                        "Launch first (very important): the first time you use an agent_id (new or changed), the intent must begin with "Launch the XXX app ..." so the subagent runs Launch directly instead of searching the home screen.\n" +
+                        "Launch first (very important): the first time you use an agent_id (new or changed), the intent must begin with \"Launch the XXX app ...\" so the subagent runs Launch directly instead of searching the home screen.\n" +
                         "Stateless: each call is a new conversation, so the intent must state what is done, what is next, and the key information.\n" +
                         "Self-contained: don't say 'these five / continue / same as above'; for multiple items, either list them plus the current target, or first have the subagent identify and restate the list on the current page.\n" +
                         "Align + parallelize: list first, then go item by item (A→B→C); run independent sub-tasks or multiple entry points for the same target in parallel (run_subagent_parallel_virtual), and only retry failed branches.\n" +

@@ -283,18 +283,18 @@ function GroupBlock({
   const [userOverride, setUserOverride] = useState<boolean | null>(null);
   const title = (() => {
     if (block.group_type === 'search_only') {
-      return '搜索';
+      return 'Search';
     }
     if (block.group_type === 'tools_only') {
-      return `工具调用 (${toolCount})`;
+      return `Tool calls (${toolCount})`;
     }
     if (searchCount > 0 && toolCount > 0) {
-      return `思考、搜索并调用工具 (${toolCount})`;
+      return `Thinking, search and tool calls (${toolCount})`;
     }
     if (searchCount > 0) {
-      return '思考并搜索';
+      return 'Thinking and search';
     }
-    return `思考与工具 (${toolCount})`;
+    return `Thinking and tools (${toolCount})`;
   })();
 
   useEffect(() => {
@@ -375,7 +375,7 @@ function ThinkBlock({
             return nextValue;
           });
         }}
-        title="思考过程"
+        title="Thinking process"
       />
       {thinkContent ? (
         <AnimatedExpandBody
@@ -424,7 +424,7 @@ function SearchBlock({ block }: { block: WebMessageContentBlock }) {
         <StructuredExpandRow
           expanded={expanded}
           onClick={() => setExpanded((value) => !value)}
-          title="搜索来源"
+          title="Search sources"
         />
         <AnimatedExpandBody className="structured-search-body" durationMs={200} visible={expanded}>
           <div className="structured-search-body-content">
@@ -515,11 +515,11 @@ function SearchSourceDialog({
           <footer className="structured-modal-footer">
             {source.url ? (
               <a className="structured-modal-primary" href={source.url} rel="noreferrer" target="_blank">
-                打开网页
+                Open web page
               </a>
             ) : null}
             <button className="structured-modal-secondary" onClick={onDismiss} type="button">
-              关闭
+              Close
             </button>
           </footer>
         </div>
@@ -546,7 +546,7 @@ function StatusBlock({ block }: { block: WebMessageContentBlock }) {
           type="button"
         >
           <span className="structured-warning-bar" />
-          <span className="structured-warning-text">AI犯了一个错误</span>
+          <span className="structured-warning-text">The AI made a mistake</span>
         </button>
         {detailOpen ? (
           <div className="structured-modal-backdrop" onClick={() => setDetailOpen(false)} role="presentation">
@@ -557,7 +557,7 @@ function StatusBlock({ block }: { block: WebMessageContentBlock }) {
             >
               <header className="structured-modal-header">
                 <div className="structured-modal-title-row">
-                  <strong>AI错误原因</strong>
+                  <strong>AI error reason</strong>
                 </div>
               </header>
               <div className="structured-modal-divider" />
@@ -566,7 +566,7 @@ function StatusBlock({ block }: { block: WebMessageContentBlock }) {
               </div>
               <footer className="structured-modal-footer">
                 <button className="structured-modal-primary" onClick={() => setDetailOpen(false)} type="button">
-                  关闭
+                  Close
                 </button>
               </footer>
             </section>

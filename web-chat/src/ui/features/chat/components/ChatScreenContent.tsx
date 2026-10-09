@@ -227,7 +227,7 @@ export function ChatScreenContent({
               activeCharacterAvatarUrl={viewModel.activeCharacterAvatarUrl}
               activeCharacterName={viewModel.activeCharacterName}
               contextCurrentValue={viewModel.contextStats.currentValue}
-              contextLabel={`上下文 ${viewModel.contextStats.percent}%`}
+              contextLabel={`Context ${viewModel.contextStats.percent}%`}
               contextMaxValue={viewModel.contextStats.maxValue}
               contextPercent={viewModel.contextStats.percent}
               isConnecting={viewModel.isConnecting}

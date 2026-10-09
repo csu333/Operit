@@ -34,77 +34,77 @@ type PendingSelection = {
 };
 
 const AUTO_GLM_WARNING =
-  '禁止使用autoglm作为对话主模型。对话模型和ui控制模型是分离的，请选择任意一个别的聪明的大模型。如有疑问，请仔细阅读文档学习软件的模型配置机制。';
+  'Do not use autoglm as the main chat model. The chat model and the UI controller model are separate; choose any other capable LLM. If in doubt, read the documentation on how model configuration works.';
 
 const INFO_COPY = {
   thinkingSettings: {
-    title: '思考',
-    description: '管理思考模式'
+    title: 'Thinking',
+    description: 'Manage thinking mode'
   },
   thinkingMode: {
-    title: '思考模式',
-    description: '目前支持Gemini、Qwen3、Claude、豆包、NVIDIA、硅基流动和MNN本地模型，能够启用内置的思考。'
+    title: 'Thinking mode',
+    description: 'Currently supports Gemini, Qwen3, Claude, Doubao, NVIDIA, SiliconFlow and local MNN models, enabling built-in thinking.'
   },
   thinkingQuality: {
-    title: '思考程度',
-    description: '仅在思考模式下生效；具体档位与当前模型配置一致。'
+    title: 'Thinking level',
+    description: 'Only applies in thinking mode; available levels follow the current model configuration.'
   },
   maxMode: {
-    title: 'Max模式',
-    description: '开启后使用更大的上下文窗口。'
+    title: 'Max mode',
+    description: 'Uses a larger context window when enabled.'
   },
   memory: {
-    title: '记忆',
-    description: '切换当前对话使用的记忆配置。'
+    title: 'Memory',
+    description: 'Switch the memory configuration used by the current chat.'
   },
   memoryAutoUpdate: {
-    title: '自动保存记忆',
-    description: '开启后，当前轮回复结束时会把候选内容加入长期记忆队列。'
+    title: 'Auto-save memory',
+    description: 'When enabled, candidate content is added to the long-term memory queue after each reply.'
   },
   manualMemoryUpdate: {
-    title: '手动更新记忆',
-    description: '立即基于当前对话内容触发一次记忆保存。'
+    title: 'Update memory now',
+    description: 'Save memory from the current chat right now.'
   },
   manualConversationSummary: {
-    title: '手动总结对话',
-    description: '立即为当前对话生成一次总结。'
+    title: 'Summarize chat now',
+    description: 'Generate a summary of the current chat right now.'
   },
   autoRead: {
-    title: '自动朗读',
-    description: '收到新回复后自动朗读内容。'
+    title: 'Auto read aloud',
+    description: 'Read new replies aloud automatically.'
   },
   autoApprove: {
-    title: '自动批准',
-    description: '开启后，默认直接执行所有工具调用而不再弹出确认。'
+    title: 'Auto approve',
+    description: 'When enabled, all tool calls run directly without a confirmation prompt.'
   },
   disableGroup: {
-    title: '禁用项',
-    description: '集中管理会影响回复行为的禁用开关。'
+    title: 'Disable options',
+    description: 'Manage the switches that disable features affecting replies.'
   },
   disableStream: {
-    title: '禁用流式输出',
-    description: '禁用后，AI回复将一次性完整显示，而不是逐字流式显示。'
+    title: 'Disable streaming',
+    description: 'When disabled, AI replies appear all at once instead of streaming word by word.'
   },
   disableTools: {
-    title: '禁用工具',
-    description: '禁用后，AI将无法调用包括记忆查询在内的内置工具。'
+    title: 'Disable tools',
+    description: 'When disabled, the AI cannot call built-in tools, including memory queries.'
   },
   disablePreferenceDescription: {
-    title: '禁用用户偏好描述',
-    description: '禁用后，系统提示词中不再附加 User preference description 段落。'
+    title: 'Disable user preference description',
+    description: 'When disabled, the User preference description section is no longer appended to the system prompt.'
   }
 } as const;
 
 function currentModelName(selector: WebModelSelectorState | null) {
   const value = selector?.current_model_name?.trim();
-  return value ? value : '未选择';
+  return value ? value : 'None selected';
 }
 
 function configModelSummary(config: WebModelSelectorConfig) {
   if (config.models.length > 1) {
-    return `${config.models.length}个模型`;
+    return `${config.models.length} models`;
   }
-  return config.model_name || '未选择';
+  return config.model_name || 'None selected';
 }
 
 function joinClasses(...values: Array<string | false | null | undefined>) {
@@ -288,7 +288,7 @@ function ClassicModelSelectorItem({
           <ClassicInfoSpacer />
           <span className="classic-settings-popup-summary-shell">
             <span className="classic-settings-popup-summary">
-              <strong>模型:</strong>
+              <strong>Model:</strong>
               <span className="classic-settings-popup-summary-value">{modelName}</span>
             </span>
           </span>
@@ -299,10 +299,10 @@ function ClassicModelSelectorItem({
 
         {expanded ? (
           <div className="classic-model-selector-body">
-            {loading ? <div className="classic-model-selector-empty">正在加载模型配置...</div> : null}
+            {loading ? <div className="classic-model-selector-empty">Loading model configurations...</div> : null}
 
             {!loading && !selector?.configs.length ? (
-              <div className="classic-model-selector-empty">没有可用的模型</div>
+              <div className="classic-model-selector-empty">No models available</div>
             ) : null}
 
             {!loading
@@ -331,7 +331,7 @@ function ClassicModelSelectorItem({
                         {hasMultipleModels ? (
                           <span className="classic-model-selector-config-tail">
                             <span className="classic-model-selector-config-count">
-                              {config.models.length}个模型
+                              {config.models.length} models
                             </span>
                             {isExpanded ? <ChevronUpIcon size={16} /> : <ChevronDownIcon size={16} />}
                           </span>
@@ -372,7 +372,7 @@ function ClassicModelSelectorItem({
 
             {selector?.locked_by_character_card ? (
               <div className="classic-model-selector-lock-hint">
-                当前角色卡已固定模型: {selector.locked_character_card_name || '当前角色'}
+                The current character card has a fixed model: {selector.locked_character_card_name || 'Current character'}
               </div>
             ) : null}
 
@@ -418,7 +418,7 @@ function ClassicMemorySelectorItem({
 }) {
   const currentProfileName =
     memorySelector?.profiles.find((profile) => profile.id === memorySelector.current_profile_id)?.name ??
-    '未选择';
+    'None selected';
 
   return (
     <>
@@ -430,7 +430,7 @@ function ClassicMemorySelectorItem({
         <ClassicInfoSpacer />
         <span className="classic-settings-popup-summary-shell">
           <span className="classic-settings-popup-summary">
-            <strong>记忆:</strong>
+            <strong>Memory:</strong>
             <span className="classic-settings-popup-summary-value">{currentProfileName}</span>
           </span>
         </span>
@@ -459,7 +459,7 @@ function ClassicMemorySelectorItem({
           })}
           {onManageClick ? (
             <button className="classic-settings-manage-button" onClick={onManageClick} type="button">
-              管理配置
+              Manage configurations
             </button>
           ) : null}
         </div>
@@ -500,8 +500,8 @@ function ClassicThinkingSettingsItem({
         <ClassicInfoButton onClick={onInfoClick} />
         <ClassicInfoSpacer />
         <span className="classic-settings-popup-summary">
-          <strong>思考:</strong>
-          <span className="classic-settings-popup-summary-value">{enabled ? '思考模式' : '关闭'}</span>
+          <strong>Thinking:</strong>
+          <span className="classic-settings-popup-summary-value">{enabled ? 'Thinking mode' : 'Off'}</span>
         </span>
         <span className="classic-settings-popup-chevron">
           {expanded ? <ChevronUpIcon size={18} /> : <ChevronDownIcon size={18} />}
@@ -515,7 +515,7 @@ function ClassicThinkingSettingsItem({
             icon={TuneIcon}
             onInfoClick={onToggleInfoClick}
             onToggle={onToggle}
-            title="思考模式"
+            title="Thinking mode"
           />
           {enabled && qualityMapping?.mode === 'levels' ? (
             <ClassicSettingsRow className="is-child">
@@ -525,7 +525,7 @@ function ClassicThinkingSettingsItem({
               <ClassicInfoButton onClick={onQualityInfoClick} />
               <ClassicInfoSpacer />
               <ThinkingQualitySlider
-                label="思考程度"
+                label="Thinking level"
                 mapping={qualityMapping}
                 onChange={onQualityChange}
                 value={qualityOptionId}
@@ -576,7 +576,7 @@ function ClassicDisableSettingsGroup({
         <ClassicInfoButton onClick={onGroupInfoClick} />
         <ClassicInfoSpacer />
         <span className="classic-settings-popup-summary">
-          <strong>禁用项:</strong>
+          <strong>Disable options:</strong>
           <span className="classic-settings-popup-summary-value">{`${disabledCount}/3`}</span>
         </span>
         <span className="classic-settings-popup-chevron">
@@ -591,21 +591,21 @@ function ClassicDisableSettingsGroup({
             icon={InfoIcon}
             onInfoClick={onDisableStreamOutputInfoClick}
             onToggle={onDisableStreamOutput}
-            title="禁用流式输出"
+            title="Disable streaming"
           />
           <ClassicSettingItem
             checked={!enableTools}
             icon={TuneIcon}
             onInfoClick={onDisableToolsInfoClick}
             onToggle={onToggleTools}
-            title="禁用工具"
+            title="Disable tools"
           />
           <ClassicSettingItem
             checked={disableUserPreferenceDescription}
             icon={PersonIcon}
             onInfoClick={onDisablePreferenceDescriptionInfoClick}
             onToggle={onDisablePreferenceDescription}
-            title="禁用用户偏好描述"
+            title="Disable user preference description"
           />
         </div>
       ) : null}
@@ -763,8 +763,8 @@ export function ClassicChatSettingsBar({
                   onExpandedChange={setShowModelDropdown}
                   onInfoClick={() =>
                     openInfo({
-                      title: '模型配置',
-                      description: '在这里选择一个已经配置好的模型，或者点击下方的管理配置去新建或修改模型'
+                      title: 'Model configuration',
+                      description: 'Choose an already configured model here, or tap Manage configurations below to create or edit models'
                     })
                   }
                   onSelectModel={onSelectModelConfig}
@@ -832,7 +832,7 @@ export function ClassicChatSettingsBar({
                   onToggle={() => {
                     void onUpdateInputSettings({ enable_max_context_mode: !enableMaxContextMode });
                   }}
-                  title="Max模式"
+                  title="Max mode"
                 />
 
                 <div className="classic-settings-divider" />
@@ -844,7 +844,7 @@ export function ClassicChatSettingsBar({
                   onToggle={() => {
                     void onUpdateInputSettings({ enable_memory_auto_update: !enableMemoryAutoUpdate });
                   }}
-                  title="自动保存记忆"
+                  title="Auto-save memory"
                 />
 
                 <ClassicActionSettingItem
@@ -854,7 +854,7 @@ export function ClassicChatSettingsBar({
                     onToggleSettings();
                   }}
                   onInfoClick={() => openInfo(INFO_COPY.manualMemoryUpdate)}
-                  title="手动更新记忆"
+                  title="Update memory now"
                 />
 
                 <ClassicActionSettingItem
@@ -864,7 +864,7 @@ export function ClassicChatSettingsBar({
                     onToggleSettings();
                   }}
                   onInfoClick={() => openInfo(INFO_COPY.manualConversationSummary)}
-                  title="手动总结对话"
+                  title="Summarize chat now"
                 />
 
                 <div className="classic-settings-divider" />
@@ -876,7 +876,7 @@ export function ClassicChatSettingsBar({
                   onToggle={() => {
                     void onUpdateInputSettings({ enable_auto_read: !enableAutoRead });
                   }}
-                  title="自动朗读"
+                  title="Auto read aloud"
                 />
 
                 <div className="classic-settings-divider" />
@@ -890,7 +890,7 @@ export function ClassicChatSettingsBar({
                       permission_level: permissionLevel === 'ALLOW' ? 'ASK' : 'ALLOW'
                     });
                   }}
-                  title="自动批准"
+                  title="Auto approve"
                 />
               </div>
             </div>

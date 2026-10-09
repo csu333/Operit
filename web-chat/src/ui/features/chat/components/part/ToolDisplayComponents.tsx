@@ -178,11 +178,11 @@ function buildParamsHeadPreview(params: string, maxChars = 120) {
 
 function buildToolSemanticDescription(toolName: string, params: string, useByteSummary: boolean) {
   if (!params.trim()) {
-    return `工具调用: ${toolName}`;
+    return `Tool call: ${toolName}`;
   }
 
   const summary = useByteSummary ? `${calculateToolParamsBytes(params)} B` : buildParamsHeadPreview(params);
-  return `工具调用: ${toolName}，调用参数: ${summary}`;
+  return `Tool call: ${toolName}, parameters: ${summary}`;
 }
 
 function isFileDiffTool(toolName: string) {
@@ -227,7 +227,7 @@ export function ToolDisplayComponent({ block }: { block: WebMessageContentBlock 
           content={normalizeEscapedTextForDisplay(displayParams)}
           iconName={iconName}
           onDismiss={() => setDetailOpen(false)}
-          title={`${displayToolName} 调用参数`}
+          title={`${displayToolName} parameters`}
         />
       ) : null}
     </>

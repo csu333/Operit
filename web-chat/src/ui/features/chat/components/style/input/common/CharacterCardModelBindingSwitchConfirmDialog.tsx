@@ -19,15 +19,15 @@ export function CharacterCardModelBindingSwitchConfirmDialog({
         role="dialog"
       >
         <header>
-          <h3>修改角色卡绑定模型</h3>
-          <p>当前角色卡已绑定对话模型。继续后将修改该角色卡的模型绑定，不会修改全局对话模型配置。</p>
+          <h3>Change the character card's bound model</h3>
+          <p>The current character card is bound to a chat model. Continuing changes this character card's model binding; the global chat model configuration is not changed.</p>
         </header>
         <footer>
           <button onClick={onDismiss} type="button">
-            取消
+            Cancel
           </button>
           <button onClick={onConfirm} type="button">
-            确认修改
+            Confirm change
           </button>
         </footer>
       </div>

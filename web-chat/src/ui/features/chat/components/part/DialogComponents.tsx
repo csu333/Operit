@@ -146,7 +146,7 @@ export function ContentDetailDialog({
             <div className="structured-modal-actions">
               {isXmlContent && !isDiffContent ? (
                 <button
-                  aria-label={isRawView ? '切换到可视视图' : '切换到原始视图'}
+                  aria-label={isRawView ? 'Switch to visual view' : 'Switch to raw view'}
                   className="structured-modal-icon-button"
                   onClick={() => setRawView((value) => !value)}
                   type="button"
@@ -171,7 +171,7 @@ export function ContentDetailDialog({
 
           <footer className="structured-modal-footer">
             <button className="structured-modal-primary" onClick={onDismiss} type="button">
-              关闭
+              Close
             </button>
           </footer>
         </div>
@@ -207,12 +207,12 @@ export function ToolResultDetailDialog({
                 size={20}
               />
               <div className="structured-modal-title-stack">
-                <strong>{`${toolName} ${isSuccess ? '执行成功' : '执行失败'}`}</strong>
+                <strong>{`${toolName} ${isSuccess ? 'succeeded' : 'failed'}`}</strong>
               </div>
             </div>
             <div className="structured-modal-actions">
               <button
-                aria-label="复制结果"
+                aria-label="Copy result"
                 className="structured-modal-icon-button"
                 onClick={() => copyText(result)}
                 type="button"
@@ -230,7 +230,7 @@ export function ToolResultDetailDialog({
 
           <footer className="structured-modal-footer">
             <button className="structured-modal-primary" onClick={onDismiss} type="button">
-              关闭
+              Close
             </button>
           </footer>
         </div>

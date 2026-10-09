@@ -118,7 +118,12 @@ def apply(name, mapping_path):
         for m in literals(text):
             body = m.group('body')
             if body in mapping:
-                out.append(text[last:m.start('body')]); out.append(mapping[body]); last = m.end('body'); hits += 1
+                quote = text[m.start()]
+                repl = mapping[body]
+                if quote in '\'"':
+                    # translations may contain the literal's own quote char; escape it so the source still parses
+                    repl = re.sub(r'(?<!\\)' + quote, '\\' + quote, repl)
+                out.append(text[last:m.start('body')]); out.append(repl); last = m.end('body'); hits += 1
         out.append(text[last:])
         open(path, 'w', encoding='utf-8').write(''.join(out))
         left = sum(1 for m in literals(''.join(out)) if HAN.search(m.group('body')))

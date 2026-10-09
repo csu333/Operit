@@ -237,7 +237,7 @@ export function ChatArea({
               }}
               type="button"
             >
-              点击加载更早的历史记录
+              Tap to load earlier history
             </button>
           ) : null}
 
@@ -265,11 +265,11 @@ export function ChatArea({
             })
           ) : (
             <section className="chat-empty-state">
-              <strong>{isConversationLoading ? '正在同步会话' : '准备开始聊天'}</strong>
+              <strong>{isConversationLoading ? 'Syncing chat' : 'Ready to chat'}</strong>
               <p>
                 {isConversationLoading
-                  ? '正在按需拉取当前会话的主题和最近消息。'
-                  : '这里会显示手机当前会话、主题和流式回复。'}
+                  ? 'Fetching the theme and recent messages of the current chat.'
+                  : 'The current chat on the phone, its theme and streaming replies appear here.'}
               </p>
             </section>
           )}
@@ -284,7 +284,7 @@ export function ChatArea({
               }}
               type="button"
             >
-              点击加载较新的消息
+              Tap to load newer messages
             </button>
           ) : null}
 

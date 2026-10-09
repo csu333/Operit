@@ -53,10 +53,10 @@ function toRgba(color: string | null | undefined, alpha: number) {
 
 function attachmentDisplayLabel(attachment: WebMessageAttachment) {
   if (attachment.mime_type === 'text/json' && attachment.file_name === 'screen_content.json') {
-    return '屏幕内容';
+    return 'Screen content';
   }
   if (attachment.mime_type === 'application/vnd.workspace-context+xml') {
-    return '工作区';
+    return 'Workspace';
   }
   return attachment.file_name;
 }

@@ -33,7 +33,7 @@ function UserBubbleAvatar({
 function imageLinkToAttachment(imageLink: WebMessageImageLink): WebMessageAttachment {
   return {
     id: `image-link:${imageLink.id}`,
-    file_name: imageLink.expired ? '图片已过期' : '图片',
+    file_name: imageLink.expired ? 'Image expired' : 'Image',
     mime_type: 'image/*',
     file_size: 0,
     asset_url: imageLink.asset_url

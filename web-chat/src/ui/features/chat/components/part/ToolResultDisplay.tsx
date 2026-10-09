@@ -51,7 +51,7 @@ function isFileDiffTool(toolName: string) {
 }
 
 function normalizeToolResult(block: WebMessageContentBlock) {
-  const toolName = block.attrs?.name?.trim() || '未知工具';
+  const toolName = block.attrs?.name?.trim() || 'Unknown tool';
   const status = (block.attrs?.status?.trim()?.toLowerCase() || 'success');
   const outerContent = block.content ?? '';
   const rawResultContent = extractTaggedContent(outerContent, 'content') || outerContent.trim();
@@ -76,7 +76,7 @@ function buildSummaryText(result: string, isSuccess: boolean) {
   if (result.trim()) {
     return result.slice(0, 200);
   }
-  return isSuccess ? '执行成功' : '执行失败';
+  return isSuccess ? 'succeeded' : 'failed';
 }
 
 function buildSemanticDescription(toolName: string, summaryText: string, result: string, isSuccess: boolean) {
@@ -86,10 +86,10 @@ function buildSemanticDescription(toolName: string, summaryText: string, result:
     .trim();
   const preview =
     normalizedPreview.length <= 20 ? normalizedPreview : `${normalizedPreview.slice(0, 20)}...`;
-  const statusLabel = isSuccess ? '成功' : '失败';
+  const statusLabel = isSuccess ? 'succeeded' : 'failed';
   return preview
-    ? `工具执行结果: ${toolName}，${statusLabel}，${preview}`
-    : `工具执行结果: ${toolName}，${statusLabel}，${summaryText}`;
+    ? `Tool result: ${toolName}, ${statusLabel}, ${preview}`
+    : `Tool result: ${toolName}, ${statusLabel}, ${summaryText}`;
 }
 
 export function ToolResultDisplay({ block }: { block: WebMessageContentBlock }) {

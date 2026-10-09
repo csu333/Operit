@@ -12,7 +12,7 @@ export function normalizeError(error: unknown) {
   if (error instanceof Error) {
     return error.message;
   }
-  return '发生未知错误';
+  return 'An unknown error occurred';
 }
 
 export function buildVisibleChats(chats: WebChatSummary[], search: string) {
