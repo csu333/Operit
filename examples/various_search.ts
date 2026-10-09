@@ -758,7 +758,7 @@ const various_search = (function () {
     try {
       const response = await Tools.Net.visit({ url });
       if (!response) {
-        throw new Error(`无法获取 ${platform} 搜索结果`);
+        throw new Error(`Unable to get ${platform} search results`);
       }
 
       let parts: string[] = [];
@@ -793,7 +793,7 @@ const various_search = (function () {
     } catch (error: any) {
       return {
         platform,
-        content: `${platform} 搜索失败: ${error.message}`
+        content: `${platform} search failed: ${error.message}`
       };
     }
   }
@@ -802,7 +802,7 @@ const various_search = (function () {
     try {
       const response = await Tools.Net.visit({ url, include_image_links: true });
       if (!response) {
-        throw new Error(`无法获取 ${platform} 图片搜索结果`);
+        throw new Error(`Unable to get ${platform} image search results`);
       }
 
       let parts: string[] = [];
@@ -833,7 +833,7 @@ const various_search = (function () {
     } catch (error: any) {
       return {
         platform,
-        content: `${platform} 图片搜索失败: ${error.message}`
+        content: `${platform} image search failed: ${error.message}`
       };
     }
   }
@@ -939,7 +939,7 @@ const various_search = (function () {
           searchPromises.push(searchFn(query, '1', includeLinks));
         }
       } else {
-        searchPromises.push(Promise.resolve({ platform, success: false, message: `不支持的搜索平台: ${platform}` }));
+        searchPromises.push(Promise.resolve({ platform, success: false, message: `Unsupported search platform: ${platform}` }));
       }
     }
 
@@ -955,7 +955,7 @@ const various_search = (function () {
   }
 
   async function main() {
-    const result = await combined_search('如何学习编程', 'bing,baidu,sogou,quark');
+    const result = await combined_search('how to learn programming', 'bing,baidu,sogou,quark');
     console.log(JSON.stringify(result, null, 2));
   }
 

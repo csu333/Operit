@@ -247,7 +247,7 @@ const CrossrefSearch = (function () {
         if (!doi || doi.trim() === "") {
             return {
                 success: false,
-                message: "请提供有效的 DOI"
+                message: "Provide a valid DOI"
             };
         }
 
@@ -261,7 +261,7 @@ const CrossrefSearch = (function () {
             if (!response.isSuccessful()) {
                 return {
                     success: false,
-                    message: `查询失败: HTTP ${response.statusCode} - ${response.statusMessage}`
+                    message: `Query failed: HTTP ${response.statusCode} - ${response.statusMessage}`
                 };
             }
 
@@ -271,19 +271,19 @@ const CrossrefSearch = (function () {
                 const article = formatArticle(data.message);
                 return {
                     success: true,
-                    message: "查询成功",
+                    message: "Query succeeded",
                     data: article
                 };
             } else {
                 return {
                     success: false,
-                    message: "未找到该 DOI 对应的文章"
+                    message: "No article found for this DOI"
                 };
             }
         } catch (error: any) {
             return {
                 success: false,
-                message: `查询失败: ${error.message}`
+                message: `Query failed: ${error.message}`
             };
         }
     }
@@ -297,7 +297,7 @@ const CrossrefSearch = (function () {
         if (!query || query.trim() === "") {
             return {
                 success: false,
-                message: "请提供有效的搜索关键词"
+                message: "Provide valid search keywords"
             };
         }
 
@@ -320,7 +320,7 @@ const CrossrefSearch = (function () {
             if (!response.isSuccessful()) {
                 return {
                     success: false,
-                    message: `搜索失败: HTTP ${response.statusCode} - ${response.statusMessage}`
+                    message: `Search failed: HTTP ${response.statusCode} - ${response.statusMessage}`
                 };
             }
 
@@ -336,7 +336,7 @@ const CrossrefSearch = (function () {
 
                 return {
                     success: true,
-                    message: "搜索成功",
+                    message: "Search succeeded",
                     data: summary,
                     total: totalResults,
                     count: items.length
@@ -344,13 +344,13 @@ const CrossrefSearch = (function () {
             } else {
                 return {
                     success: false,
-                    message: "未找到相关文章"
+                    message: "No matching articles found"
                 };
             }
         } catch (error: any) {
             return {
                 success: false,
-                message: `搜索失败: ${error.message}`
+                message: `Search failed: ${error.message}`
             };
         }
     }
@@ -364,7 +364,7 @@ const CrossrefSearch = (function () {
         if (!author || author.trim() === "") {
             return {
                 success: false,
-                message: "请提供有效的作者名字"
+                message: "Provide a valid author name"
             };
         }
 
@@ -385,7 +385,7 @@ const CrossrefSearch = (function () {
             if (!response.isSuccessful()) {
                 return {
                     success: false,
-                    message: `搜索失败: HTTP ${response.statusCode} - ${response.statusMessage}`
+                    message: `Search failed: HTTP ${response.statusCode} - ${response.statusMessage}`
                 };
             }
 
@@ -401,7 +401,7 @@ const CrossrefSearch = (function () {
 
                 return {
                     success: true,
-                    message: "搜索成功",
+                    message: "Search succeeded",
                     data: summary,
                     total: totalResults,
                     count: items.length
@@ -409,13 +409,13 @@ const CrossrefSearch = (function () {
             } else {
                 return {
                     success: false,
-                    message: `未找到该作者 "${author}" 的文章`
+                    message: `No articles found for author "${author}"`
                 };
             }
         } catch (error: any) {
             return {
                 success: false,
-                message: `搜索失败: ${error.message}`
+                message: `Search failed: ${error.message}`
             };
         }
     }
@@ -429,7 +429,7 @@ const CrossrefSearch = (function () {
         if (!title || title.trim() === "") {
             return {
                 success: false,
-                message: "请提供有效的文章标题"
+                message: "Provide a valid article title"
             };
         }
 
@@ -460,7 +460,7 @@ const CrossrefSearch = (function () {
 
                 return {
                     success: true,
-                    message: "搜索成功",
+                    message: "Search succeeded",
                     data: summary,
                     total: totalResults,
                     count: items.length
@@ -468,13 +468,13 @@ const CrossrefSearch = (function () {
             } else {
                 return {
                     success: false,
-                    message: `未找到标题包含 "${title}" 的文章`
+                    message: `No articles found with a title containing "${title}"`
                 };
             }
         } catch (error: any) {
             return {
                 success: false,
-                message: `搜索失败: ${error.message}`
+                message: `Search failed: ${error.message}`
             };
         }
     }
@@ -488,7 +488,7 @@ const CrossrefSearch = (function () {
         if (!issn || issn.trim() === "") {
             return {
                 success: false,
-                message: "请提供有效的 ISSN"
+                message: "Provide a valid ISSN"
             };
         }
 
@@ -504,7 +504,7 @@ const CrossrefSearch = (function () {
             if (!response.isSuccessful()) {
                 return {
                     success: false,
-                    message: `查询失败: HTTP ${response.statusCode} - ${response.statusMessage}`
+                    message: `Query failed: HTTP ${response.statusCode} - ${response.statusMessage}`
                 };
             }
 
@@ -520,7 +520,7 @@ const CrossrefSearch = (function () {
 
                 return {
                     success: true,
-                    message: "查询成功",
+                    message: "Query succeeded",
                     data: summary,
                     total: totalResults,
                     count: items.length
@@ -528,13 +528,13 @@ const CrossrefSearch = (function () {
             } else {
                 return {
                     success: false,
-                    message: `未找到 ISSN "${issn}" 对应期刊的文章`
+                    message: `No articles found for the journal with ISSN "${issn}"`
                 };
             }
         } catch (error: any) {
             return {
                 success: false,
-                message: `查询失败: ${error.message}`
+                message: `Query failed: ${error.message}`
             };
         }
     }
@@ -550,7 +550,7 @@ const CrossrefSearch = (function () {
             console.error(`工具执行失败`, error);
             complete({
                 success: false,
-                message: `工具执行时发生意外错误: ${error.message}`,
+                message: `Unexpected error while running tool: ${error.message}`,
             });
         }
     }

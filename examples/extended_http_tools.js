@@ -91,7 +91,7 @@ const ExtendedHttpTools = (function () {
             };
             return {
                 success,
-                message: `HTTP 请求完成；响应内容过大，已保存到文件：${filePath}。请使用 read_file_part 读取指定行范围，或用 grep_code 在该文件中检索关键字。`,
+                message: `HTTP request complete; the response was too large and was saved to: ${filePath}. Use read_file_part to read a line range, or grep_code to search that file for keywords.`,
                 data: {
                     result: resultMeta,
                     content_saved_to: filePath,
@@ -99,7 +99,7 @@ const ExtendedHttpTools = (function () {
                 },
             };
         }
-        return { success, message: 'HTTP 请求完成', data: result };
+        return { success, message: 'HTTP request complete', data: result };
     }
     async function multipart_request(params) {
         const toolParams = {
@@ -116,7 +116,7 @@ const ExtendedHttpTools = (function () {
             toolParams.ignore_ssl = params.ignore_ssl;
         const result = await toolCall({ name: "multipart_request", params: toolParams });
         const success = result.statusCode >= 200 && result.statusCode < 400;
-        return { success, message: '文件上传完成', data: result };
+        return { success, message: 'File upload complete', data: result };
     }
     async function manage_cookies(params) {
         const toolParams = {
@@ -128,7 +128,7 @@ const ExtendedHttpTools = (function () {
             toolParams.cookies = params.cookies;
         const result = await toolCall({ name: "manage_cookies", params: toolParams });
         const success = result.statusCode >= 200 && result.statusCode < 400;
-        return { success, message: 'Cookies 操作完成', data: result };
+        return { success, message: 'Cookie operation complete', data: result };
     }
     async function wrapToolExecution(func, params) {
         try {
@@ -139,19 +139,19 @@ const ExtendedHttpTools = (function () {
             console.error(`Tool ${func.name} failed unexpectedly`, error);
             complete({
                 success: false,
-                message: `工具执行时发生意外错误: ${error.message}`,
+                message: `Unexpected error while running tool: ${error.message}`,
             });
         }
     }
     async function main() {
         const results = [];
         // 这些工具可能对外发请求 / 写 cookies，默认不做自动化演示。
-        results.push({ tool: 'http_request', result: { success: null, message: '未测试（会对外发起网络请求）' } });
-        results.push({ tool: 'multipart_request', result: { success: null, message: '未测试（会上传文件/对外发起网络请求）' } });
-        results.push({ tool: 'manage_cookies', result: { success: null, message: '未测试（会读写 cookies）' } });
+        results.push({ tool: 'http_request', result: { success: null, message: 'Not tested (would make outbound network requests)' } });
+        results.push({ tool: 'multipart_request', result: { success: null, message: 'Not tested (would upload files / make outbound network requests)' } });
+        results.push({ tool: 'manage_cookies', result: { success: null, message: 'Not tested (would read and write cookies)' } });
         complete({
             success: true,
-            message: "拓展 HTTP 工具包加载完成（未执行网络请求测试）",
+            message: "Extended HTTP toolkit loaded (network request tests not run)",
             data: { results }
         });
     }

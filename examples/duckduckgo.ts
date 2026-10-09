@@ -103,7 +103,7 @@ const duckduckgo = (function () {
         }
 
         if (!query) {
-            throw new Error("查询不能为空");
+            throw new Error("Query must not be empty");
         }
 
         await searchRateLimiter.acquire();
@@ -119,7 +119,7 @@ const duckduckgo = (function () {
 
         const response = await request.build().execute();
         if (!response.isSuccessful()) {
-            throw new Error(`HTTP 错误! 状态码: ${response.statusCode}`);
+            throw new Error(`HTTP error! Status code: ${response.statusCode}`);
         }
 
         const html = response.content;
@@ -163,7 +163,7 @@ const duckduckgo = (function () {
     async function fetch_content(params: { url: string }): Promise<string> {
         const { url } = params;
         if (!url) {
-            throw new Error("URL不能为空");
+            throw new Error("URL must not be empty");
         }
 
         await fetchRateLimiter.acquire();
@@ -177,7 +177,7 @@ const duckduckgo = (function () {
 
             const response = await request.build().execute();
             if (!response.isSuccessful()) {
-                throw new Error(`无法访问网页 (${response.statusCode})`);
+                throw new Error(`Unable to access the web page (${response.statusCode})`);
             }
 
             let text = response.content;
@@ -190,14 +190,14 @@ const duckduckgo = (function () {
             text = text.replace(/\s+/g, ' ').trim();
 
             if (text.length > 8000) {
-                text = text.substring(0, 8000) + "... [内容被截断]";
+                text = text.substring(0, 8000) + "... [content truncated]";
             }
 
             console.log(`成功抓取并解析内容 (${text.length} 字符)`);
             return text;
         } catch (error) {
             console.error(`从 ${url} 抓取内容时出错: ${error.message}`);
-            return `错误: 从网页抓取内容时发生意外错误 (${error.message})`;
+            return `Error: unexpected error while fetching web page content (${error.message})`;
         }
     }
 
@@ -208,14 +208,14 @@ const duckduckgo = (function () {
      */
     function format_results_for_llm(results: { title: string; link: string; snippet: string; position: number }[]): string {
         if (!results || results.length === 0) {
-            return "没有为您的搜索查询找到结果。这可能是由于DuckDuckGo的机器人检测或查询没有匹配项。请尝试重新措辞您的搜索或在几分钟后重试。";
+            return "No results found for your search query. This may be due to DuckDuckGo bot detection or no matches for the query. Try rephrasing your search or retry in a few minutes.";
         }
 
         const output = results.map(r =>
-            `${r.position}. ${r.title}\n   URL: ${r.link}\n   摘要: ${r.snippet}`
+            `${r.position}. ${r.title}\n   URL: ${r.link}\n   Snippet: ${r.snippet}`
         );
 
-        return `找到 ${results.length} 个搜索结果:\n\n${output.join('\n\n')}`;
+        return `Found ${results.length} search result(s):\n\n${output.join('\n\n')}`;
     }
 
     /**
@@ -238,8 +238,8 @@ const duckduckgo = (function () {
     }
 
     return {
-        search: (params: any) => duckduckgo_wrap(search, params, '搜索完成', '搜索失败'),
-        fetch_content: (params: any) => duckduckgo_wrap(fetch_content, params, '内容抓取完成', '内容抓取失败'),
+        search: (params: any) => duckduckgo_wrap(search, params, 'Search complete', 'Search failed'),
+        fetch_content: (params: any) => duckduckgo_wrap(fetch_content, params, 'Content fetched', 'Content fetch failed'),
     };
 })();
 

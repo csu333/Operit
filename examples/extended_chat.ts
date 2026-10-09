@@ -226,7 +226,7 @@ const HistoryChat = (function () {
         const chats = listResult.chats;
         return {
             success: true,
-            message: '对话列表获取完成',
+            message: 'Got chat list',
             data: {
                 totalCount: listResult?.totalCount ?? chats.length,
                 currentChatId: listResult?.currentChatId ?? null,
@@ -256,7 +256,7 @@ const HistoryChat = (function () {
 
         return {
             success: true,
-            message: '对话查找完成',
+            message: 'Chat lookup complete',
             data: {
                 chat: picked,
                 matchedCount: findResult?.matchedCount ?? 1,
@@ -317,7 +317,7 @@ const HistoryChat = (function () {
 
         return {
             success: true,
-            message: '读取对话消息完成',
+            message: 'Read chat messages',
             data: {
                 result,
                 text,
@@ -360,7 +360,7 @@ const HistoryChat = (function () {
 
         return {
             success: true,
-            message: '按区间读取对话消息完成',
+            message: 'Read chat messages in range',
             data: {
                 result,
                 text,
@@ -379,7 +379,7 @@ const HistoryChat = (function () {
 
         return {
             success: true,
-            message: '对话重命名完成',
+            message: 'Chat renamed',
             data: {
                 chat_id: chatId,
                 title: newTitle,
@@ -394,7 +394,7 @@ const HistoryChat = (function () {
 
         return {
             success: true,
-            message: '对话删除完成',
+            message: 'Chat deleted',
             data: {
                 chat_id: chatId,
                 result,
@@ -410,7 +410,7 @@ const HistoryChat = (function () {
         const result = await Tools.Chat.agentStatus(chatId);
         return {
             success: true,
-            message: '对话状态查询完成',
+            message: 'Chat status queried',
             data: {
                 result,
             },
@@ -422,7 +422,7 @@ const HistoryChat = (function () {
         const cards = result.cards;
         return {
             success: true,
-            message: '角色卡列表获取完成',
+            message: 'Got character card list',
             data: {
                 totalCount: result?.totalCount ?? cards.length,
                 cards,
@@ -484,7 +484,7 @@ const HistoryChat = (function () {
             });
             const boundName = findResult?.chat?.characterCardName ?? null;
             if (boundName && boundName !== characterCardName) {
-                throw new Error(`Chat ${chatId} 已绑定角色 ${boundName}，不能与 ${characterCardName} 共用会话`);
+                throw new Error(`Chat ${chatId} is bound to character ${boundName} and cannot be shared with ${characterCardName}`);
             }
         }
 
@@ -522,18 +522,18 @@ const HistoryChat = (function () {
         if (sendResult === null) {
             return {
                 success: true,
-                message: `已发送给 ${characterCardName}，等待响应超时（${timeoutSec}s）`,
+                message: `Sent to ${characterCardName}; timed out waiting for a response (${timeoutSec}s)`,
                 data: {
                     chat_id: chatId,
                     timeout: true,
-                    hint: '可以通过 agent_status 查看该 agent 是否已处理你的问题。',
+                    hint: 'Use agent_status to check whether that agent has handled your request.',
                 },
             };
         }
 
         return {
             success: true,
-            message: `发消息给 ${characterCardName}`,
+            message: `Message ${characterCardName}`,
             data: {
                 chat_id: chatId,
                 result: sendResult,
@@ -550,7 +550,7 @@ const HistoryChat = (function () {
             console.error(`Tool ${func.name} failed unexpectedly`, error);
             complete({
                 success: false,
-                message: `读取对话消息失败: ${message}`,
+                message: `Failed to read chat messages: ${message}`,
             });
         }
     }
@@ -564,7 +564,7 @@ const HistoryChat = (function () {
             console.error(`Tool ${func.name} failed unexpectedly`, error);
             complete({
                 success: false,
-                message: `读取对话消息失败: ${message}`,
+                message: `Failed to read chat messages: ${message}`,
             });
         }
     }
@@ -608,7 +608,7 @@ const HistoryChat = (function () {
     async function main(): Promise<void> {
         complete({
             success: true,
-            message: 'extended_chat 工具包已加载',
+            message: 'extended_chat toolkit loaded',
             data: {
                 hint: 'Use extended_chat:read_messages / rename_chat / delete_chat.',
             },

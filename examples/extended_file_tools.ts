@@ -100,22 +100,22 @@ const ExtendedFileTools = (function () {
 
     async function file_exists(params: { path: string; environment?: FileEnvironment }): Promise<ToolResponse> {
         const result = await Tools.Files.exists(params.path, params.environment);
-        return { success: !!result && (result.exists ?? true), message: '检查完成', data: result };
+        return { success: !!result && (result.exists ?? true), message: 'Check complete', data: result };
     }
 
     async function move_file(params: { source: string; destination: string; environment?: FileEnvironment }): Promise<ToolResponse> {
         const result = await Tools.Files.move(params.source, params.destination, params.environment);
-        return { success: !!result, message: '移动完成', data: result };
+        return { success: !!result, message: 'Move complete', data: result };
     }
 
     async function copy_file(params: { source: string; destination: string; recursive?: boolean; source_environment?: FileEnvironment; dest_environment?: FileEnvironment }): Promise<ToolResponse> {
         const result = await Tools.Files.copy(params.source, params.destination, params.recursive, params.source_environment, params.dest_environment);
-        return { success: !!result, message: '复制完成', data: result };
+        return { success: !!result, message: 'Copy complete', data: result };
     }
 
     async function file_info(params: { path: string; environment?: FileEnvironment }): Promise<ToolResponse> {
         const result = await Tools.Files.info(params.path, params.environment);
-        return { success: !!result, message: '获取信息完成', data: result };
+        return { success: !!result, message: 'Got file information', data: result };
     }
 
     async function zip_files(params: { source: string; destination: string; environment?: FileEnvironment; include_root_directory?: boolean }): Promise<ToolResponse> {
@@ -125,22 +125,22 @@ const ExtendedFileTools = (function () {
             params.environment,
             params.include_root_directory
         );
-        return { success: !!result, message: '压缩完成', data: result };
+        return { success: !!result, message: 'Compression complete', data: result };
     }
 
     async function unzip_files(params: { source: string; destination: string; environment?: FileEnvironment }): Promise<ToolResponse> {
         const result = await Tools.Files.unzip(params.source, params.destination, params.environment);
-        return { success: !!result, message: '解压完成', data: result };
+        return { success: !!result, message: 'Extraction complete', data: result };
     }
 
     async function open_file(params: { path: string; environment?: FileEnvironment }): Promise<ToolResponse> {
         const result = await Tools.Files.open(params.path, params.environment);
-        return { success: !!result, message: '打开文件完成', data: result };
+        return { success: !!result, message: 'File opened', data: result };
     }
 
     async function share_file(params: { path: string; title?: string; environment?: FileEnvironment }): Promise<ToolResponse> {
         const result = await Tools.Files.share(params.path, params.title, params.environment);
-        return { success: !!result, message: '分享文件完成', data: result };
+        return { success: !!result, message: 'File shared', data: result };
     }
 
     async function wrapToolExecution<P>(func: (params: P) => Promise<ToolResponse>, params: P) {
@@ -151,25 +151,25 @@ const ExtendedFileTools = (function () {
             console.error(`Tool ${func.name} failed unexpectedly`, error);
             complete({
                 success: false,
-                message: `工具执行时发生意外错误: ${error.message}`,
+                message: `Unexpected error while running tool: ${error.message}`,
             });
         }
     }
 
     async function main() {
         const results: any[] = [];
-        results.push({ tool: 'file_exists', result: { success: null, message: '未测试' } });
-        results.push({ tool: 'move_file', result: { success: null, message: '未测试（会移动/重命名文件）' } });
-        results.push({ tool: 'copy_file', result: { success: null, message: '未测试（会复制文件）' } });
-        results.push({ tool: 'file_info', result: { success: null, message: '未测试' } });
-        results.push({ tool: 'zip_files', result: { success: null, message: '未测试（会写入zip文件）' } });
-        results.push({ tool: 'unzip_files', result: { success: null, message: '未测试（会写入解压文件）' } });
-        results.push({ tool: 'open_file', result: { success: null, message: '未测试（会拉起系统应用）' } });
-        results.push({ tool: 'share_file', result: { success: null, message: '未测试（会弹出分享面板）' } });
+        results.push({ tool: 'file_exists', result: { success: null, message: 'Not tested' } });
+        results.push({ tool: 'move_file', result: { success: null, message: 'Not tested (would move/rename files)' } });
+        results.push({ tool: 'copy_file', result: { success: null, message: 'Not tested (would copy files)' } });
+        results.push({ tool: 'file_info', result: { success: null, message: 'Not tested' } });
+        results.push({ tool: 'zip_files', result: { success: null, message: 'Not tested (would write a zip file)' } });
+        results.push({ tool: 'unzip_files', result: { success: null, message: 'Not tested (would write extracted files)' } });
+        results.push({ tool: 'open_file', result: { success: null, message: 'Not tested (would launch a system app)' } });
+        results.push({ tool: 'share_file', result: { success: null, message: 'Not tested (would open the share sheet)' } });
 
         complete({
             success: true,
-            message: '拓展文件工具包加载完成（未执行破坏性测试）',
+            message: 'Extended file toolkit loaded (destructive tests not run)',
             data: { results }
         });
     }

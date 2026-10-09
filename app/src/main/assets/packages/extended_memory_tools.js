@@ -133,7 +133,7 @@ const ExtendedMemoryTools = (function () {
             tags: params.tags,
             callerCardId: resolveCallerCardId(),
         });
-        return { success: result.length > 0, message: '记忆创建完成', data: result };
+        return { success: result.length > 0, message: 'Memory created', data: result };
     }
     async function update_memory(params) {
         const result = await Tools.Memory.update({
@@ -148,14 +148,14 @@ const ExtendedMemoryTools = (function () {
             tags: params.tags,
             callerCardId: resolveCallerCardId(),
         });
-        return { success: result.length > 0, message: '记忆更新完成', data: result };
+        return { success: result.length > 0, message: 'Memory updated', data: result };
     }
     async function delete_memory(params) {
         const result = await Tools.Memory.deleteMemory({
             title: params.title,
             callerCardId: resolveCallerCardId(),
         });
-        return { success: result.length > 0, message: '记忆删除完成', data: result };
+        return { success: result.length > 0, message: 'Memory deleted', data: result };
     }
     async function move_memory(params) {
         const titles = params.titles
@@ -167,7 +167,7 @@ const ExtendedMemoryTools = (function () {
             sourceFolderPath: params.source_folder_path,
             callerCardId: resolveCallerCardId(),
         });
-        return { success: result.length > 0, message: '记忆移动完成', data: result };
+        return { success: result.length > 0, message: 'Memory moved', data: result };
     }
     async function link_memories(params) {
         const result = await Tools.Memory.link({
@@ -178,7 +178,7 @@ const ExtendedMemoryTools = (function () {
             description: params.description,
             callerCardId: resolveCallerCardId(),
         });
-        return { success: !!result, message: '记忆链接创建完成', data: result };
+        return { success: !!result, message: 'Memory link created', data: result };
     }
     async function query_memory_links(params) {
         const result = await Tools.Memory.queryLinks({
@@ -189,7 +189,7 @@ const ExtendedMemoryTools = (function () {
             limit: params.limit,
             callerCardId: resolveCallerCardId(),
         });
-        return { success: !!result, message: '记忆链接查询完成', data: result };
+        return { success: !!result, message: 'Memory links queried', data: result };
     }
     async function update_memory_link(params) {
         const result = await Tools.Memory.updateLink({
@@ -202,7 +202,7 @@ const ExtendedMemoryTools = (function () {
             description: params.description,
             callerCardId: resolveCallerCardId(),
         });
-        return { success: !!result, message: '记忆链接更新完成', data: result };
+        return { success: !!result, message: 'Memory link updated', data: result };
     }
     async function delete_memory_link(params) {
         const result = await Tools.Memory.deleteLink({
@@ -212,7 +212,7 @@ const ExtendedMemoryTools = (function () {
             linkType: params.link_type,
             callerCardId: resolveCallerCardId(),
         });
-        return { success: result.length > 0, message: '记忆链接删除完成', data: result };
+        return { success: result.length > 0, message: 'Memory link deleted', data: result };
     }
     async function update_user_preferences(params) {
         const toolParams = {};
@@ -230,7 +230,7 @@ const ExtendedMemoryTools = (function () {
             toolParams.ai_style = params.ai_style;
         const result = await toolCall({ name: "update_user_preferences", params: toolParams });
         const success = result.length > 0;
-        return { success, message: '用户偏好更新完成', data: result };
+        return { success, message: 'User preferences updated', data: result };
     }
     async function wrapToolExecution(func, params) {
         try {
@@ -241,25 +241,25 @@ const ExtendedMemoryTools = (function () {
             console.error(`Tool ${func.name} failed unexpectedly`, error);
             complete({
                 success: false,
-                message: `工具执行时发生意外错误: ${error.message}`,
+                message: `Unexpected error while running tool: ${error.message}`,
             });
         }
     }
     async function main() {
         const results = [];
         // 这些工具都可能修改记忆/偏好，默认不做自动化演示，避免污染用户数据。
-        results.push({ tool: 'create_memory', result: { success: null, message: '未测试（会写入记忆库）' } });
-        results.push({ tool: 'update_memory', result: { success: null, message: '未测试（会修改记忆库）' } });
-        results.push({ tool: 'delete_memory', result: { success: null, message: '未测试（会删除记忆库数据）' } });
-        results.push({ tool: 'move_memory', result: { success: null, message: '未测试（会批量修改记忆文件夹）' } });
-        results.push({ tool: 'link_memories', result: { success: null, message: '未测试（会修改记忆库链接）' } });
-        results.push({ tool: 'query_memory_links', result: { success: null, message: '未测试（只读查询）' } });
-        results.push({ tool: 'update_memory_link', result: { success: null, message: '未测试（会修改记忆库链接）' } });
-        results.push({ tool: 'delete_memory_link', result: { success: null, message: '未测试（会删除记忆库链接）' } });
-        results.push({ tool: 'update_user_preferences', result: { success: null, message: '未测试（会修改用户偏好）' } });
+        results.push({ tool: 'create_memory', result: { success: null, message: 'Not tested (would write to the memory store)' } });
+        results.push({ tool: 'update_memory', result: { success: null, message: 'Not tested (would modify the memory store)' } });
+        results.push({ tool: 'delete_memory', result: { success: null, message: 'Not tested (would delete memory store data)' } });
+        results.push({ tool: 'move_memory', result: { success: null, message: 'Not tested (would bulk-modify memory folders)' } });
+        results.push({ tool: 'link_memories', result: { success: null, message: 'Not tested (would modify memory store links)' } });
+        results.push({ tool: 'query_memory_links', result: { success: null, message: 'Not tested (read-only query)' } });
+        results.push({ tool: 'update_memory_link', result: { success: null, message: 'Not tested (would modify memory store links)' } });
+        results.push({ tool: 'delete_memory_link', result: { success: null, message: 'Not tested (would delete memory store links)' } });
+        results.push({ tool: 'update_user_preferences', result: { success: null, message: 'Not tested (would modify user preferences)' } });
         complete({
             success: true,
-            message: "拓展记忆工具包加载完成（未执行破坏性测试）",
+            message: "Extended memory toolkit loaded (destructive tests not run)",
             data: { results }
         });
     }

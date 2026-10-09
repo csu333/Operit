@@ -129,20 +129,20 @@ const googleSearch = (function () {
 
             return {
                 success: true,
-                message: `${sourceName} 搜索成功`,
+                message: `${sourceName} search succeeded`,
                 data: parts.join('\n\n')
             };
         } catch (error: any) {
             return {
                 success: false,
-                message: `${sourceName} 搜索失败: ${error.message}`
+                message: `${sourceName} search failed: ${error.message}`
             };
         }
     }
 
     async function searchWeb(params: SearchParams) {
         if (!params.query || params.query.trim() === "") {
-            throw new Error("请提供有效的 query 参数。");
+            throw new Error("Provide a valid query parameter.");
         }
         const maxResults = Math.min(Math.max(params.max_results || 10, 1), MAX_RESULTS);
         const language = params.language || "en";
@@ -160,7 +160,7 @@ const googleSearch = (function () {
 
     async function searchScholar(params: ScholarSearchParams) {
         if (!params.query || params.query.trim() === "") {
-            throw new Error("请提供有效的 query 参数。");
+            throw new Error("Provide a valid query parameter.");
         }
         const maxResults = Math.min(Math.max(params.max_results || 10, 1), MAX_RESULTS);
         const language = params.language || "en";
@@ -176,7 +176,7 @@ const googleSearch = (function () {
 
     async function searchScholarMirror(params: ScholarSearchParams) {
         if (!params.query || params.query.trim() === "") {
-            throw new Error("请提供有效的 query 参数。");
+            throw new Error("Provide a valid query parameter.");
         }
         const maxResults = Math.min(Math.max(params.max_results || 10, 1), MAX_RESULTS);
         const language = params.language || "en";
@@ -191,7 +191,7 @@ const googleSearch = (function () {
         if (mirrorUrls.length === 0) {
             return {
                 success: false,
-                message: "没有可用的 Google Scholar 镜像地址。"
+                message: "No Google Scholar mirror addresses are available."
             };
         }
 
@@ -199,7 +199,7 @@ const googleSearch = (function () {
 
         for (const currentUrl of mirrorUrls) {
             try {
-                const searchResult = await performSearch(currentUrl, params.includeLinks, `Google Scholar 镜像 (${getHostname(currentUrl)})`);
+                const searchResult = await performSearch(currentUrl, params.includeLinks, `Google Scholar mirror (${getHostname(currentUrl)})`);
                 if (searchResult.success && searchResult.data) {
                     // Check for CAPTCHA in the content
                     if (searchResult.data.includes("recaptcha") || searchResult.data.includes("人机身份验证")) {
@@ -216,7 +216,7 @@ const googleSearch = (function () {
 
         return {
             success: false,
-            message: `Google Scholar 镜像搜索在尝试所有镜像后失败: ${lastError?.message || 'Unknown error'}`
+            message: `Google Scholar mirror search failed after trying all mirrors: ${lastError?.message || 'Unknown error'}`
         };
     }
 

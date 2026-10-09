@@ -110,7 +110,7 @@ const zhipuSearch = (function () {
     async function httpPost(body: Record<string, any>, apiKey?: string | null): Promise<ZhipuSearchResponse> {
         const key = getApiKey(apiKey || undefined);
         if (!key) {
-            throw new Error("未设置 API Key，请配置 ZHIPU_SEARCH_API_KEY 环境变量或在调用时传入 api_key 参数");
+            throw new Error("No API key set. Configure the ZHIPU_SEARCH_API_KEY environment variable or pass the api_key parameter");
         }
 
         const request = client
@@ -198,13 +198,13 @@ const zhipuSearch = (function () {
             const result = await search(params);
             complete({
                 success: true,
-                message: "搜索完成，找到 " + result.count + " 条结果",
+                message: "Search complete, found " + result.count + " result(s)",
                 data: result
             });
         } catch (error: any) {
             complete({
                 success: false,
-                message: "搜索失败：" + error.message,
+                message: "Search failed: " + error.message,
                 error_stack: error.stack
             });
         }
@@ -215,13 +215,13 @@ const zhipuSearch = (function () {
             const result = await test();
             complete({
                 success: true,
-                message: "连接成功，延迟 " + result.latency + "ms",
+                message: "Connected, latency " + result.latency + "ms",
                 data: result
             });
         } catch (error: any) {
             complete({
                 success: false,
-                message: "测试失败：" + error.message,
+                message: "Test failed: " + error.message,
                 error_stack: error.stack
             });
         }

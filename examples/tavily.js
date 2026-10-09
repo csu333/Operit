@@ -171,10 +171,10 @@ const tavily = (function () {
         }
     }
     return {
-        search: (p) => wrap(search, p, '搜索成功', '搜索失败'),
-        extract: (p) => wrap(extract, p, '提取成功', '提取失败'),
-        crawl: (p) => wrap(crawl, p, '爬取成功', '爬取失败'),
-        map: (p) => wrap(map, p, '映射成功', '映射失败')
+        search: (p) => wrap(search, p, 'Search succeeded', 'Search failed'),
+        extract: (p) => wrap(extract, p, 'Extraction succeeded', 'Extraction failed'),
+        crawl: (p) => wrap(crawl, p, 'Crawl succeeded', 'Crawl failed'),
+        map: (p) => wrap(map, p, 'Mapping succeeded', 'Mapping failed')
     };
 })();
 exports.search = tavily.search;
