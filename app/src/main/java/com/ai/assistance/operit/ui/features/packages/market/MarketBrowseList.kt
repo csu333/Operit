@@ -307,7 +307,7 @@ private fun <T> LazyListScope.groupedMarketItems(
 @Composable
 private fun MarketBrowseDateHeader(dateLabel: String) {
     Text(
-        text = dateLabel,
+        text = dateLabel.ifEmpty { stringResource(R.string.market_date_earlier) },
         modifier = Modifier.padding(top = 10.dp, bottom = 2.dp, start = 4.dp),
         style = MaterialTheme.typography.labelLarge,
         fontWeight = FontWeight.SemiBold,
@@ -318,7 +318,7 @@ private fun MarketBrowseDateHeader(dateLabel: String) {
 private fun resolveMarketUpdatedDateLabel(rawUpdatedAt: String): String {
     val trimmed = rawUpdatedAt.trim()
     if (trimmed.isBlank()) {
-        return "更早"
+        return ""
     }
 
     parseMarketUpdatedDate(trimmed)?.let { date ->

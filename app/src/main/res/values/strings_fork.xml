@@ -46,4 +46,8 @@
     <string name="thinking_config_display_name_placeholder">例如：高</string>
     <string name="thinking_config_write_path">写入路径</string>
     <string name="thinking_config_value_placeholder">例如：high</string>
+    <string name="market_date_earlier">更早</string>
+    <string name="mcp_publish_login_required">GitHub 登录后才能发布 MCP。</string>
+    <string name="market_install_builtin_conflict_detail">本地已安装同名内置插件 `%1$s`，不能直接覆盖。</string>
+    <string name="market_install_replace_failed_detail">替换已安装插件 `%1$s` 失败。</string>
 </resources>

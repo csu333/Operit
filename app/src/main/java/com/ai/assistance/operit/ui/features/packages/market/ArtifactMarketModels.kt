@@ -322,7 +322,7 @@ fun requiresStandaloneArtifactIdUpgrade(runtimePackageId: String): Boolean {
 
 fun validateStandaloneArtifactRuntimePackageId(runtimePackageId: String) {
     require(!requiresStandaloneArtifactIdUpgrade(runtimePackageId)) {
-        "当前包 ID「$runtimePackageId」无法生成稳定的市场项目 ID。请改用包含英文字母或数字的包 ID（可含 -、_、.），再重新发布。"
+        "Package ID \"$runtimePackageId\" cannot produce a stable market project ID. Use a package ID containing ASCII letters or digits (-, _ and . are allowed), then publish again."
     }
 }
 
@@ -484,7 +484,8 @@ fun buildArtifactMarketMetadata(
         projectId = payload.projectId,
         projectDisplayName = payload.projectDisplayName,
         projectDescription = payload.projectDescription,
-        runtimePackageId = payload.runtimePackageId,
+        runtimePackageId = payload.runtimePackageId,
+
         publisherLogin = payload.publisherLogin,
         releaseOwner = payload.releaseOwner,
         releaseRepository = payload.releaseRepository,

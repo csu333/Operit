@@ -448,7 +448,7 @@ class RepoMarketPublishViewModel(
     private fun loginRequiredMessage(): String =
         when (type) {
             MarketStatsType.SKILL -> context.getString(R.string.skill_publish_login_required)
-            MarketStatsType.MCP -> "GitHub 登录后才能发布 MCP。"
+            MarketStatsType.MCP -> context.getString(R.string.mcp_publish_login_required)
             else -> context.getString(R.string.skillmarket_github_login_required)
         }
 

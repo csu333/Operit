@@ -536,7 +536,7 @@ private fun stageComposeDslPickedFile(
         targetFile.outputStream().use { output ->
             input.copyTo(output)
         }
-    } ?: throw IllegalStateException("无法打开所选文件")
+    } ?: throw IllegalStateException("Unable to open the selected file")
     return targetFile
 }
 
@@ -607,7 +607,7 @@ private fun completeComposeDslSelectedUris(
             pending.onComplete(
                 Result.failure(
                     IllegalStateException(
-                        error.message?.trim().orEmpty().ifBlank { "处理所选内容失败" }
+                        error.message?.trim().orEmpty().ifBlank { "Failed to process the selected content" }
                     )
                 )
             )
@@ -775,7 +775,7 @@ fun ToolPkgComposeDslToolScreen(
                     if (selectedUris.isNotEmpty() && flags == 0) {
                         pending.onComplete(
                             Result.failure(
-                                IllegalStateException("所选内容未授予可保留的访问权限")
+                                IllegalStateException("The selected content was not granted persistable access permission")
                             )
                         )
                         return@rememberLauncherForActivityResult
@@ -790,7 +790,7 @@ fun ToolPkgComposeDslToolScreen(
                             Result.failure(
                                 IllegalStateException(
                                     error.message?.trim().orEmpty().ifBlank {
-                                        "无法保留所选内容的访问权限"
+                                        "Unable to persist access permission for the selected content"
                                     }
                                 )
                             )
@@ -857,7 +857,7 @@ fun ToolPkgComposeDslToolScreen(
                         pending.onComplete(
                             Result.failure(
                                 IllegalStateException(
-                                    error.message?.trim().orEmpty().ifBlank { "处理相机拍摄结果失败" }
+                                    error.message?.trim().orEmpty().ifBlank { "Failed to process the camera capture result" }
                                 )
                             )
                         )
@@ -1446,7 +1446,7 @@ fun ToolPkgComposeDslToolScreen(
                                 onComplete(
                                     Result.failure(
                                         IllegalStateException(
-                                            error.message?.trim().orEmpty().ifBlank { "无法创建相机拍摄文件" }
+                                            error.message?.trim().orEmpty().ifBlank { "Unable to create the camera capture file" }
                                         )
                                     )
                                 )

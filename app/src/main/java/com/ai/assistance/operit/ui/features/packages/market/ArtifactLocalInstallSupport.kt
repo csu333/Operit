@@ -1,5 +1,6 @@
 package com.ai.assistance.operit.ui.features.packages.market
 
+import com.ai.assistance.operit.R
 import android.content.Context
 import com.ai.assistance.operit.core.tools.packTool.PackageManager
 import com.ai.assistance.operit.data.api.ArtifactProjectVersionResponse
@@ -159,7 +160,7 @@ suspend fun installArtifactProjectVersion(
     when (installState.kind) {
         LocalArtifactInstallStateKind.EXACT_INSTALLED -> return
         LocalArtifactInstallStateKind.BUILT_IN_CONFLICT ->
-            throw IllegalStateException("本地已安装同名内置插件 `${version.runtimePackageId}`，不能直接覆盖。")
+            throw IllegalStateException(context.getString(R.string.market_install_builtin_conflict_detail, version.runtimePackageId))
         LocalArtifactInstallStateKind.NAME_CONFLICT,
         LocalArtifactInstallStateKind.NOT_INSTALLED,
         LocalArtifactInstallStateKind.SAME_PROJECT_VARIANT_INSTALLED -> Unit
@@ -178,7 +179,7 @@ suspend fun installArtifactProjectVersion(
                     packageManager.deletePackage(installedPackageName)
                 }
             if (!deleted) {
-                throw IllegalStateException("替换已安装插件 `${installedPackageName}` 失败。")
+                throw IllegalStateException(context.getString(R.string.market_install_replace_failed_detail, installedPackageName))
             }
         }
         val importResult =

@@ -46,4 +46,8 @@
     <string name="thinking_config_display_name_placeholder">e.g. High</string>
     <string name="thinking_config_write_path">Write path</string>
     <string name="thinking_config_value_placeholder">e.g. high</string>
+    <string name="market_date_earlier">Earlier</string>
+    <string name="mcp_publish_login_required">You must log in with GitHub to publish an MCP.</string>
+    <string name="market_install_builtin_conflict_detail">A built-in plugin named `%1$s` is already installed locally and cannot be overwritten.</string>
+    <string name="market_install_replace_failed_detail">Failed to replace installed plugin `%1$s`.</string>
 </resources>

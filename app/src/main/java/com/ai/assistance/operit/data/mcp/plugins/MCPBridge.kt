@@ -510,7 +510,7 @@ class MCPBridge private constructor(private val context: Context) {
                                 if (serviceName != null && serviceName.isNotEmpty()) {
                                     "${context.getString(R.string.mcp_send_command)}[$cmdId]: $cmdType ${context.getString(R.string.mcp_service_label)}: $serviceName ${context.getString(R.string.mcp_other_params)}: ${params.toString()}"
                                 } else {
-                                    "${context.getString(R.string.mcp_send_command)}[$cmdId]: $cmdType ${if (params != null) "参数: $params" else ""}"
+                                    "${context.getString(R.string.mcp_send_command)}[$cmdId]: $cmdType ${if (params != null) "params: $params" else ""}"
                                 }
 
                         AppLogger.d(TAG, logMessage)
@@ -534,7 +534,7 @@ class MCPBridge private constructor(private val context: Context) {
                                     cmdId = cmdId,
                                     cmdType = cmdType,
                                     serviceName = serviceName,
-                                    emptyResponseMessage = "命令[$cmdId: $cmdType]没有收到响应（独立连接）"
+                                    emptyResponseMessage = "Command [$cmdId: $cmdType] received no response (dedicated connection)"
                                 )
                             } catch (e: Exception) {
                                 AppLogger.e(TAG, "发送独立连接命令失败[$cmdType]: ${e.message}")
@@ -584,7 +584,7 @@ class MCPBridge private constructor(private val context: Context) {
                                 cmdId = cmdId,
                                 cmdType = cmdType,
                                 serviceName = serviceName,
-                                emptyResponseMessage = "命令[$cmdId: $cmdType]没有收到响应"
+                                emptyResponseMessage = "Command [$cmdId: $cmdType] received no response"
                             )
 
                             if (jsonResponse == null) {
