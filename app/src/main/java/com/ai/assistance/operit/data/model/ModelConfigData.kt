@@ -39,6 +39,7 @@ enum class ApiProviderType {
         OPENAI_LOCAL, // OpenAI兼容本地模型服务
         MNN, // MNN本地推理引擎
         LLAMA_CPP, // llama.cpp 本地推理引擎
+        LITERT_LM, // Google LiteRT-LM on-device inference
         PPINFRA, // 派欧云
         NOVITA, // Novita AI
         MINIMAX, // MiniMax
@@ -162,6 +163,10 @@ data class ModelConfigData(
         // 注意：MNN模型路径会根据modelName自动构建，不需要单独存储
         val mnnForwardType: Int = 0, // 前向计算类型 (CPU/GPU等)
         val mnnThreadCount: Int = 4, // 推理线程数
+
+        // LiteRT-LM specific configuration
+        val litertlmBackend: String = "GPU", // GPU / CPU / NPU / GOOGLE_TENSOR
+        val litertlmMaxTokens: Int = 4096, // KV cache size; 0 = model default
 
         // llama.cpp 特定配置
         val llamaThreadCount: Int = 4, // 推理线程数

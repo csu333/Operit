@@ -1937,7 +1937,7 @@ object SystemToolPromptsInternal {
                                     ToolParameterSchema(
                                         name = "stt_service_type",
                                         type = "string",
-                                        description = "optional, SHERPA_NCNN/OPENAI_STT/DEEPGRAM_STT",
+                                        description = "optional, SHERPA_NCNN/OPENAI_STT/DEEPGRAM_STT/ANDROID_ONDEVICE",
                                         required = false
                                     ),
                                     ToolParameterSchema(
@@ -2011,7 +2011,7 @@ object SystemToolPromptsInternal {
                                     ToolParameterSchema(
                                         name = "api_provider_type",
                                         type = "string",
-                                        description = "optional, provider enum name (e.g. OPENAI_GENERIC/OPENAI_LOCAL/OPENAI_RESPONSES_GENERIC/DEEPSEEK/MIMO/GEMINI_GENERIC/LMSTUDIO/OLLAMA/MNN/LLAMA_CPP)",
+                                        description = "optional, provider enum name (e.g. OPENAI_GENERIC/OPENAI_LOCAL/OPENAI_RESPONSES_GENERIC/DEEPSEEK/MIMO/GEMINI_GENERIC/LMSTUDIO/OLLAMA/MNN/LLAMA_CPP/LITERT_LM)",
                                         required = false
                                     ),
                                     ToolParameterSchema(
@@ -4929,7 +4929,7 @@ object SystemToolPromptsInternal {
                                     ToolParameterSchema(
                                         name = "stt_service_type",
                                         type = "string",
-                                        description = "可选，SHERPA_NCNN/OPENAI_STT/DEEPGRAM_STT",
+                                        description = "可选，SHERPA_NCNN/OPENAI_STT/DEEPGRAM_STT/ANDROID_ONDEVICE",
                                         required = false
                                     ),
                                     ToolParameterSchema(
@@ -5003,7 +5003,7 @@ object SystemToolPromptsInternal {
                                     ToolParameterSchema(
                                         name = "api_provider_type",
                                         type = "string",
-                                        description = "可选，提供商枚举名（如 OPENAI_GENERIC/OPENAI_LOCAL/OPENAI_RESPONSES_GENERIC/DEEPSEEK/MIMO/GEMINI_GENERIC/LMSTUDIO/OLLAMA/MNN/LLAMA_CPP）",
+                                        description = "可选，提供商枚举名（如 OPENAI_GENERIC/OPENAI_LOCAL/OPENAI_RESPONSES_GENERIC/DEEPSEEK/MIMO/GEMINI_GENERIC/LMSTUDIO/OLLAMA/MNN/LLAMA_CPP/LITERT_LM）",
                                         required = false
                                     ),
                                     ToolParameterSchema(

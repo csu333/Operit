@@ -100,6 +100,17 @@
             android:name="libOpenCL.so"
             android:required="false" />
         
+        <!-- Extra GPU libraries used by LiteRT-LM (Pixel ships OpenCL as libOpenCL-pixel.so) -->
+        <uses-native-library
+            android:name="libOpenCL-pixel.so"
+            android:required="false" />
+        <uses-native-library
+            android:name="libOpenCL-car.so"
+            android:required="false" />
+        <uses-native-library
+            android:name="libvndksupport.so"
+            android:required="false" />
+
         <!-- Vulkan 库权限声明 -->
         <uses-native-library 
             android:name="libvulkan.so"

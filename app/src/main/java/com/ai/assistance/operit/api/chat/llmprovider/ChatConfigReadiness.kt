@@ -62,7 +62,8 @@ object ChatConfigReadiness {
             return ChatConfigReadinessResult(ChatConfigReadinessIssue.MODEL_MISSING)
         }
 
-        if (providerType == ApiProviderType.MNN || providerType == ApiProviderType.LLAMA_CPP) {
+        if (providerType == ApiProviderType.MNN || providerType == ApiProviderType.LLAMA_CPP ||
+            providerType == ApiProviderType.LITERT_LM) {
             return ChatConfigReadinessResult()
         }
 

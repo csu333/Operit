@@ -71,4 +71,21 @@
     <string name="autoglm_thinking">💭 Thinking:</string>
     <string name="autoglm_action">🎯 Action:</string>
     <string name="attachment_package_display_name">Package: %1$s</string>
+    <string name="provider_litert_lm">LiteRT-LM Local Inference (Google)</string>
+    <string name="litertlm_local_model_download_tip">LiteRT-LM models (.litertlm) can be downloaded from Hugging Face (litert-community), e.g. Gemma 3n E2B. Put the file in the folder below, then select it in “Model name”:</string>
+    <string name="litertlm_backend">Backend</string>
+    <string name="litertlm_backend_subtitle">GPU is the fastest on most phones</string>
+    <string name="litertlm_backend_gpu">GPU (recommended)</string>
+    <string name="litertlm_backend_cpu">CPU</string>
+    <string name="litertlm_backend_npu">NPU (Qualcomm / MediaTek, needs an NPU model)</string>
+    <string name="litertlm_backend_google_tensor">Google Tensor (Pixel, experimental)</string>
+    <string name="litertlm_max_tokens">Max tokens (context)</string>
+    <string name="litertlm_max_tokens_subtitle">Prompt plus reply. Most mobile models are built for 4096; 0 uses the model default.</string>
+    <string name="litertlm_error_model_file_not_exist">LiteRT-LM model file not found: %1$s</string>
+    <string name="litertlm_error_engine_init_failed">Failed to load the LiteRT-LM model on %1$s: %2$s. Try another backend.</string>
+    <string name="litertlm_error_inference_failed">LiteRT-LM inference failed: %1$s</string>
+    <string name="speech_services_stt_type_android">Android on-device (Google)</string>
+    <string name="android_stt_error_unavailable">Speech recognition is not available on this device</string>
+    <string name="android_stt_error_language_pack">The on-device speech model for this language is not installed. Download it in Settings → System → Languages → Speech, then try again.</string>
+    <string name="android_stt_error_generic">Speech recognition error (%1$d)</string>
 </resources>

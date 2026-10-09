@@ -670,6 +670,29 @@ object ModelListFetcher {
         }
     }
 
+    suspend fun getLiteRtLmLocalModels(context: Context): Result<List<ModelOption>> {
+        return withContext(Dispatchers.IO) {
+            try {
+                val modelsDir = LiteRtLmProvider.getModelsDir()
+                if (!modelsDir.exists()) {
+                    return@withContext Result.success(emptyList())
+                }
+                val models = modelsDir.listFiles { file ->
+                    file.isFile && file.name.lowercase().let { it.endsWith(".litertlm") || it.endsWith(".task") }
+                }?.map { file ->
+                    ModelOption(
+                        id = file.name,
+                        name = "${file.name} (${formatFileSize(file.length())})"
+                    )
+                }?.sortedBy { it.name } ?: emptyList()
+                Result.success(models)
+            } catch (e: Exception) {
+                AppLogger.e(TAG, "Failed to list LiteRT-LM models", e)
+                Result.failure(e)
+            }
+        }
+    }
+
     /**
      * 格式化文件大小
      */

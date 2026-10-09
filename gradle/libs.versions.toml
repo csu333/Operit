@@ -72,6 +72,7 @@ reorderable = "2.5.1"
 swipe = "1.2.0"
 objectbox = "5.3.0"
 mediapipe = "0.10.11"
+litertlm = "0.16.1"
 work = "2.9.0"
 uiTextAndroid = "1.10.4"
 animationAndroid = "1.10.4"
@@ -182,6 +183,7 @@ hnswlib-utils = { group = "com.github.jelmerk", name = "hnswlib-utils", version.
 # Machine learning
 tensorflow-lite = { group = "org.tensorflow", name = "tensorflow-lite", version.ref = "tensorflow" }
 mediapipe-tasks-text = { group = "com.google.mediapipe", name = "tasks-text", version.ref = "mediapipe" }
+litertlm-android = { group = "com.google.ai.edge.litertlm", name = "litertlm-android", version.ref = "litertlm" }
 
 # Database
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }

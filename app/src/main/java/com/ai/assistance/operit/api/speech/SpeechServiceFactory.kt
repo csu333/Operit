@@ -17,6 +17,8 @@ object SpeechServiceFactory {
         SHERPA_NCNN,
         OPENAI_STT,
         DEEPGRAM_STT,
+        /** Android built-in SpeechRecognizer (on-device Google model when available) */
+        ANDROID_ONDEVICE,
     }
 
     /**
@@ -43,6 +45,7 @@ object SpeechServiceFactory {
         val effectiveType = when (selectedType) {
             SpeechServiceType.OPENAI_STT,
             SpeechServiceType.DEEPGRAM_STT,
+            SpeechServiceType.ANDROID_ONDEVICE,
             -> SpeechServiceType.SHERPA_NCNN
             else -> selectedType
         }
@@ -85,6 +88,8 @@ object SpeechServiceFactory {
                     )
                 }
             }
+            SpeechServiceType.ANDROID_ONDEVICE ->
+                AndroidSpeechRecognizerProvider(context.applicationContext)
         }
     }
 

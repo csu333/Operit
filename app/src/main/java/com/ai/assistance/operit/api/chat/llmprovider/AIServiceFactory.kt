@@ -489,6 +489,17 @@ object AIServiceFactory {
                     enableToolCall = enableToolCall
                 )
 
+            // Google LiteRT-LM on-device inference
+            ApiProviderType.LITERT_LM ->
+                LiteRtLmProvider(
+                    context = context,
+                    modelName = config.modelName,
+                    backendName = config.litertlmBackend,
+                    maxNumTokens = config.litertlmMaxTokens,
+                    threadCount = config.llamaThreadCount,
+                    providerType = providerType
+                )
+
             // 阿里云（通义千问）使用QwenProvider
             ApiProviderType.ALIYUN ->
                 QwenAIProvider(

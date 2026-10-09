@@ -232,6 +232,8 @@ class SpeechServicesPreferences(private val context: Context) {
                 SpeechServiceFactory.SpeechServiceType.DEEPGRAM_STT -> {
                     httpConfig?.let { prefs[STT_HTTP_CONFIG] = serializerJson.encodeToString(it) }
                 }
+                SpeechServiceFactory.SpeechServiceType.ANDROID_ONDEVICE -> {
+                }
             }
         }
     }

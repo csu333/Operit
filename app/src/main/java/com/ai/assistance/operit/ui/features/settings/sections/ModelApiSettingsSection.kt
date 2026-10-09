@@ -50,6 +50,7 @@ import com.ai.assistance.operit.api.chat.llmprovider.EndpointCompleter
 import com.ai.assistance.operit.api.chat.EnhancedAIService
 import com.ai.assistance.operit.api.chat.llmprovider.AIServiceFactory
 import com.ai.assistance.operit.api.chat.llmprovider.CodexModelListFetcher
+import com.ai.assistance.operit.api.chat.llmprovider.LiteRtLmProvider
 import com.ai.assistance.operit.api.chat.llmprovider.LlamaProvider
 import com.ai.assistance.operit.api.chat.llmprovider.ModelListFetcher
 import com.ai.assistance.operit.data.api.CodexAuthManager
@@ -212,6 +213,10 @@ fun ModelApiSettingsSection(
     var llamaContextSizeInput by remember(config.id) { mutableStateOf(config.llamaContextSize.toString()) }
     var llamaGpuLayersInput by remember(config.id) { mutableStateOf(config.llamaGpuLayers.toString()) }
 
+    // LiteRT-LM configuration state
+    var litertlmBackendInput by remember(config.id) { mutableStateOf(config.litertlmBackend) }
+    var litertlmMaxTokensInput by remember(config.id) { mutableStateOf(config.litertlmMaxTokens.toString()) }
+
     // 图片处理配置状态
     var enableDirectImageProcessingInput by remember(config.id) { mutableStateOf(config.enableDirectImageProcessing) }
 
@@ -258,6 +263,8 @@ fun ModelApiSettingsSection(
         val llamaThreadCount: Int,
         val llamaContextSize: Int,
         val llamaGpuLayers: Int,
+        val litertlmBackend: String,
+        val litertlmMaxTokens: Int,
         val enableDirectImageProcessing: Boolean,
         val enableDirectAudioProcessing: Boolean,
         val enableDirectVideoProcessing: Boolean,
@@ -284,6 +291,8 @@ fun ModelApiSettingsSection(
                     llamaThreadCount = state.llamaThreadCount,
                     llamaContextSize = state.llamaContextSize,
                     llamaGpuLayers = state.llamaGpuLayers,
+                    litertlmBackend = state.litertlmBackend,
+                    litertlmMaxTokens = state.litertlmMaxTokens,
                     enableDirectImageProcessing = state.enableDirectImageProcessing,
                     enableDirectAudioProcessing = state.enableDirectAudioProcessing,
                     enableDirectVideoProcessing = state.enableDirectVideoProcessing,
@@ -313,6 +322,8 @@ fun ModelApiSettingsSection(
             llamaThreadCount = llamaThreadCountInput.toIntOrNull()?.coerceAtLeast(1) ?: 4,
             llamaContextSize = llamaContextSizeInput.toIntOrNull()?.coerceAtLeast(1) ?: 2048,
             llamaGpuLayers = llamaGpuLayersInput.toIntOrNull()?.coerceAtLeast(0) ?: 0,
+            litertlmBackend = litertlmBackendInput,
+            litertlmMaxTokens = litertlmMaxTokensInput.toIntOrNull()?.coerceAtLeast(0) ?: 4096,
             enableDirectImageProcessing = enableDirectImageProcessingInput,
             enableDirectAudioProcessing = enableDirectAudioProcessingInput,
             enableDirectVideoProcessing = enableDirectVideoProcessingInput,
@@ -452,15 +463,17 @@ fun ModelApiSettingsSection(
         ApiProviderConfigs.requiresApiKey(selectedProviderTypeId, apiEndpointInput)
     val isMnnProvider = selectedApiProvider == ApiProviderType.MNN
     val isLlamaProvider = selectedApiProvider == ApiProviderType.LLAMA_CPP
+    val isLiteRtLmProvider = selectedApiProvider == ApiProviderType.LITERT_LM
     val isToolPkgProvider = selectedApiProvider == null
     val canUseKeylessModelUi = isToolPkgProvider || !providerRequiresApiKey
     val canEditModelName =
         !isMnnProvider &&
             !isLlamaProvider &&
+            !isLiteRtLmProvider &&
             (canUseKeylessModelUi || !isUsingDefaultApiKey)
     val canRequestModelList = when {
         isCodexProvider -> codexAuthState != null && apiEndpointInput.isNotBlank()
-        isToolPkgProvider || isMnnProvider || isLlamaProvider -> true
+        isToolPkgProvider || isMnnProvider || isLlamaProvider || isLiteRtLmProvider -> true
         else ->
             apiEndpointInput.isNotBlank() &&
                 (!providerRequiresApiKey || (!isUsingDefaultApiKey && apiKeyInput.isNotBlank()))
@@ -485,6 +498,7 @@ fun ModelApiSettingsSection(
             isCodexProvider -> CodexModelListFetcher.getModelsList()
             isMnnProvider -> ModelListFetcher.getMnnLocalModels(context)
             isLlamaProvider -> ModelListFetcher.getLlamaLocalModels(context)
+            isLiteRtLmProvider -> ModelListFetcher.getLiteRtLmLocalModels(context)
             isToolPkgProvider -> runCatching {
                 val service =
                     AIServiceFactory.createService(
@@ -605,6 +619,23 @@ fun ModelApiSettingsSection(
                     onGpuLayersChange = { input ->
                         if (input.isEmpty() || input.toIntOrNull() != null) {
                             llamaGpuLayersInput = input
+                        }
+                    }
+                )
+            } else if (isLiteRtLmProvider) {
+                LiteRtLmSettingsBlock(
+                    backendInput = litertlmBackendInput,
+                    onBackendSelected = { litertlmBackendInput = it },
+                    maxTokensInput = litertlmMaxTokensInput,
+                    onMaxTokensChange = { input ->
+                        if (input.isEmpty() || input.toIntOrNull() != null) {
+                            litertlmMaxTokensInput = input
+                        }
+                    },
+                    threadCountInput = llamaThreadCountInput,
+                    onThreadCountChange = { input ->
+                        if (input.isEmpty() || input.toIntOrNull() != null) {
+                            llamaThreadCountInput = input
                         }
                     }
                 )
@@ -767,6 +798,7 @@ fun ModelApiSettingsSection(
                     subtitle = when {
                         isMnnProvider -> stringResource(R.string.mnn_select_downloaded_model)
                         isLlamaProvider -> stringResource(R.string.llama_select_downloaded_model)
+                        isLiteRtLmProvider -> stringResource(R.string.llama_select_downloaded_model)
                         else -> stringResource(R.string.model_name_placeholder) + stringResource(R.string.model_name_multiple_hint)
                     },
                         value = modelNameInput,
@@ -775,7 +807,7 @@ fun ModelApiSettingsSection(
                                 modelNameInput = it.replace("\n", "").replace("\r", "")
                             }
                         },
-                    enabled = !isMnnProvider && !isLlamaProvider && canEditModelName,
+                    enabled = !isMnnProvider && !isLlamaProvider && !isLiteRtLmProvider && canEditModelName,
                     trailingContent = {
                 IconButton(
                         onClick = {
@@ -1455,6 +1487,7 @@ private fun getBuiltInProviderDisplayName(provider: ApiProviderType, context: an
         ApiProviderType.OPENAI_LOCAL -> context.getString(R.string.provider_openai_local)
         ApiProviderType.MNN -> context.getString(R.string.provider_mnn)
         ApiProviderType.LLAMA_CPP -> context.getString(R.string.provider_llama_cpp)
+        ApiProviderType.LITERT_LM -> context.getString(R.string.provider_litert_lm)
         ApiProviderType.PPINFRA -> context.getString(R.string.provider_ppinfra)
         ApiProviderType.NOVITA -> context.getString(R.string.provider_novita)
         ApiProviderType.MINIMAX -> context.getString(R.string.provider_minimax)
@@ -1952,6 +1985,117 @@ private fun LlamaSettingsBlock(
     }
 }
 
+@Composable
+private fun LiteRtLmSettingsBlock(
+        backendInput: String,
+        onBackendSelected: (String) -> Unit,
+        maxTokensInput: String,
+        onMaxTokensChange: (String) -> Unit,
+        threadCountInput: String,
+        onThreadCountChange: (String) -> Unit
+) {
+    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        SettingsInfoBanner(text = stringResource(R.string.llama_local_model_tip))
+
+        SettingsInfoBanner(
+            text =
+                stringResource(R.string.litertlm_local_model_download_tip) +
+                    "\n" +
+                    stringResource(
+                        R.string.llama_local_model_dir,
+                        LiteRtLmProvider.getModelsDir().absolutePath
+                    )
+        )
+
+        var showBackendDialog by remember { mutableStateOf(false) }
+
+        SettingsSelectorRow(
+                title = stringResource(R.string.litertlm_backend),
+                subtitle = stringResource(R.string.litertlm_backend_subtitle),
+                value = liteRtLmBackendLabel(backendInput),
+                onClick = { showBackendDialog = true }
+        )
+
+        if (showBackendDialog) {
+            Dialog(onDismissRequest = { showBackendDialog = false }) {
+                Surface(
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(16.dp),
+                        color = MaterialTheme.colorScheme.surface
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        Text(
+                                text = stringResource(R.string.litertlm_backend),
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.SemiBold,
+                                modifier = Modifier.padding(bottom = 12.dp)
+                        )
+                        LiteRtLmProvider.BACKENDS.forEach { backend ->
+                            Surface(
+                                    modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(vertical = 4.dp)
+                                            .clickable {
+                                                onBackendSelected(backend)
+                                                showBackendDialog = false
+                                            },
+                                    shape = RoundedCornerShape(8.dp),
+                                    color =
+                                            if (backendInput == backend)
+                                                    MaterialTheme.colorScheme.primaryContainer
+                                            else MaterialTheme.colorScheme.surface
+                            ) {
+                                Text(
+                                        text = liteRtLmBackendLabel(backend),
+                                        modifier = Modifier.padding(14.dp),
+                                        style = MaterialTheme.typography.bodyLarge
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        SettingsTextField(
+                title = stringResource(R.string.litertlm_max_tokens),
+                subtitle = stringResource(R.string.litertlm_max_tokens_subtitle),
+                value = maxTokensInput,
+                onValueChange = onMaxTokensChange,
+                placeholder = "4096",
+                keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number,
+                        imeAction = ImeAction.Next
+                ),
+                valueFilter = { input -> input.filter { it.isDigit() } }
+        )
+
+        if (backendInput == LiteRtLmProvider.BACKEND_CPU) {
+            SettingsTextField(
+                    title = stringResource(R.string.llama_thread_count),
+                    value = threadCountInput,
+                    onValueChange = onThreadCountChange,
+                    placeholder = "4",
+                    keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Number,
+                            imeAction = ImeAction.Next
+                    ),
+                    valueFilter = { input -> input.filter { it.isDigit() } }
+            )
+        }
+    }
+}
+
+@Composable
+private fun liteRtLmBackendLabel(backend: String): String {
+    return when (backend) {
+        LiteRtLmProvider.BACKEND_CPU -> stringResource(R.string.litertlm_backend_cpu)
+        LiteRtLmProvider.BACKEND_NPU -> stringResource(R.string.litertlm_backend_npu)
+        LiteRtLmProvider.BACKEND_GOOGLE_TENSOR -> stringResource(R.string.litertlm_backend_google_tensor)
+        else -> stringResource(R.string.litertlm_backend_gpu)
+    }
+}
+
 private fun forwardTypeName(type: Int): String {
     return when (type) {
         0 -> "CPU"
@@ -2189,6 +2333,7 @@ private fun getProviderColor(providerTypeId: String): androidx.compose.ui.graphi
         ApiProviderType.OPENAI_LOCAL -> MaterialTheme.colorScheme.primary.copy(alpha = 0.82f)
         ApiProviderType.MNN -> MaterialTheme.colorScheme.secondary
         ApiProviderType.LLAMA_CPP -> MaterialTheme.colorScheme.secondary.copy(alpha = 0.9f)
+        ApiProviderType.LITERT_LM -> MaterialTheme.colorScheme.secondary.copy(alpha = 0.8f)
         ApiProviderType.PPINFRA -> MaterialTheme.colorScheme.primaryContainer
         ApiProviderType.NOVITA -> MaterialTheme.colorScheme.tertiary.copy(alpha = 0.75f)
         ApiProviderType.MINIMAX -> MaterialTheme.colorScheme.primary.copy(alpha = 0.78f)

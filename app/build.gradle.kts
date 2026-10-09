@@ -702,6 +702,9 @@ dependencies {
     // 用于向量嵌入的TF Lite (如果需要自定义嵌入)
     implementation(libs.tensorflow.lite)
     implementation(libs.mediapipe.tasks.text)
+
+    // Google LiteRT-LM on-device LLM runtime (0.16.x matches Kotlin 2.2)
+    implementation(libs.litertlm.android)
     
     // ONNX Runtime for Android - 支持更强大的多语言Embedding模型
     implementation("com.microsoft.onnxruntime:onnxruntime-android:1.17.1")

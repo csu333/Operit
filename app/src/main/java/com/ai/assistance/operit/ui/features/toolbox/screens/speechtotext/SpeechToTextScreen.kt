@@ -211,6 +211,8 @@ fun SpeechToTextScreen(navController: NavController) {
             SpeechServiceFactory.SpeechServiceType.OPENAI_STT ->
                 SpeechServiceFactory.SpeechServiceType.DEEPGRAM_STT
             SpeechServiceFactory.SpeechServiceType.DEEPGRAM_STT ->
+                SpeechServiceFactory.SpeechServiceType.ANDROID_ONDEVICE
+            SpeechServiceFactory.SpeechServiceType.ANDROID_ONDEVICE ->
                 SpeechServiceFactory.SpeechServiceType.SHERPA_NCNN
         }
     }
@@ -221,6 +223,7 @@ fun SpeechToTextScreen(navController: NavController) {
             SpeechServiceFactory.SpeechServiceType.SHERPA_NCNN -> context.getString(R.string.sherpa_ncnn_best)
             SpeechServiceFactory.SpeechServiceType.OPENAI_STT -> context.getString(R.string.speech_services_stt_type_openai)
             SpeechServiceFactory.SpeechServiceType.DEEPGRAM_STT -> context.getString(R.string.speech_services_stt_type_deepgram)
+            SpeechServiceFactory.SpeechServiceType.ANDROID_ONDEVICE -> context.getString(R.string.speech_services_stt_type_android)
         }
     }
     

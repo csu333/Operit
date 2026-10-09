@@ -27,7 +27,8 @@ enum class ToolExposureMode {
                 ApiProviderType.OLLAMA,
                 ApiProviderType.OPENAI_LOCAL,
                 ApiProviderType.MNN,
-                ApiProviderType.LLAMA_CPP -> CLI
+                ApiProviderType.LLAMA_CPP,
+                ApiProviderType.LITERT_LM -> CLI
                 else -> FULL
             }
         }

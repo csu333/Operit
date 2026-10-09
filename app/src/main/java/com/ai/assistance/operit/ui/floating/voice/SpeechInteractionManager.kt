@@ -4,6 +4,7 @@ import android.content.Intent
 import android.content.Context
 import android.content.Context.INPUT_METHOD_SERVICE
 import com.ai.assistance.operit.util.AppLogger
+import com.ai.assistance.operit.util.LocaleUtils
 import com.ai.assistance.operit.R
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -216,8 +217,8 @@ class SpeechInteractionManager(
         if (isRecording) {
             if (effectiveText.isNotBlank()) {
                 // 处理增量
-                if (latestPartialText.isNotEmpty() && !effectiveText.startsWith(latestPartialText)) {
-                    accumulatedText += (if (accumulatedText.isNotEmpty()) "。" else "") + latestPartialText
+                if (latestPartialText.isNotEmpty() && isNewSegment(latestPartialText, effectiveText)) {
+                    accumulatedText += (if (accumulatedText.isNotEmpty()) segmentSeparator() else "") + latestPartialText
                 }
                 latestPartialText = effectiveText
 
@@ -235,9 +236,23 @@ class SpeechInteractionManager(
             
         } else if (isProcessingSpeech && isFinal) {
             timeoutJob?.cancel()
-            accumulatedText += (if (accumulatedText.isNotEmpty() && effectiveText.isNotBlank()) "。" else "") + effectiveText
+            accumulatedText += (if (accumulatedText.isNotEmpty() && effectiveText.isNotBlank()) segmentSeparator() else "") + effectiveText
             finalizeSpeechInput()
         }
+    }
+
+    private fun segmentSeparator(): String =
+        if (LocaleUtils.usesChineseContent(context)) "。" else ". "
+
+    /**
+     * A partial that no longer extends the previous one is either a new utterance or a revision
+     * of the same one (Google's recognizer often rewrites earlier words). Only treat it as a new
+     * segment when the two share little of their beginning.
+     */
+    private fun isNewSegment(previous: String, current: String): Boolean {
+        if (current.startsWith(previous)) return false
+        val common = previous.commonPrefixWith(current).length
+        return common * 2 < minOf(previous.length, current.length)
     }
 
     private fun stripWakePhrasePrefixIfNeeded(text: String): String {

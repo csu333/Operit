@@ -71,4 +71,21 @@
     <string name="autoglm_thinking">💭 思考过程:</string>
     <string name="autoglm_action">🎯 执行动作:</string>
     <string name="attachment_package_display_name">包: %1$s</string>
+    <string name="provider_litert_lm">LiteRT-LM 本地推理（Google）</string>
+    <string name="litertlm_local_model_download_tip">LiteRT-LM 模型（.litertlm）可从 Hugging Face 的 litert-community 下载，例如 Gemma 3n E2B。将模型文件放入下方文件夹，然后在“模型名称”中选择：</string>
+    <string name="litertlm_backend">推理后端</string>
+    <string name="litertlm_backend_subtitle">大多数手机上 GPU 最快</string>
+    <string name="litertlm_backend_gpu">GPU（推荐）</string>
+    <string name="litertlm_backend_cpu">CPU</string>
+    <string name="litertlm_backend_npu">NPU（高通 / 联发科，需要对应 NPU 模型）</string>
+    <string name="litertlm_backend_google_tensor">Google Tensor（Pixel，实验性）</string>
+    <string name="litertlm_max_tokens">最大 Token 数（上下文）</string>
+    <string name="litertlm_max_tokens_subtitle">提示词加回复的总长度。多数移动端模型按 4096 构建；0 表示使用模型默认值。</string>
+    <string name="litertlm_error_model_file_not_exist">LiteRT-LM 模型文件不存在：%1$s</string>
+    <string name="litertlm_error_engine_init_failed">无法在 %1$s 上加载 LiteRT-LM 模型：%2$s。请尝试其他后端。</string>
+    <string name="litertlm_error_inference_failed">LiteRT-LM 推理失败：%1$s</string>
+    <string name="speech_services_stt_type_android">Android 设备端识别（Google）</string>
+    <string name="android_stt_error_unavailable">此设备不支持语音识别</string>
+    <string name="android_stt_error_language_pack">未安装该语言的设备端语音模型。请在 设置 → 系统 → 语言 → 语音 中下载后重试。</string>
+    <string name="android_stt_error_generic">语音识别错误（%1$d）</string>
 </resources>
