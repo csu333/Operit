@@ -2379,7 +2379,7 @@ const operitEditorPackage = (function () {
             const { query } = params ?? {};
             complete({
                 success: true,
-                message: "配置排查手册已加载（MCP/Skill/Sandbox Package/沙盒包调试烧录/功能模型与模型配置/TTS-STT语音服务），将按配置链路执行排查。",
+                message: "Configuration troubleshooting manual loaded (MCP / Skill / Sandbox Package / sandbox package debug flashing / functional models and model configuration / TTS-STT voice services); troubleshooting will follow the configuration chain.",
                 data: {
                     query: query ?? ""
                 }
@@ -2396,17 +2396,17 @@ const operitEditorPackage = (function () {
         try {
             const locale = (getLang() ?? "").toLowerCase();
             const lang = locale.startsWith("zh") ? "zh" : locale.startsWith("en") ? "en" : "both";
-            const zh = `如何制作 skill（简版）
-1. 先创建目录：/sdcard/Download/Operit/skills/<skill_name>/
-2. 必备文件：SKILL.md
-3. 在 SKILL.md 顶部用 Markdown 元数据（frontmatter）写 name、description，例如：
+            const zh = `How to make a skill (short version)
+1. Create the directory: /sdcard/Download/Operit/skills/<skill_name>/
+2. Required file: SKILL.md
+3. At the top of SKILL.md, write name and description as Markdown metadata (frontmatter), for example:
 ---
 name: your_skill_name
-description: 用一句话说明这个 skill 做什么
+description: One sentence describing what this skill does
 ---
-4. 元数据后再写正文：适用场景、执行步骤、约束边界、期望输出
-5. 可选内容：scripts/、templates/、examples/、assets/；在 SKILL.md 里用相对路径引用
-6. 实践建议：优先下载现成 skill，直接解压过来，并确保目录下有 SKILL.md。`;
+4. After the metadata, write the body: when to use it, steps, constraints and boundaries, expected output
+5. Optional content: scripts/, templates/, examples/, assets/; reference them from SKILL.md with relative paths
+6. Tip: prefer downloading an existing skill, unzip it in place, and make sure SKILL.md is in the directory.`;
             const en = `How to make a skill (quick guide)
 1. Create a directory: /sdcard/Download/Operit/skills/<skill_name>/
 2. Required file: SKILL.md

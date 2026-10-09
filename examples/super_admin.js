@@ -170,7 +170,7 @@ const superAdmin = (function () {
     async function terminal(params) {
         try {
             if (!params.command) {
-                throw new Error("命令不能为空");
+                throw new Error("Command must not be empty");
             }
             const command = params.command;
             const background = params.background;
@@ -182,7 +182,7 @@ const superAdmin = (function () {
                 if (timeoutMs !== undefined) {
                     const parsedTimeout = parseInt(timeoutMs, 10);
                     if (!Number.isFinite(parsedTimeout) || parsedTimeout < MIN_TIMEOUT_MS) {
-                        throw new Error(`timeoutMs必须是整数且不少于${MIN_TIMEOUT_MS}毫秒`);
+                        throw new Error(`timeoutMs must be an integer of at least ${MIN_TIMEOUT_MS} ms`);
                     }
                     timeout = parsedTimeout;
                 }
@@ -253,7 +253,7 @@ const superAdmin = (function () {
             if (timeoutMs !== undefined) {
                 const parsedTimeout = parseInt(timeoutMs, 10);
                 if (!Number.isFinite(parsedTimeout) || parsedTimeout < MIN_TIMEOUT_MS) {
-                    throw new Error(`timeoutMs必须是整数且不少于${MIN_TIMEOUT_MS}毫秒`);
+                    throw new Error(`timeoutMs must be an integer of at least ${MIN_TIMEOUT_MS} ms`);
                 }
                 timeout = parsedTimeout;
             }
@@ -296,7 +296,7 @@ const superAdmin = (function () {
     async function shell(params) {
         try {
             if (!params.command) {
-                throw new Error("命令不能为空");
+                throw new Error("Command must not be empty");
             }
             const command = params.command;
             console.log(`执行Shell命令: ${command}`);
@@ -347,7 +347,7 @@ const superAdmin = (function () {
     async function terminal_input(params = {}) {
         try {
             if (params.input === undefined && params.control === undefined) {
-                throw new Error("input和control至少需要提供一个");
+                throw new Error("At least one of input and control must be provided");
             }
             const session = params.sessionId
                 ? { sessionId: params.sessionId }

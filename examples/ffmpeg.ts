@@ -100,7 +100,7 @@ const FFmpegTools = (function () {
             console.error(`Tool ${func.name} failed unexpectedly`, error);
             complete({
                 success: false,
-                message: `工具执行时发生意外错误: ${error.message}`,
+                message: `Unexpected error while running tool: ${error.message}`,
             });
         }
     }

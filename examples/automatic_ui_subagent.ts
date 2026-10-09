@@ -598,23 +598,23 @@ const UIAutomationSubAgentTools = (function () {
         const isMainScreen = String(state).toLowerCase() === 'main_screen';
         return {
             success: true,
-            message: 'UI子代理使用建议',
+            message: 'UI subagent usage advice',
             data: {
                 advice: isMainScreen
-                    ? ("主屏模式：不支持 agent_id，会话复用策略不适用；不支持并行工具，一次只做一个明确子目标（必要时拆多次）。\n" +
-                        "屏幕选择规则：不传 agent_id 或传 'default' => 主屏幕；传入且不为 'default' => 虚拟屏（主屏模式下会忽略并强制主屏）。\n" +
-                        "启动前置（非常重要）：当你第一次需要操作某个应用时，intent 开头必须写“启动XXX应用 ...”，让子代理直接执行 Launch，而不是在桌面自己找。\n" +
-                        "对话无状态：每次调用是新对话，intent 写清 已完成/下一步/关键信息。\n" +
-                        "自包含：别用‘这五个/继续/同上’；多对象要么列清单+当前目标，要么先让子代理在当前页识别并复述清单。\n" +
-                        "失败与完成：半成功不算完成；未达成目标继续推进，连续 2-3 次失败再停并说明原因。")
-                    : ("虚拟屏模式：尽量复用 agent_id（沿用 data.agentId）保持同一虚拟屏/同一应用上下文。\n" +
-                        "屏幕选择规则：不传 agent_id 或传 'default' => 主屏幕；传入且不为 'default' => 对应虚拟屏会话（虚拟屏必须可用，否则失败）。为避免误操作主屏，虚拟屏模式下首次调用建议显式传入 agent_id。\n" +
-                        "启动前置（非常重要）：当你第一次使用某个 agent_id（新建或更换 agent_id）时，intent 开头必须写“启动XXX应用 ...”，让子代理直接执行 Launch，而不是在桌面自己找。\n" +
-                        "对话无状态：每次调用是新对话，intent 写清 已完成/下一步/关键信息。\n" +
-                        "自包含：别用‘这五个/继续/同上’；多对象要么列清单+当前目标，要么先让子代理在当前页识别并复述清单。\n" +
-                        "对齐+并行：先清单后逐项(A→B→C)；独立子任务/同一对象多入口优先并行(run_subagent_parallel_virtual)，只重试失败分支。\n" +
-                        "并行资源约束：并行分支数必须受可用独立App/虚拟屏数量限制；同一个App/包名不能同时出现在两个虚拟屏/两个agent_id 中并行操作（会坏）。并行调用必须传 target_app_i=目标应用名，且各分支 target_app_i 不能重复；第2次/第N次并行不得擅自提高并行度，保持上限，只重试失败分支或改串行。\n" +
-                        "失败与完成：半成功不算完成；未达成目标继续推进，连续 2-3 次失败再停并说明原因。"
+                    ? ("Main-screen mode: agent_id is not supported and session reuse does not apply; parallel tools are not supported. Do one clear sub-goal at a time (split into multiple calls if needed).\n" +
+                        "Screen selection: no agent_id or 'default' => main screen; any other value => virtual screen (ignored in main-screen mode, which forces the main screen).\n" +
+                        "Launch first (very important): the first time you need to operate an app, the intent must begin with "Launch the XXX app ..." so the subagent runs Launch directly instead of searching the home screen.\n" +
+                        "Stateless: each call is a new conversation, so the intent must state what is done, what is next, and the key information.\n" +
+                        "Self-contained: don't say 'these five / continue / same as above'; for multiple items, either list them plus the current target, or first have the subagent identify and restate the list on the current page.\n" +
+                        "Failure and completion: partial success is not completion; keep going until the goal is reached, and only stop after 2-3 consecutive failures, explaining why.")
+                    : ("Virtual-screen mode: reuse agent_id where possible (keep using data.agentId) to stay on the same virtual screen / app context.\n" +
+                        "Screen selection: no agent_id or 'default' => main screen; any other value => that virtual-screen session (a virtual screen must be available, otherwise the call fails). To avoid operating the main screen by mistake, pass agent_id explicitly on the first call in virtual-screen mode.\n" +
+                        "Launch first (very important): the first time you use an agent_id (new or changed), the intent must begin with "Launch the XXX app ..." so the subagent runs Launch directly instead of searching the home screen.\n" +
+                        "Stateless: each call is a new conversation, so the intent must state what is done, what is next, and the key information.\n" +
+                        "Self-contained: don't say 'these five / continue / same as above'; for multiple items, either list them plus the current target, or first have the subagent identify and restate the list on the current page.\n" +
+                        "Align + parallelize: list first, then go item by item (A→B→C); run independent sub-tasks or multiple entry points for the same target in parallel (run_subagent_parallel_virtual), and only retry failed branches.\n" +
+                        "Parallel resource limits: the number of parallel branches is limited by the number of available distinct apps / virtual screens; the same app/package must never be operated in two virtual screens / agent_ids at once (it breaks). Parallel calls must pass target_app_i = target app name, with no duplicate target_app_i across branches; on the 2nd/Nth parallel call do not raise the parallelism on your own—keep the limit, and only retry failed branches or switch to serial.\n" +
+                        "Failure and completion: partial success is not completion; keep going until the goal is reached, and only stop after 2-3 consecutive failures, explaining why."
                     ),
             },
         };
@@ -636,7 +636,7 @@ const UIAutomationSubAgentTools = (function () {
             if (agentIdToUse === undefined || agentIdToUse === null || String(agentIdToUse).trim().length === 0) {
                 return {
                     success: false,
-                    message: "虚拟屏模式下未指定 agent_id：为避免误操作主屏幕，请显式传入 agent_id（且不为 'default'）来使用虚拟屏会话；或先完成一次成功调用并复用返回的 data.agentId。",
+                    message: "No agent_id specified in virtual-screen mode: to avoid operating the main screen by mistake, pass agent_id explicitly (not 'default') to use a virtual-screen session, or complete one successful call first and reuse the returned data.agentId.",
                 };
             }
         }
@@ -648,7 +648,7 @@ const UIAutomationSubAgentTools = (function () {
             if (!matched) {
                 return {
                     success: false,
-                    message: `目标应用不存在：当前给定的 target_app=“${String(target_app).trim()}” 未在已安装应用中找到。已返回已安装应用名列表。`,
+                    message: `Target app not found: target_app="${String(target_app).trim()}" is not among the installed apps. The list of installed app names has been returned.`,
                     data: {
                         target_app: String(target_app).trim(),
                         installed_apps: installed.names,
@@ -665,7 +665,7 @@ const UIAutomationSubAgentTools = (function () {
         }
         return {
             success: true,
-            message: 'UI子代理执行完成',
+            message: 'UI subagent finished',
             data: result,
         };
     }
@@ -685,7 +685,7 @@ const UIAutomationSubAgentTools = (function () {
         if (agentIdToUse === undefined || agentIdToUse === null || String(agentIdToUse).trim().length === 0 || String(agentIdToUse).trim().toLowerCase() === 'default') {
             return {
                 success: false,
-                message: "虚拟屏模式必须使用非 'default' 的 agent_id：请显式传入 agent_id（非 'default'），或先完成一次成功调用并复用返回的 data.agentId。",
+                message: "Virtual-screen mode requires an agent_id other than 'default': pass agent_id explicitly (not 'default'), or complete one successful call first and reuse the returned data.agentId.",
             };
         }
 
@@ -706,7 +706,7 @@ const UIAutomationSubAgentTools = (function () {
         if (isMainScreen) {
             return {
                 success: false,
-                message: "主屏模式不支持 run_subagent_parallel_virtual 并行调用。请改用 run_subagent_main 串行执行。",
+                message: "Main-screen mode does not support parallel run_subagent_parallel_virtual calls. Use run_subagent_main serially instead.",
             };
         }
 
@@ -731,7 +731,7 @@ const UIAutomationSubAgentTools = (function () {
         if (missingTargets.length > 0) {
             return {
                 success: false,
-                message: `并行参数错误：intent_${missingTargets.join(', intent_')} 缺少 target_app_${missingTargets.join(', target_app_')}（目标应用名）。并行时必须为每个启用分支传入目标应用名，用于检测“同一应用不能出现在两个虚拟屏/agent_id”的冲突。`,
+                message: `Parallel parameter error: intent_${missingTargets.join(', intent_')} is missing target_app_${missingTargets.join(', target_app_')} (target app name). In parallel mode every active branch must pass a target app name, used to detect the conflict "the same app cannot appear in two virtual screens / agent_ids".`,
             };
         }
 
@@ -745,7 +745,7 @@ const UIAutomationSubAgentTools = (function () {
         if (missingAgentIds.length > 0) {
             return {
                 success: false,
-                message: `并行参数错误：虚拟屏并行模式下，每个启用分支必须显式传入非 'default' 的 agent_id。缺少/非法 agent_id 的分支：${missingAgentIds.map((i) => `#${i}`).join('，')}。`,
+                message: `Parallel parameter error: in virtual-screen parallel mode every active branch must pass an agent_id other than 'default'. Branches with a missing/invalid agent_id: ${missingAgentIds.map((i) => `#${i}`).join(', ')}.`,
             };
         }
 
@@ -763,7 +763,7 @@ const UIAutomationSubAgentTools = (function () {
         if (missingApps.length) {
             return {
                 success: false,
-                message: `目标应用不存在：当前给定的 target_app 列表中包含未安装/不存在的应用：${missingApps.map((s) => `“${String(s).trim()}”`).join('，')}。已返回已安装应用名列表。`,
+                message: `Target app not found: the given target_app list contains apps that are not installed or do not exist: ${missingApps.map((s) => `"${String(s).trim()}"`).join(', ')}. The list of installed app names has been returned.`,
                 data: {
                     missing_apps: missingApps,
                     installed_apps: installed.names,
@@ -778,7 +778,7 @@ const UIAutomationSubAgentTools = (function () {
             if (prev !== undefined) {
                 return {
                     success: false,
-                    message: `并行参数错误：target_app_${prev} 与 target_app_${s.index} 重复（同一目标应用=“${String(s.targetApp).trim()}”）。同一应用不能同时在两个虚拟屏/agent_id 中并行操作。`,
+                    message: `Parallel parameter error: target_app_${prev} and target_app_${s.index} are duplicates (same target app = "${String(s.targetApp).trim()}"). The same app cannot be operated in two virtual screens / agent_ids at once.`,
                 };
             }
             used[key] = s.index;
@@ -817,7 +817,7 @@ const UIAutomationSubAgentTools = (function () {
         const okCount = results.filter((r) => r.success).length;
         return {
             success: true,
-            message: `并行UI子代理执行完成：成功 ${okCount} 个 / 共 ${results.length} 个`,
+            message: `Parallel UI subagents finished: ${okCount} of ${results.length} succeeded`,
             data: {
                 results,
             },
@@ -835,8 +835,8 @@ const UIAutomationSubAgentTools = (function () {
         return {
             success: ok,
             message: ok
-                ? '已关闭所有虚拟屏幕。'
-                : `关闭虚拟屏幕失败：${error ? String(error) : 'unknown error'}`,
+                ? 'All virtual screens closed.'
+                : `Failed to close virtual screens: ${error ? String(error) : 'unknown error'}`,
             data: result,
         };
     }
@@ -849,7 +849,7 @@ const UIAutomationSubAgentTools = (function () {
             console.error(`Tool ${func.name} failed unexpectedly`, error);
             complete({
                 success: false,
-                message: `工具执行时发生意外错误: ${errorMessage(error)}`,
+                message: `Unexpected error while running tool: ${errorMessage(error)}`,
             });
         }
     }

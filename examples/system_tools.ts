@@ -317,38 +317,38 @@ const SystemTools = (function () {
 
     async function get_system_setting(params: { setting: string, namespace?: string }): Promise<ToolResponse> {
         const result = await Tools.System.getSetting(params.setting, params.namespace || 'system');
-        return { success: true, message: '成功获取系统设置', data: result };
+        return { success: true, message: 'Got system setting', data: result };
     }
 
     async function modify_system_setting(params: { setting: string, value: string, namespace?: string }): Promise<ToolResponse> {
         const result = await Tools.System.setSetting(params.setting, params.value, params.namespace || 'system');
         const success = result && result.value === params.value;
-        return { success: success, message: success ? '成功修改系统设置' : '修改系统设置失败', data: result };
+        return { success: success, message: success ? 'Modified system setting' : 'Failed to modify system setting', data: result };
     }
 
     async function install_app(params: { path: string }): Promise<ToolResponse> {
         const result = await Tools.System.installApp(params.path);
-        return { success: result.success, message: result.success ? '应用安装成功' : '应用安装失败', data: result };
+        return { success: result.success, message: result.success ? 'App installed' : 'App installation failed', data: result };
     }
 
     async function uninstall_app(params: { package_name: string, keep_data?: boolean }): Promise<ToolResponse> {
         const result = await Tools.System.uninstallApp(params.package_name);
-        return { success: result.success, message: result.success ? '应用卸载成功' : '应用卸载失败', data: result };
+        return { success: result.success, message: result.success ? 'App uninstalled' : 'App uninstallation failed', data: result };
     }
 
     async function list_installed_apps(params: { include_system_apps?: boolean }): Promise<ToolResponse> {
         const result = await Tools.System.listApps(params.include_system_apps || false);
-        return { success: true, message: '成功获取应用列表', data: result };
+        return { success: true, message: 'Got app list', data: result };
     }
 
     async function start_app(params: { package_name: string, activity?: string }): Promise<ToolResponse> {
         const result = await Tools.System.startApp(params.package_name, params.activity);
-        return { success: result.success, message: result.success ? '应用启动成功' : '应用启动失败', data: result };
+        return { success: result.success, message: result.success ? 'App launched' : 'App launch failed', data: result };
     }
 
     async function stop_app(params: { package_name: string }): Promise<ToolResponse> {
         const result = await Tools.System.stopApp(params.package_name);
-        return { success: result.success, message: result.success ? '应用停止成功' : '应用停止失败', data: result };
+        return { success: result.success, message: result.success ? 'App stopped' : 'Failed to stop app', data: result };
     }
 
     async function send_broadcast(params: { action: string, package_name?: string, component?: string, uri?: string, extras?: any, extra_key?: string, extra_value?: string, extra_key2?: string, extra_value2?: string }): Promise<ToolResponse> {
@@ -363,7 +363,7 @@ const SystemTools = (function () {
             extra_key2: params.extra_key2,
             extra_value2: params.extra_value2
         });
-        return { success: true, message: '广播发送成功', data: result };
+        return { success: true, message: 'Broadcast sent', data: result };
     }
 
     async function execute_intent(params: { type?: 'activity' | 'broadcast' | 'service' | string, action?: string, uri?: string, package_name?: string, component?: string, flags?: number | number[] | string, extras?: any }): Promise<ToolResponse> {
@@ -377,12 +377,12 @@ const SystemTools = (function () {
             extras: params.extras,
             type: (params.type as any) || 'activity'
         });
-        return { success: true, message: 'Intent 执行成功', data: result };
+        return { success: true, message: 'Intent executed', data: result };
     }
 
     async function get_notifications(params: { limit?: number, include_ongoing?: boolean }): Promise<ToolResponse> {
         const result = await Tools.System.getNotifications(params.limit || 10, params.include_ongoing || false);
-        return { success: true, message: '成功获取通知', data: result };
+        return { success: true, message: 'Got notifications', data: result };
     }
 
     async function get_app_usage_time(params: { package_name?: string, since_hours?: number, limit?: number, include_system_apps?: boolean }): Promise<ToolResponse> {
@@ -392,32 +392,32 @@ const SystemTools = (function () {
             limit: params.limit || 10,
             includeSystemApps: params.include_system_apps || false
         });
-        return { success: true, message: '成功获取应用使用时长', data: result };
+        return { success: true, message: 'Got app usage time', data: result };
     }
 
     async function get_device_location(params: { high_accuracy?: boolean, timeout?: number, include_address?: boolean }): Promise<ToolResponse> {
         const result = await Tools.System.getLocation(params.high_accuracy || false, params.timeout || 10, params.include_address);
-        return { success: true, message: '成功获取位置信息', data: result };
+        return { success: true, message: 'Got location', data: result };
     }
 
     async function request_bluetooth_permission(params: Record<string, never>): Promise<ToolResponse> {
         const result = await Tools.System.bluetooth.requestPermission();
-        return { success: true, message: '成功请求蓝牙权限', data: result };
+        return { success: true, message: 'Requested Bluetooth permission', data: result };
     }
 
     async function get_bluetooth_state(params: Record<string, never>): Promise<ToolResponse> {
         const result = await Tools.System.bluetooth.getState();
-        return { success: true, message: '成功获取蓝牙状态', data: result };
+        return { success: true, message: 'Got Bluetooth state', data: result };
     }
 
     async function request_enable_bluetooth(params: Record<string, never>): Promise<ToolResponse> {
         const result = await Tools.System.bluetooth.requestEnable();
-        return { success: true, message: '已打开蓝牙开启请求', data: result };
+        return { success: true, message: 'Opened the Bluetooth enable request', data: result };
     }
 
     async function list_bluetooth_bonded_devices(params: Record<string, never>): Promise<ToolResponse> {
         const result = await Tools.System.bluetooth.listBondedDevices();
-        return { success: true, message: '成功获取已配对蓝牙设备', data: result };
+        return { success: true, message: 'Got paired Bluetooth devices', data: result };
     }
 
     async function scan_bluetooth_devices(params: BluetoothScanParams): Promise<ToolResponse> {
@@ -425,7 +425,7 @@ const SystemTools = (function () {
             durationMs: params.duration_ms,
             includeBle: params.include_ble
         });
-        return { success: true, message: '成功扫描蓝牙设备', data: result };
+        return { success: true, message: 'Scanned Bluetooth devices', data: result };
     }
 
     async function bluetooth_connect(params: BluetoothConnectParams): Promise<ToolResponse> {
@@ -433,7 +433,7 @@ const SystemTools = (function () {
             address: params.address,
             uuid: params.uuid
         });
-        return { success: true, message: '成功连接蓝牙设备', data: result };
+        return { success: true, message: 'Connected to Bluetooth device', data: result };
     }
 
     async function bluetooth_listen(params: BluetoothListenParams): Promise<ToolResponse> {
@@ -441,12 +441,12 @@ const SystemTools = (function () {
             name: params.name,
             uuid: params.uuid
         });
-        return { success: true, message: '成功创建蓝牙监听', data: result };
+        return { success: true, message: 'Created Bluetooth listener', data: result };
     }
 
     async function bluetooth_accept(params: BluetoothAcceptParams): Promise<ToolResponse> {
         const result = await Tools.System.bluetooth.accept(params.listener_session_id, params.timeout_ms);
-        return { success: true, message: '成功接受蓝牙连接', data: result };
+        return { success: true, message: 'Accepted Bluetooth connection', data: result };
     }
 
     async function bluetooth_send(params: BluetoothPayloadParams): Promise<ToolResponse> {
@@ -454,7 +454,7 @@ const SystemTools = (function () {
             text: params.text,
             dataBase64: params.data_base64
         });
-        return { success: true, message: '成功发送蓝牙数据', data: result };
+        return { success: true, message: 'Sent Bluetooth data', data: result };
     }
 
     async function bluetooth_read(params: BluetoothReadParams): Promise<ToolResponse> {
@@ -462,7 +462,7 @@ const SystemTools = (function () {
             maxBytes: params.max_bytes,
             timeoutMs: params.timeout_ms
         });
-        return { success: true, message: '成功读取蓝牙数据', data: result };
+        return { success: true, message: 'Read Bluetooth data', data: result };
     }
 
     async function bluetooth_send_and_read(params: BluetoothSendAndReadParams): Promise<ToolResponse> {
@@ -472,12 +472,12 @@ const SystemTools = (function () {
             maxBytes: params.max_bytes,
             timeoutMs: params.timeout_ms
         });
-        return { success: true, message: '成功发送并读取蓝牙数据', data: result };
+        return { success: true, message: 'Sent and read Bluetooth data', data: result };
     }
 
     async function bluetooth_close(params: BluetoothCloseParams): Promise<ToolResponse> {
         const result = await Tools.System.bluetooth.close(params.session_id);
-        return { success: true, message: '成功关闭蓝牙会话', data: result };
+        return { success: true, message: 'Closed Bluetooth session', data: result };
     }
 
     async function bluetooth_ble_connect(params: BluetoothBleConnectParams): Promise<ToolResponse> {
@@ -485,12 +485,12 @@ const SystemTools = (function () {
             address: params.address,
             autoConnect: params.auto_connect
         });
-        return { success: true, message: '成功连接 BLE 设备', data: result };
+        return { success: true, message: 'Connected to BLE device', data: result };
     }
 
     async function bluetooth_ble_discover_services(params: BluetoothBleDiscoverParams): Promise<ToolResponse> {
         const result = await Tools.System.bluetooth.ble.discoverServices(params.session_id, params.timeout_ms);
-        return { success: true, message: '成功发现 BLE 服务', data: result };
+        return { success: true, message: 'Discovered BLE services', data: result };
     }
 
     async function bluetooth_ble_read_characteristic(params: BluetoothBleCharacteristicParams): Promise<ToolResponse> {
@@ -499,7 +499,7 @@ const SystemTools = (function () {
             characteristicUuid: params.characteristic_uuid,
             timeoutMs: params.timeout_ms
         });
-        return { success: true, message: '成功读取 BLE characteristic', data: result };
+        return { success: true, message: 'Read BLE characteristic', data: result };
     }
 
     async function bluetooth_ble_write_characteristic(params: BluetoothBleWriteParams): Promise<ToolResponse> {
@@ -509,7 +509,7 @@ const SystemTools = (function () {
             text: params.text,
             dataBase64: params.data_base64
         });
-        return { success: true, message: '成功写入 BLE characteristic', data: result };
+        return { success: true, message: 'Wrote BLE characteristic', data: result };
     }
 
     async function bluetooth_ble_write_and_read_characteristic(params: BluetoothBleWriteAndReadParams): Promise<ToolResponse> {
@@ -522,7 +522,7 @@ const SystemTools = (function () {
             dataBase64: params.data_base64,
             timeoutMs: params.timeout_ms
         });
-        return { success: true, message: '成功写入并读取 BLE characteristic', data: result };
+        return { success: true, message: 'Wrote and read BLE characteristic', data: result };
     }
 
     async function bluetooth_ble_subscribe_characteristic(params: BluetoothBleSubscribeParams): Promise<ToolResponse> {
@@ -531,17 +531,17 @@ const SystemTools = (function () {
             characteristicUuid: params.characteristic_uuid,
             enable: params.enable
         });
-        return { success: true, message: '成功更新 BLE 订阅', data: result };
+        return { success: true, message: 'Updated BLE subscription', data: result };
     }
 
     async function bluetooth_ble_read_notifications(params: BluetoothBleReadNotificationsParams): Promise<ToolResponse> {
         const result = await Tools.System.bluetooth.ble.readNotifications(params.session_id, params.limit);
-        return { success: true, message: '成功读取 BLE 通知', data: result };
+        return { success: true, message: 'Read BLE notifications', data: result };
     }
 
     async function get_device_info(params: {}): Promise<ToolResponse> {
         const result = await Tools.System.getDeviceInfo();
-        return { success: true, message: '成功获取设备信息', data: result };
+        return { success: true, message: 'Got device information', data: result };
     }
 
     async function wrapToolExecution<P>(func: (params: P) => Promise<ToolResponse>, params: P) {
@@ -552,7 +552,7 @@ const SystemTools = (function () {
             console.error(`Tool ${func.name} failed unexpectedly`, error);
             complete({
                 success: false,
-                message: `工具执行时发生意外错误: ${error.message}`,
+                message: `Unexpected error while running tool: ${error.message}`,
             });
         }
     }
@@ -660,11 +660,11 @@ const SystemTools = (function () {
             console.log("  ⊘ start_app - 需要应用包名，可能会启动应用");
             console.log("  ⊘ stop_app - 需要KILL_BACKGROUND_PROCESSES权限\n");
 
-            results.push({ tool: 'modify_system_setting', result: { success: null, message: '未测试（避免修改系统）' } });
-            results.push({ tool: 'install_app', result: { success: null, message: '未测试（需要APK文件）' } });
-            results.push({ tool: 'uninstall_app', result: { success: null, message: '未测试（避免卸载应用）' } });
-            results.push({ tool: 'start_app', result: { success: null, message: '未测试（避免启动应用）' } });
-            results.push({ tool: 'stop_app', result: { success: null, message: '未测试（避免停止应用）' } });
+            results.push({ tool: 'modify_system_setting', result: { success: null, message: 'Not tested (to avoid modifying the system)' } });
+            results.push({ tool: 'install_app', result: { success: null, message: 'Not tested (requires an APK file)' } });
+            results.push({ tool: 'uninstall_app', result: { success: null, message: 'Not tested (to avoid uninstalling apps)' } });
+            results.push({ tool: 'start_app', result: { success: null, message: 'Not tested (to avoid launching apps)' } });
+            results.push({ tool: 'stop_app', result: { success: null, message: 'Not tested (to avoid stopping apps)' } });
 
             console.log("=== System Tools 测试完成 ===\n");
             console.log("测试结果汇总:");
@@ -681,7 +681,7 @@ const SystemTools = (function () {
 
             complete({
                 success: true,
-                message: "系统工具全面测试完成",
+                message: "Full system tools test complete",
                 data: {
                     results,
                     summary: {
@@ -696,7 +696,7 @@ const SystemTools = (function () {
             console.error("测试过程中发生错误:", error);
             complete({
                 success: false,
-                message: `测试失败: ${error.message}`,
+                message: `Test failed: ${error.message}`,
                 data: results
             });
         }

@@ -386,7 +386,7 @@ const WorkflowIntegration = (function () {
   async function usage_advice(_params: {}): Promise<any> {
     return {
       success: true,
-      message: "请阅读 workflow 工具 METADATA 中的 usage_advice 说明：包含节点/连线 schema、分支 condition 规则、触发类型与配置示例。建议在脚本里直接使用 Tools.Workflow.getAll/get/create/update/patch/setEnabled/enable/disable/delete/trigger 等封装方法。"
+      message: "Read usage_advice in the workflow tool METADATA: it covers the node/connection schema, branch condition rules, trigger types and configuration examples. In scripts, prefer the wrapper methods Tools.Workflow.getAll/get/create/update/patch/setEnabled/enable/disable/delete/trigger."
     };
   }
 
@@ -398,7 +398,7 @@ const WorkflowIntegration = (function () {
     const data = await Tools.Workflow.getAll();
     return {
       success: true,
-      message: "成功获取工作流列表",
+      message: "Got workflow list",
       data
     };
   }
@@ -418,7 +418,7 @@ const WorkflowIntegration = (function () {
     );
     return {
       success: true,
-      message: "成功创建工作流",
+      message: "Workflow created",
       data
     };
   }
@@ -432,7 +432,7 @@ const WorkflowIntegration = (function () {
     const data = await Tools.Workflow.get(params.workflow_id);
     return {
       success: true,
-      message: "成功获取工作流详情",
+      message: "Got workflow details",
       data
     };
   }
@@ -447,7 +447,7 @@ const WorkflowIntegration = (function () {
     const data = await Tools.Workflow.update(workflow_id, updates);
     return {
       success: true,
-      message: "成功更新工作流",
+      message: "Workflow updated",
       data
     };
   }
@@ -462,7 +462,7 @@ const WorkflowIntegration = (function () {
     const data = await Tools.Workflow.patch(workflow_id, patch);
     return {
       success: true,
-      message: "成功差异更新工作流",
+      message: "Workflow patched",
       data
     };
   }
@@ -476,7 +476,7 @@ const WorkflowIntegration = (function () {
     const data = await Tools.Workflow.enable(params.workflow_id);
     return {
       success: true,
-      message: "成功启用工作流",
+      message: "Workflow enabled",
       data
     };
   }
@@ -490,7 +490,7 @@ const WorkflowIntegration = (function () {
     const data = await Tools.Workflow.disable(params.workflow_id);
     return {
       success: true,
-      message: "成功禁用工作流",
+      message: "Workflow disabled",
       data
     };
   }
@@ -504,7 +504,7 @@ const WorkflowIntegration = (function () {
     const data = await Tools.Workflow['delete'](params.workflow_id);
     return {
       success: true,
-      message: "成功删除工作流",
+      message: "Workflow deleted",
       data
     };
   }
@@ -518,7 +518,7 @@ const WorkflowIntegration = (function () {
     const data = await Tools.Workflow.trigger(params.workflow_id);
     return {
       success: true,
-      message: "成功触发工作流",
+      message: "Workflow triggered",
       data
     };
   }
