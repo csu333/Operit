@@ -453,7 +453,7 @@ class AttachmentDelegate(private val context: Context, private val toolHandler: 
     }
 
     private fun packageAttachmentDisplayName(packageName: String): String {
-        return "包: $packageName"
+        return context.getString(R.string.attachment_package_display_name, packageName)
     }
 
     private fun workspaceMentionAttachmentPath(relativePath: String): String {

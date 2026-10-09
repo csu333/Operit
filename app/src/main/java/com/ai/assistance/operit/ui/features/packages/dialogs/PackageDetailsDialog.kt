@@ -245,7 +245,7 @@ fun PackageDetailsDialog(
                         )
                         if (resolvedAuthors.isNotEmpty()) {
                             Text(
-                                text = "作者：${resolvedAuthors.joinToString(", ")}",
+                                text = "${stringResource(R.string.author_colon)} ${resolvedAuthors.joinToString(", ")}",
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )

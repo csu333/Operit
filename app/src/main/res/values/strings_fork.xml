@@ -50,4 +50,25 @@
     <string name="mcp_publish_login_required">GitHub 登录后才能发布 MCP。</string>
     <string name="market_install_builtin_conflict_detail">本地已安装同名内置插件 `%1$s`，不能直接覆盖。</string>
     <string name="market_install_replace_failed_detail">替换已安装插件 `%1$s` 失败。</string>
+    <string name="market_notification_comment_new">新评论</string>
+    <string name="market_notification_comment_reply">回复了你的评论</string>
+    <string name="market_notification_review_approved">已通过审核</string>
+    <string name="market_notification_review_rejected">未通过审核</string>
+    <string name="market_notification_review_changes">需要修改</string>
+    <string name="market_notification_entry_curated">入选精选</string>
+    <string name="relative_time_just_now">刚刚</string>
+    <string name="relative_time_minutes_ago">%1$d 分钟前</string>
+    <string name="relative_time_hours_ago">%1$d 小时前</string>
+    <string name="relative_time_days_ago">%1$d 天前</string>
+    <string name="relative_time_months_ago">%1$d 个月前</string>
+    <string name="relative_time_years_ago">%1$d 年前</string>
+    <string name="token_activity_weekday_labels">一,二,三,四,五,六,日</string>
+    <string name="mention_package_kind_package">工具包</string>
+    <string name="mention_package_kind_skill">Skill 包</string>
+    <string name="mention_package_kind_mcp">MCP 包</string>
+    <string name="attachment_package_kind_package">包</string>
+    <string name="attachment_package_kind_skill">技能</string>
+    <string name="autoglm_thinking">💭 思考过程:</string>
+    <string name="autoglm_action">🎯 执行动作:</string>
+    <string name="attachment_package_display_name">包: %1$s</string>
 </resources>

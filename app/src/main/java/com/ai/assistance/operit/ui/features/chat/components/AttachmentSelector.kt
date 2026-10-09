@@ -73,6 +73,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
+import androidx.compose.ui.res.stringResource
 import com.ai.assistance.operit.R
 import com.ai.assistance.operit.core.tools.AIToolHandler
 import com.ai.assistance.operit.core.tools.packTool.PackageManager as ToolPackageManager
@@ -852,11 +853,12 @@ private fun buildAttachmentPackageOptions(
     return options.values.toList()
 }
 
+@Composable
 private fun buildAttachmentPackageSubtitle(option: AttachmentPackageOption): String {
     val typeLabel =
             when (option.kind) {
-                AttachmentPackageKind.PACKAGE -> "包"
-                AttachmentPackageKind.SKILL -> "技能"
+                AttachmentPackageKind.PACKAGE -> stringResource(R.string.attachment_package_kind_package)
+                AttachmentPackageKind.SKILL -> stringResource(R.string.attachment_package_kind_skill)
                 AttachmentPackageKind.MCP -> "MCP"
             }
     return if (option.description.isBlank()) {

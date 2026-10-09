@@ -1,5 +1,6 @@
 package com.ai.assistance.operit.ui.features.toolbox.screens.autoglm
 
+import com.ai.assistance.operit.R
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -169,7 +170,7 @@ class AutoGlmViewModel(private val context: Context) : ViewModel() {
 
                     val finalLines = finalMessage.lines()
                     if (finalLines.isNotEmpty()) {
-                        appendFinal("✅ 任务完成: ${finalLines.first().trim()}")
+                        appendFinal(context.getString(R.string.autoglm_task_complete, finalLines.first().trim()))
                         finalLines.drop(1).forEach { line ->
                             if (line.isNotBlank()) {
                                 appendFinal(line.trim())
@@ -231,7 +232,7 @@ class AutoGlmViewModel(private val context: Context) : ViewModel() {
 
         // 💭 思考过程
         stepResult.thinking?.takeIf { it.isNotBlank() }?.let { thinking ->
-            append("💭 思考过程:")
+            append(context.getString(R.string.autoglm_thinking))
             append("--------------------------------------------------")
             thinking.trim().lines().forEach { line ->
                 if (line.isNotBlank()) {
@@ -243,7 +244,7 @@ class AutoGlmViewModel(private val context: Context) : ViewModel() {
         // 🎯 执行动作
         stepResult.action?.let { action ->
             append("--------------------------------------------------")
-            append("🎯 执行动作:")
+            append(context.getString(R.string.autoglm_action))
 
             val jsonLines = mutableListOf<String>()
             action.actionName?.let { name ->

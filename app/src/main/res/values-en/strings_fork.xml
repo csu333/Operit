@@ -50,4 +50,25 @@
     <string name="mcp_publish_login_required">You must log in with GitHub to publish an MCP.</string>
     <string name="market_install_builtin_conflict_detail">A built-in plugin named `%1$s` is already installed locally and cannot be overwritten.</string>
     <string name="market_install_replace_failed_detail">Failed to replace installed plugin `%1$s`.</string>
+    <string name="market_notification_comment_new">New comment</string>
+    <string name="market_notification_comment_reply">Replied to your comment</string>
+    <string name="market_notification_review_approved">Review approved</string>
+    <string name="market_notification_review_rejected">Review rejected</string>
+    <string name="market_notification_review_changes">Changes requested</string>
+    <string name="market_notification_entry_curated">Featured</string>
+    <string name="relative_time_just_now">Just now</string>
+    <string name="relative_time_minutes_ago">%1$d min ago</string>
+    <string name="relative_time_hours_ago">%1$d h ago</string>
+    <string name="relative_time_days_ago">%1$d d ago</string>
+    <string name="relative_time_months_ago">%1$d mo ago</string>
+    <string name="relative_time_years_ago">%1$d y ago</string>
+    <string name="token_activity_weekday_labels">Mon,Tue,Wed,Thu,Fri,Sat,Sun</string>
+    <string name="mention_package_kind_package">Toolkit</string>
+    <string name="mention_package_kind_skill">Skill package</string>
+    <string name="mention_package_kind_mcp">MCP package</string>
+    <string name="attachment_package_kind_package">Package</string>
+    <string name="attachment_package_kind_skill">Skill</string>
+    <string name="autoglm_thinking">💭 Thinking:</string>
+    <string name="autoglm_action">🎯 Action:</string>
+    <string name="attachment_package_display_name">Package: %1$s</string>
 </resources>

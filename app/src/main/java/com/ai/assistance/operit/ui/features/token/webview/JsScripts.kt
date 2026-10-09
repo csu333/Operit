@@ -135,7 +135,7 @@ object JsScripts {
                         // 如果没有找到任何API密钥
                         if (apiKeys.length === 0) {
                             console.log('No API keys found in response');
-                            Android.onError("找不到API密钥数据");
+                            Android.onError("No API key data found");
                             return;
                         }
                         
@@ -148,11 +148,11 @@ object JsScripts {
                             Android.onKeysReceived(JSON.stringify(simplifiedResult));
                         } catch (e) {
                             console.error('Error sending keys to Android:', e);
-                            Android.onError("发送API密钥到Android失败: " + e.toString());
+                            Android.onError("Failed to send API keys to Android: " + e.toString());
                         }
                     } catch (e) {
                         console.error('JSON parse error:', e);
-                        Android.onError("JSON解析错误: " + e.toString());
+                        Android.onError("JSON parse error: " + e.toString());
                     }
                 })
                 .catch(error => {
