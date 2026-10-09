@@ -1,5 +1,7 @@
 package com.ai.assistance.operit.widget
 
+import com.ai.assistance.operit.util.LocaleUtils
+import android.content.Context
 import android.appwidget.AppWidgetManager
 import android.content.Intent
 import android.os.Bundle
@@ -43,6 +45,12 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class ToolPkgDesktopWidgetConfigActivity : ComponentActivity() {
+    // Services and activities get a system-locale base context; apply the app language
+    // so unsupported system languages don't fall through to the Chinese default resources.
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(LocaleUtils.getLocalizedContext(newBase))
+    }
+
     private var configuredAppWidgetId: Int = AppWidgetManager.INVALID_APPWIDGET_ID
     private var shouldRefreshAfterFinish: Boolean = false
 

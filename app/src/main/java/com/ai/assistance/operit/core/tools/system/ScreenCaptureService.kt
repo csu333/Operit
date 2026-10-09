@@ -1,5 +1,6 @@
 package com.ai.assistance.operit.core.tools.system
 
+import com.ai.assistance.operit.util.LocaleUtils
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -18,6 +19,12 @@ import com.ai.assistance.operit.util.AppLogger
  * This service must be running before MediaProjection is requested and while it is active.
  */
 class ScreenCaptureService : Service() {
+    // Services and activities get a system-locale base context; apply the app language
+    // so unsupported system languages don't fall through to the Chinese default resources.
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(LocaleUtils.getLocalizedContext(newBase))
+    }
+
 
     companion object {
         private const val TAG = "ScreenCaptureService"

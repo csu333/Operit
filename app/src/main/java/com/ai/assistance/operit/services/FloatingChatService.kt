@@ -1,5 +1,6 @@
 package com.ai.assistance.operit.services
 
+import com.ai.assistance.operit.util.LocaleUtils
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -58,6 +59,12 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class FloatingChatService : Service(), FloatingWindowCallback {
+    // Services and activities get a system-locale base context; apply the app language
+    // so unsupported system languages don't fall through to the Chinese default resources.
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(LocaleUtils.getLocalizedContext(newBase))
+    }
+
     private val TAG = "FloatingChatService"
     private val binder = LocalBinder()
 

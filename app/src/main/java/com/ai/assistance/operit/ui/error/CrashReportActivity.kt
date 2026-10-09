@@ -1,5 +1,6 @@
 package com.ai.assistance.operit.ui.error
 
+import com.ai.assistance.operit.util.LocaleUtils
 import android.app.Activity
 import android.app.AlarmManager
 import android.app.PendingIntent
@@ -53,6 +54,12 @@ import java.util.Date
 import java.util.Locale
 
 class CrashReportActivity : ComponentActivity() {
+    // Services and activities get a system-locale base context; apply the app language
+    // so unsupported system languages don't fall through to the Chinese default resources.
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(LocaleUtils.getLocalizedContext(newBase))
+    }
+
 
     companion object {
         const val EXTRA_STACK_TRACE = "extra_stack_trace"

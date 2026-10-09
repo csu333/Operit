@@ -1,5 +1,6 @@
 package com.ai.assistance.operit.services.assistant
 
+import com.ai.assistance.operit.util.LocaleUtils
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -19,6 +20,12 @@ import com.ai.assistance.operit.ui.floating.FloatingMode
  * 我们在这里启动悬浮窗来提供 AI 助手功能。
  */
 class OperitVoiceInteractionSessionService : VoiceInteractionSessionService() {
+    // Services and activities get a system-locale base context; apply the app language
+    // so unsupported system languages don't fall through to the Chinese default resources.
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(LocaleUtils.getLocalizedContext(newBase))
+    }
+
     
     companion object {
         private const val TAG = "OperitSessionService"

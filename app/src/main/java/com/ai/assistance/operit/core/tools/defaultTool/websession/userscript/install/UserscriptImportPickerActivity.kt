@@ -1,5 +1,7 @@
 package com.ai.assistance.operit.core.tools.defaultTool.websession.userscript.install
 
+import com.ai.assistance.operit.util.LocaleUtils
+import android.content.Context
 import android.content.Intent
 import android.database.Cursor
 import android.graphics.Color
@@ -15,6 +17,12 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 internal class UserscriptImportPickerActivity : ComponentActivity() {
+    // Services and activities get a system-locale base context; apply the app language
+    // so unsupported system languages don't fall through to the Chinese default resources.
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(LocaleUtils.getLocalizedContext(newBase))
+    }
+
     private var requestId: String = ""
     private var completed = false
 

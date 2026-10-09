@@ -1,5 +1,6 @@
 package com.ai.assistance.operit.api.chat
 
+import com.ai.assistance.operit.util.LocaleUtils
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -99,6 +100,11 @@ private fun AudioRecordingConfiguration.tryGetClientPackageName(): String? {
 
 /** 前台服务，用于在AI进行长时间处理时保持应用活跃，防止被系统杀死。 该服务不执行实际工作，仅通过显示一个持久通知来提升应用的进程优先级。 */
 class AIForegroundService : Service() {
+    // Services and activities get a system-locale base context; apply the app language
+    // so unsupported system languages don't fall through to the Chinese default resources.
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(LocaleUtils.getLocalizedContext(newBase))
+    }
 
     companion object {
         private const val TAG = "AIForegroundService"

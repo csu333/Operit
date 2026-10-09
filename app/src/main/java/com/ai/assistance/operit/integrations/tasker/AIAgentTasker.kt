@@ -1,5 +1,6 @@
 package com.ai.assistance.operit.integrations.tasker
 
+import com.ai.assistance.operit.util.LocaleUtils
 import android.app.Activity
 import android.content.Context
 import android.os.Bundle
@@ -98,6 +99,12 @@ class AIAgentActionHelper(config: TaskerPluginConfig<Unit>) :
 }
 
 class ActivityConfigAIAgentAction : Activity(), TaskerPluginConfigNoInput {
+    // Services and activities get a system-locale base context; apply the app language
+    // so unsupported system languages don't fall through to the Chinese default resources.
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(LocaleUtils.getLocalizedContext(newBase))
+    }
+
     override val context get() = applicationContext
 
     override fun onCreate(savedInstanceState: Bundle?) {

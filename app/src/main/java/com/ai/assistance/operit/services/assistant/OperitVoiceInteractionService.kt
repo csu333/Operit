@@ -1,5 +1,7 @@
 package com.ai.assistance.operit.services.assistant
 
+import com.ai.assistance.operit.util.LocaleUtils
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.service.voice.VoiceInteractionService
@@ -12,6 +14,12 @@ import com.ai.assistance.operit.util.AppLogger
  * 当用户长按 Home 键或触发其他助手调用方式时，系统会启动这个服务。
  */
 class OperitVoiceInteractionService : VoiceInteractionService() {
+    // Services and activities get a system-locale base context; apply the app language
+    // so unsupported system languages don't fall through to the Chinese default resources.
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(LocaleUtils.getLocalizedContext(newBase))
+    }
+
     
     companion object {
         private const val TAG = "OperitVoiceInteraction"
