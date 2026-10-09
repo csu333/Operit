@@ -20,48 +20,87 @@ def copies(name):
            os.path.join(ROOT, 'app', 'src', 'main', 'assets', 'packages', f'{name}.js')]
     return [p for p in out if os.path.exists(p)]
 
-def code_regions(text):
-    """Yield (start, end) spans of code outside METADATA, comments and console.* lines."""
+REGEX_PREV = re.compile(r'(^|[=(,:!&|?{};\[]|\breturn|\btypeof|\bcase)\s*$')
+
+def literals(text):
+    """Yield top-level string/template literal matches (with .start/.end/.group('body') semantics),
+    skipping METADATA, comments, regex literals and literals on console.* lines.
+    Template literals are yielded whole, including any nested ${...} expressions."""
     meta = re.search(r'/\*\s*METADATA.*?\*/', text, re.S)
-    skip = []
-    if meta:
-        skip.append(meta.span())
-    i, n = 0, len(text)
-    # mask comments while respecting string literals
+    n = len(text)
+    i = meta.end() if meta and meta.start() < 50 else 0
+
+    def skip_string(j, q):
+        j += 1
+        while j < n and text[j] != q:
+            j += 2 if text[j] == '\\' else 1
+        return j + 1
+
+    def skip_template(j):
+        j += 1
+        while j < n:
+            c = text[j]
+            if c == '\\':
+                j += 2; continue
+            if c == '`':
+                return j + 1
+            if text.startswith('${', j):
+                j = skip_code(j + 2, closing='}')
+                continue
+            j += 1
+        return j
+
+    def skip_code(j, closing):
+        depth = 0
+        while j < n:
+            c = text[j]
+            if c in '"\'':
+                j = skip_string(j, c); continue
+            if c == '`':
+                j = skip_template(j); continue
+            if text.startswith('//', j):
+                k = text.find('\n', j); j = n if k < 0 else k; continue
+            if text.startswith('/*', j):
+                k = text.find('*/', j + 2); j = n if k < 0 else k + 2; continue
+            if c == '{':
+                depth += 1
+            elif c == '}':
+                if depth == 0:
+                    return j + 1
+                depth -= 1
+            j += 1
+        return j
+
+    class M:
+        def __init__(s, a, b):
+            s.a, s.b = a, b
+        def start(s, g=None):
+            return s.a + 1 if g == 'body' else s.a
+        def end(s, g=None):
+            return s.b - 1 if g == 'body' else s.b
+        def group(s, g):
+            return text[s.a + 1:s.b - 1]
+
+    def on_console_line(pos):
+        ls = text.rfind('\n', 0, pos) + 1
+        return re.search(r'console\.(log|error|warn|info|debug)\(', text[ls:pos]) is not None
+
     while i < n:
         c = text[i]
         if c in '"\'`':
-            m = LIT.match(text, i)
-            i = m.end() if m else i + 1
-            continue
+            end = skip_template(i) if c == '`' else skip_string(i, c)
+            if not on_console_line(i):
+                yield M(i, end)
+            i = end; continue
         if text.startswith('//', i):
-            j = text.find('\n', i); j = n if j < 0 else j
-            skip.append((i, j)); i = j; continue
+            k = text.find('\n', i); i = n if k < 0 else k; continue
         if text.startswith('/*', i):
-            j = text.find('*/', i + 2); j = n if j < 0 else j + 2
-            skip.append((i, j)); i = j; continue
-        if c == '/' and re.match(r'[=(,:!&|?{};\n]\s*$', text[max(0, i - 20):i] or '\n'):
-            m = re.match(r'/(?:\\.|\[(?:\\.|[^\]])*\]|[^/\\\n\[])+/[a-z]*', text[i:])
+            k = text.find('*/', i + 2); i = n if k < 0 else k + 2; continue
+        if c == '/' and REGEX_PREV.search(text[max(0, i - 30):i]):
+            m = re.match(r'/(?:\\.|\[(?:\\.|[^\]\n])*\]|[^/\\\n\[])+/[a-z]*', text[i:])
             if m:
-                skip.append((i, i + m.end())); i += m.end(); continue
+                i += m.end(); continue
         i += 1
-    for m in re.finditer(r'^.*console\.(log|error|warn|info|debug)\(.*$', text, re.M):
-        skip.append(m.span())
-    return skip
-
-def literals(text):
-    skip = code_regions(text)
-    def skipped(pos):
-        return any(a <= pos < b for a, b in skip)
-    i, n = 0, len(text)
-    while i < n:
-        m = LIT.search(text, i)
-        if not m:
-            break
-        if skipped(m.start()):
-            i = m.start() + 1; continue
-        yield m
-        i = m.end()
 
 def extract(name):
     found = {}

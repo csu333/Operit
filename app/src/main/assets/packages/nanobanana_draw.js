@@ -87,7 +87,7 @@ const nanobananaDraw = (function () {
         if (normalizedVariant === "nano") {
             return MODEL_NANO;
         }
-        throw new Error("参数 model_variant 仅支持 'pro' 或 'nano'。");
+        throw new Error("Parameter model_variant only supports 'pro' or 'nano'.");
     }
     function normalizePositiveInt(value, fallback) {
         if (value === undefined || value === null) {
@@ -102,7 +102,7 @@ const nanobananaDraw = (function () {
     function getApiKey() {
         const apiKey = getEnv("NANOBANANA_API_KEY");
         if (!apiKey) {
-            throw new Error("NANOBANANA_API_KEY 未配置，请在环境变量中设置 Nano Banana 的 API Key。");
+            throw new Error("NANOBANANA_API_KEY is not configured. Set your Nano Banana API key in the environment variables.");
         }
         return apiKey;
     }
@@ -260,11 +260,11 @@ const nanobananaDraw = (function () {
     async function uploadImageToBeeimg(filePath) {
         const exists = await Tools.Files.exists(filePath);
         if (!exists.exists) {
-            throw new Error(`参考图文件不存在: ${filePath}`);
+            throw new Error(`Reference image file does not exist: ${filePath}`);
         }
         const apiKey = getBeeimgApiKey();
         if (!apiKey) {
-            throw new Error("使用 image_paths 需要配置 BEEIMG_API_KEY（用于把本地图片上传到图床以获得公网URL）。");
+            throw new Error("Using image_paths requires BEEIMG_API_KEY (used to upload local images to an image host to get a public URL).");
         }
         const resp = await Tools.Net.uploadFile({
             url: BEEIMG_UPLOAD_ENDPOINT,
@@ -281,20 +281,20 @@ const nanobananaDraw = (function () {
             ]
         });
         if (resp.statusCode < 200 || resp.statusCode >= 300) {
-            throw new Error(`BeeIMG 上传失败: HTTP ${resp.statusCode} - ${resp.content}`);
+            throw new Error(`BeeIMG upload failed: HTTP ${resp.statusCode} - ${resp.content}`);
         }
         let parsed;
         try {
             parsed = safeJsonParseLoose(resp.content);
         }
         catch (e) {
-            throw new Error(`BeeIMG 上传响应解析失败: ${getErrorMessage(e)}`);
+            throw new Error(`Failed to parse BeeIMG upload response: ${getErrorMessage(e)}`);
         }
         const files = isRecord(parsed) && isRecord(parsed["files"]) ? parsed["files"] : null;
         const ok = !!files && (files["status"] === "Success" || files["code"] === "200" || files["code"] === 200);
         const url = files ? files["url"] : undefined;
         if (!ok || (typeof url !== "string" && typeof url !== "number") || String(url).trim().length === 0) {
-            throw new Error(`BeeIMG 上传失败: ${resp.content}`);
+            throw new Error(`BeeIMG upload failed: ${resp.content}`);
         }
         return String(url);
     }
@@ -366,24 +366,24 @@ const nanobananaDraw = (function () {
         console.log("步骤1/2: 提交绘图任务...");
         const response = await request.build().execute();
         if (!response.isSuccessful()) {
-            throw new Error(`Nano Banana API 调用失败: ${response.statusCode} - ${response.content}`);
+            throw new Error(`Nano Banana API call failed: ${response.statusCode} - ${response.content}`);
         }
         let parsed;
         try {
             parsed = JSON.parse(response.content);
         }
         catch (e) {
-            throw new Error(`解析 Nano Banana 响应失败: ${getErrorMessage(e)}`);
+            throw new Error(`Failed to parse Nano Banana response: ${getErrorMessage(e)}`);
         }
         if (!isRecord(parsed)) {
-            throw new Error("API响应不是合法对象，请检查参数是否正确。响应: " + response.content);
+            throw new Error("The API response is not a valid object; check that the parameters are correct. Response: " + response.content);
         }
         if (!isApiSuccessResponse(parsed)) {
-            throw new Error(`Nano Banana API 返回错误: ${extractMessage(parsed, response.content)}`);
+            throw new Error(`Nano Banana API returned an error: ${extractMessage(parsed, response.content)}`);
         }
         const payload = extractTaskPayload(parsed);
         if (!payload || typeof payload["id"] !== "string") {
-            throw new Error("API响应中未找到任务ID，请检查参数是否正确。响应: " + JSON.stringify(parsed));
+            throw new Error("No task ID found in the API response; check that the parameters are correct. Response: " + JSON.stringify(parsed));
         }
         const taskId = payload["id"];
         console.log(`任务提交成功! ID: ${taskId}`);
@@ -459,12 +459,12 @@ const nanobananaDraw = (function () {
                 if (isSuccessStatus(status) || (progress >= 100 && imageUrl.length > 0)) {
                     console.log("✅ 任务完成!");
                     if (imageUrl.length === 0) {
-                        throw new Error("任务完成但响应中未找到图片URL: " + JSON.stringify(data));
+                        throw new Error("Task completed but no image URL was found in the response: " + JSON.stringify(data));
                     }
                     return imageUrl;
                 }
                 if (isFailureStatus(status)) {
-                    throw new Error(`任务执行失败: ${JSON.stringify(data)}`);
+                    throw new Error(`Task failed: ${JSON.stringify(data)}`);
                 }
                 if ((status === "running" || status === "processing") && progress > 0) {
                     console.log(`生成中... 进度: ${progress}%`);
@@ -475,7 +475,7 @@ const nanobananaDraw = (function () {
             }
             await doSleep(pollIntervalMs);
         }
-        throw new Error(`任务超时: 等待超过${Math.ceil(maxWaitTimeMs / 60000)}分钟仍未完成`);
+        throw new Error(`Task timed out: not finished after waiting more than ${Math.ceil(maxWaitTimeMs / 60000)} minute(s)`);
     }
     function guessExtensionFromUrl(url) {
         const match = url.match(/\.(png|jpg|jpeg|webp|gif)(?:\?|#|$)/i);
@@ -486,12 +486,12 @@ const nanobananaDraw = (function () {
     }
     async function draw_image(params) {
         if (!params || !params.prompt || params.prompt.trim().length === 0) {
-            throw new Error("参数 prompt 不能为空。");
+            throw new Error("Parameter prompt must not be empty.");
         }
         const prompt = params.prompt.trim();
         const resolvedModel = resolveModel(params.model, params.model_variant);
         if (params.image_size && params.image_size.trim().length > 0 && resolvedModel !== MODEL_PRO) {
-            throw new Error("参数 image_size 仅支持 pro 模型（model_variant='pro' 或 model='nano-banana-pro'）。");
+            throw new Error("Parameter image_size is only supported by the pro model (model_variant='pro' or model='nano-banana-pro').");
         }
         const pollIntervalMs = normalizePositiveInt(params.poll_interval_ms, POLL_INTERVAL);
         const normalizedImageSize = params.image_size ? params.image_size.trim().toUpperCase() : "";
@@ -553,14 +553,14 @@ const nanobananaDraw = (function () {
         if (params.image_urls) {
             imageUrlsArray = parseImageUrls(params.image_urls);
             if (imageUrlsArray.length === 0) {
-                throw new Error("参数 image_urls 必须是有效的URL数组。");
+                throw new Error("Parameter image_urls must be an array of valid URLs.");
             }
         }
         let imagePathsArray = [];
         if (params.image_paths) {
             imagePathsArray = parseImagePaths(params.image_paths);
             if (imagePathsArray.length === 0) {
-                throw new Error("参数 image_paths 必须是有效的本地路径数组。");
+                throw new Error("Parameter image_paths must be an array of valid local paths.");
             }
         }
         if (imagePathsArray.length > 0) {
@@ -589,15 +589,15 @@ const nanobananaDraw = (function () {
         const filePath = `${DRAWS_DIR}/${baseName}.${ext}`;
         const downloadResult = await Tools.Files.download(imageUrl, filePath);
         if (!downloadResult.successful) {
-            throw new Error(`下载图片失败: ${downloadResult.details}`);
+            throw new Error(`Failed to download image: ${downloadResult.details}`);
         }
         const fileUri = `file://${filePath}`;
-        const markdown = `![AI生成的图片](${fileUri})`;
+        const markdown = `![AI-generated image](${fileUri})`;
         const hintLines = [];
-        hintLines.push(`图片已生成并保存在本地 ${DRAWS_DIR}。`);
-        hintLines.push(`本地路径: ${filePath}`);
+        hintLines.push(`Image generated and saved locally in ${DRAWS_DIR}.`);
+        hintLines.push(`Local path: ${filePath}`);
         hintLines.push("");
-        hintLines.push("在后续回答中，请直接输出下面这一行 Markdown 来展示这张图片：");
+        hintLines.push("In later replies, output the following line of Markdown directly to show this image:");
         hintLines.push("");
         hintLines.push(markdown);
         return {
@@ -618,7 +618,7 @@ const nanobananaDraw = (function () {
             const result = await draw_image(params);
             complete({
                 success: true,
-                message: `图片生成成功，已保存到 ${DRAWS_DIR}，并返回 Markdown 图片提示。`,
+                message: `Image generated, saved to ${DRAWS_DIR}, and a Markdown image hint was returned.`,
                 data: result
             });
         }
@@ -626,7 +626,7 @@ const nanobananaDraw = (function () {
             console.error("draw_image 执行失败:", error);
             complete({
                 success: false,
-                message: `图片生成失败: ${getErrorMessage(error)}`,
+                message: `Image generation failed: ${getErrorMessage(error)}`,
                 error_stack: getErrorStack(error)
             });
         }

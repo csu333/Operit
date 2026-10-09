@@ -69,7 +69,7 @@ const zhipuDraw = (function () {
     function getApiKey() {
         const apiKey = getEnv("ZHIPU_API_KEY");
         if (!apiKey) {
-            throw new Error("ZHIPU_API_KEY 未配置，请在环境变量中设置智谱的 API Key。");
+            throw new Error("ZHIPU_API_KEY is not configured. Set your Zhipu API key in the environment variables.");
         }
         return apiKey;
     }
@@ -126,18 +126,18 @@ const zhipuDraw = (function () {
             .body(JSON.stringify(body), "json");
         const response = await request.build().execute();
         if (!response.isSuccessful()) {
-            throw new Error(`智谱图片 API 调用失败: ${response.statusCode} - ${response.content}`);
+            throw new Error(`Zhipu image API call failed: ${response.statusCode} - ${response.content}`);
         }
         let parsed;
         try {
             parsed = JSON.parse(response.content);
         }
         catch (e) {
-            throw new Error(`解析智谱响应失败: ${getErrorMessage(e)}`);
+            throw new Error(`Failed to parse Zhipu response: ${getErrorMessage(e)}`);
         }
         const first = parsed?.data?.[0];
         if (!first || !first.url) {
-            throw new Error("智谱响应中未找到有效的图片数据，请检查API返回格式");
+            throw new Error("No valid image data found in the Zhipu response; check the API response format");
         }
         const result = {
             url: String(first.url),
@@ -150,7 +150,7 @@ const zhipuDraw = (function () {
     }
     async function draw_image(params) {
         if (!params || !params.prompt || params.prompt.trim().length === 0) {
-            throw new Error("参数 prompt 不能为空。");
+            throw new Error("Parameter prompt must not be empty.");
         }
         const prompt = params.prompt.trim();
         const size = params.size || "1024x1024";
@@ -158,23 +158,23 @@ const zhipuDraw = (function () {
         await ensureDirectories();
         const apiResult = await callZhipuImageAPI({ prompt, size, model });
         if (!apiResult.url || !apiResult.url.trim()) {
-            throw new Error("API响应中未包含图片URL");
+            throw new Error("The API response contains no image URL");
         }
         const baseName = buildFileName(prompt, params.file_name);
         const filePath = `${DRAWS_DIR}/${baseName}.png`;
         const downloadResult = await Tools.Files.download(apiResult.url, filePath);
         if (!downloadResult.successful) {
-            throw new Error(`下载图片失败: ${downloadResult.details}`);
+            throw new Error(`Failed to download image: ${downloadResult.details}`);
         }
         const fileUri = `file://${filePath}`;
-        const markdown = `![AI生成的图片](${fileUri})`;
+        const markdown = `![AI-generated image](${fileUri})`;
         const hintLines = [];
-        hintLines.push(`图片已生成并保存在本地 ${DRAWS_DIR}。`);
-        hintLines.push(`本地路径: ${filePath}`);
-        hintLines.push(`提示词: ${prompt}`);
-        hintLines.push(`模型: ${apiResult.model || "glm-image"}`);
+        hintLines.push(`Image generated and saved locally in ${DRAWS_DIR}.`);
+        hintLines.push(`Local path: ${filePath}`);
+        hintLines.push(`Prompt: ${prompt}`);
+        hintLines.push(`Model: ${apiResult.model || "glm-image"}`);
         hintLines.push("");
-        hintLines.push("在后续回答中，请直接输出下面这一行 Markdown 来展示这张图片：");
+        hintLines.push("In later replies, output the following line of Markdown directly to show this image:");
         hintLines.push("");
         hintLines.push(markdown);
         return {
@@ -190,7 +190,7 @@ const zhipuDraw = (function () {
             const result = await draw_image(params);
             complete({
                 success: true,
-                message: `图片生成成功，已保存到 ${DRAWS_DIR}，并返回 Markdown 图片提示。`,
+                message: `Image generated, saved to ${DRAWS_DIR}, and a Markdown image hint was returned.`,
                 data: result
             });
         }
@@ -198,7 +198,7 @@ const zhipuDraw = (function () {
             console.error("draw_image 执行失败:", error);
             complete({
                 success: false,
-                message: `图片生成失败: ${getErrorMessage(error)}`,
+                message: `Image generation failed: ${getErrorMessage(error)}`,
                 error_stack: getErrorStack(error)
             });
         }
