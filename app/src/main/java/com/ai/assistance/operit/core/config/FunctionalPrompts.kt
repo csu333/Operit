@@ -459,24 +459,39 @@ object FunctionalPrompts {
         }
     }
 
-    fun waifuEmotionRule(emotionListText: String): String {
-        return "**表达情绪规则：你必须在每个句末判断句中包含的情绪或增强语气，并使用<emotion>标签在句末插入情绪状态。后续会根据情绪生成表情包。可用情绪包括：$emotionListText。例如：<emotion>happy</emotion>、<emotion>miss_you</emotion>等。如果没有这些情绪则不插入。**"
+    fun waifuEmotionRule(emotionListText: String, useEnglish: Boolean): String {
+        return if (useEnglish) {
+            "**Emotion expression rule: at the end of every sentence you must judge the emotion or emphasis it carries, and insert the emotional state with an <emotion> tag at the end of the sentence. Stickers will be generated from these emotions. Available emotions: $emotionListText. For example: <emotion>happy</emotion>, <emotion>miss_you</emotion>, etc. If none of these emotions apply, do not insert a tag.**"
+        } else {
+            "**表达情绪规则：你必须在每个句末判断句中包含的情绪或增强语气，并使用<emotion>标签在句末插入情绪状态。后续会根据情绪生成表情包。可用情绪包括：$emotionListText。例如：<emotion>happy</emotion>、<emotion>miss_you</emotion>等。如果没有这些情绪则不插入。**"
+        }
     }
 
-    fun waifuNoCustomEmojiRule(): String {
-        return "**当前没有可用的自定义表情，请不要使用<emotion>标签。**"
+    fun waifuNoCustomEmojiRule(useEnglish: Boolean): String {
+        return if (useEnglish) {
+            "**No custom stickers are currently available. Do not use the <emotion> tag.**"
+        } else {
+            "**当前没有可用的自定义表情，请不要使用<emotion>标签。**"
+        }
     }
 
     fun waifuCustomPromptRule(customPrompt: String): String {
         return customPrompt.trim()
     }
 
-    fun waifuSelfieRule(waifuSelfiePrompt: String): String {
+    fun waifuSelfieRule(waifuSelfiePrompt: String, useEnglish: Boolean): String {
         return buildString {
-            append("**绘图（自拍）**: 当你需要自拍时，你会调用绘图功能。")
-            append("\n*   **基础关键词**: `$waifuSelfiePrompt`。")
-            append("\n*   **自定义内容**: 你会根据主人的要求，在基础关键词后添加表情、动作、穿着、背景等描述。")
-            append("\n*   **合影**: 如果需要主人出镜，你会根据指令明确包含`2 girl` （2 girl 代表2个女孩主人也是女孩，主人为黑色长发可爱女生）等关键词。")
+            if (useEnglish) {
+                append("**Drawing (selfies)**: When you need to take a selfie, you call the drawing function.")
+                append("\n*   **Base keywords**: `$waifuSelfiePrompt`.")
+                append("\n*   **Custom content**: Following your owner's request, you add descriptions of expression, pose, outfit, background, etc. after the base keywords.")
+                append("\n*   **Group photo**: If your owner needs to appear in the picture, you explicitly include keywords such as `2 girl` as instructed (2 girl means two girls; your owner is also a girl, a cute girl with long black hair).")
+            } else {
+                append("**绘图（自拍）**: 当你需要自拍时，你会调用绘图功能。")
+                append("\n*   **基础关键词**: `$waifuSelfiePrompt`。")
+                append("\n*   **自定义内容**: 你会根据主人的要求，在基础关键词后添加表情、动作、穿着、背景等描述。")
+                append("\n*   **合影**: 如果需要主人出镜，你会根据指令明确包含`2 girl` （2 girl 代表2个女孩主人也是女孩，主人为黑色长发可爱女生）等关键词。")
+            }
         }
     }
 
@@ -560,18 +575,32 @@ Output rules:
         }
     }
 
-    fun translationSystemPrompt(): String {
-        return "你是一个专业的翻译助手，能够准确翻译各种语言，并保持原文的语气和风格。"
+    fun translationSystemPrompt(useEnglish: Boolean): String {
+        return if (useEnglish) {
+            "You are a professional translation assistant who translates accurately between languages while preserving the tone and style of the original."
+        } else {
+            "你是一个专业的翻译助手，能够准确翻译各种语言，并保持原文的语气和风格。"
+        }
     }
 
-    fun translationUserPrompt(targetLanguage: String, text: String): String {
-        return """
+    fun translationUserPrompt(targetLanguage: String, text: String, useEnglish: Boolean): String {
+        return if (useEnglish) {
+            """
+Translate the following text into $targetLanguage, preserving the tone and style of the original:
+
+$text
+
+Return only the translation, without any explanation or extra content.
+            """.trim()
+        } else {
+            """
 请将以下文本翻译为$targetLanguage，保持原文的语气和风格：
 
 $text
 
 只返回翻译结果，不要添加任何解释或额外内容。
-        """.trim()
+            """.trim()
+        }
     }
 
     fun packageDescriptionSystemPrompt(useEnglish: Boolean): String {

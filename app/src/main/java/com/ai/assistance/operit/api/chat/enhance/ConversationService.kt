@@ -978,6 +978,7 @@ class ConversationService(
         val waifuCustomPrompt = waifuPreferences.waifuCustomPromptFlow.first()
         val waifuSelfiePrompt = waifuPreferences.waifuSelfiePromptFlow.first()
         val waifuRules = mutableListOf<String>()
+        val useEnglish = !LocaleUtils.usesChineseContent(context)
 
         if (waifuEnableEmoticons) {
             // 动态获取当前可用的表情分组
@@ -991,15 +992,15 @@ class ConversationService(
             
             if (availableCategories.isNotEmpty()) {
                 val emotionListText = availableCategories.joinToString(", ")
-                waifuRules.add(FunctionalPrompts.waifuEmotionRule(emotionListText))
+                waifuRules.add(FunctionalPrompts.waifuEmotionRule(emotionListText, useEnglish))
             } else {
                 // 如果没有自定义表情，则不添加情绪规则，或明确告知没有可用表情
-                waifuRules.add(FunctionalPrompts.waifuNoCustomEmojiRule())
+                waifuRules.add(FunctionalPrompts.waifuNoCustomEmojiRule(useEnglish))
             }
         }
         
         if (waifuEnableSelfie) {
-            waifuRules.add(FunctionalPrompts.waifuSelfieRule(waifuSelfiePrompt))
+            waifuRules.add(FunctionalPrompts.waifuSelfieRule(waifuSelfiePrompt, useEnglish))
         }
 
         if (waifuCustomPrompt.isNotBlank()) {
@@ -1098,14 +1099,15 @@ class ConversationService(
             else -> context.getString(R.string.conversation_language_chinese) // 默认翻译为中文
         }
         
+        val useEnglish = !LocaleUtils.usesChineseContent(context)
         val translationPrompt = """
-${FunctionalPrompts.translationUserPrompt(targetLanguage, text)}
+${FunctionalPrompts.translationUserPrompt(targetLanguage, text, useEnglish)}
         """.trim()
         
         val chatHistory = listOf(
             PromptTurn(
                 kind = PromptTurnKind.SYSTEM,
-                content = FunctionalPrompts.translationSystemPrompt()
+                content = FunctionalPrompts.translationSystemPrompt(useEnglish)
             )
         )
         
