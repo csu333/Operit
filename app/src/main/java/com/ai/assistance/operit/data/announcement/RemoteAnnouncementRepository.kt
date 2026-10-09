@@ -209,9 +209,14 @@ class RemoteAnnouncementRepository(
         val language = locale.language.normalizeLocaleKey()
         val defaultKey = content.defaultLocale.normalizeLocaleKey()
 
-        return normalizedMap[fullTag]
-            ?: normalizedMap[language]
-            ?: normalizedMap[defaultKey]
+        normalizedMap[fullTag]?.let { return it }
+        normalizedMap[language]?.let { return it }
+        // Non-Chinese users get English content, or nothing rather than Chinese-only text.
+        if (language != "zh") {
+            return normalizedMap["en"]
+                ?: normalizedMap.entries.firstOrNull { it.key.startsWith("en-") }?.value
+        }
+        return normalizedMap[defaultKey]
             ?: content.locales.values.firstOrNull()
     }
 
