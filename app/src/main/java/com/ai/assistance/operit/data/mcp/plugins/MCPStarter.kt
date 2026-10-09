@@ -630,7 +630,7 @@ class MCPStarter(private val context: Context) {
                         TAG,
                         "Registering local plugin $pluginId with env keys: $envKeysSummary"
                     )
-                    progressListener?.onPluginLog(pluginId, "读取到配置 env 键: $envKeysSummary")
+                    progressListener?.onPluginLog(pluginId, "Config env keys read: $envKeysSummary")
 
                     val registerResult = MCPBridge.getInstance(context).registerMcpService(
                         name = extractedServerName,
