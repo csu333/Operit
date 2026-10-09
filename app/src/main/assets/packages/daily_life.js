@@ -368,19 +368,19 @@ const dailyLife = (function () {
             const extractedInfo = extractWeatherInfo(result.content);
             return {
                 success: true,
-                query: location === "current" ? "当前天气" : `${location} 天气`,
+                query: location === "current" ? "current weather" : `${location} weather`,
                 location: location,
                 timestamp: new Date().toISOString(),
                 url: result.url,
                 title: result.title,
                 weather_info: extractedInfo,
-                note: "天气数据来自网页内容提取，仅供参考。"
+                note: "Weather data is extracted from web page content and is for reference only."
             };
         }
         catch (error) {
             console.error(`[search_weather] 错误: ${error.message}`);
             console.error(error.stack);
-            throw new Error(`获取天气信息失败: ${error.message}`);
+            throw new Error(`Failed to get weather information: ${error.message}`);
         }
     }
     /**
@@ -453,7 +453,7 @@ const dailyLife = (function () {
             // 返回结果
             return {
                 success: true,
-                message: "提醒创建成功",
+                message: "Reminder created",
                 title: params.title,
                 description: params.description || undefined,
                 due_date: params.due_date || undefined,
@@ -466,7 +466,7 @@ const dailyLife = (function () {
             console.error(error.stack);
             return {
                 success: false,
-                message: `创建提醒失败: ${error.message}`,
+                message: `Failed to create reminder: ${error.message}`,
                 title: params.title,
                 description: params.description || undefined,
                 due_date: params.due_date || undefined,
@@ -489,13 +489,13 @@ const dailyLife = (function () {
         const resolvedSenderName = getCallerName();
         const resolvedLang = getLang();
         const workflowName = resolvedLang?.toLowerCase()?.startsWith("zh")
-            ? `一次性定时任务 ${params.trigger_time}`
+            ? `One-time scheduled task ${params.trigger_time}`
             : `One-time scheduled task ${params.trigger_time}`;
         const description = resolvedLang?.toLowerCase()?.startsWith("zh")
-            ? `一次性定时任务，触发时间 ${params.trigger_time}`
+            ? `One-time scheduled task, triggers at ${params.trigger_time}`
             : `One-time scheduled task at ${params.trigger_time}`;
-        const timedTriggerTag = `[定时触发:${params.trigger_time}]\n[Scheduled Trigger:${params.trigger_time}]`;
-        const defaultMessage = `[自动任务] 时间到了，开始执行一次性定时任务。现在是 ${params.trigger_time}\n[Automated Task] Time reached, start executing the one-time scheduled task. Current time is ${params.trigger_time}`;
+        const timedTriggerTag = `[Scheduled Trigger:${params.trigger_time}]`;
+        const defaultMessage = `[Automated Task] Time reached, start executing the one-time scheduled task. Current time is ${params.trigger_time}`;
         const messageContent = params.message
             ? `${params.message}\n${timedTriggerTag}`
             : `${defaultMessage}\n${timedTriggerTag}`;
@@ -539,14 +539,14 @@ const dailyLife = (function () {
         }
         const nodeTexts = resolvedLang?.toLowerCase()?.startsWith("zh")
             ? {
-                triggerName: "定时触发",
-                triggerDesc: "一次性定时触发",
-                startName: "启动对话服务",
-                startDesc: "启动对话服务以便发送消息",
-                sendName: "唤醒AI",
-                sendDesc: "向对话发送唤醒消息，触发AI执行任务",
-                deleteName: "删除工作流",
-                deleteDesc: "执行后删除自己"
+                triggerName: "Scheduled trigger",
+                triggerDesc: "One-time scheduled trigger",
+                startName: "Start chat service",
+                startDesc: "Start the chat service so messages can be sent",
+                sendName: "Wake AI",
+                sendDesc: "Send a wake-up message to the chat to trigger the AI to run the task",
+                deleteName: "Delete workflow",
+                deleteDesc: "Delete itself after running"
             }
             : {
                 triggerName: "Scheduled Trigger",
@@ -632,7 +632,7 @@ const dailyLife = (function () {
         });
         return {
             success: true,
-            message: "一次性提醒工作流已创建",
+            message: "One-time reminder workflow created",
             data: {
                 workflow_id: workflowId,
                 trigger_time: params.trigger_time,
@@ -688,7 +688,7 @@ const dailyLife = (function () {
             // 返回结果
             return {
                 success: true,
-                message: "闹钟设置成功",
+                message: "Alarm set",
                 alarm_time: `${params.hour.toString().padStart(2, '0')}:${params.minute.toString().padStart(2, '0')}`,
                 label: params.message || undefined,
                 repeat_days: params.days || undefined,
@@ -701,7 +701,7 @@ const dailyLife = (function () {
             console.error(error.stack);
             return {
                 success: false,
-                message: `设置闹钟失败: ${error.message}`,
+                message: `Failed to set alarm: ${error.message}`,
                 alarm_time: `${params.hour.toString().padStart(2, '0')}:${params.minute.toString().padStart(2, '0')}`,
                 label: params.message || undefined,
                 repeat_days: params.days || undefined,
@@ -735,7 +735,7 @@ const dailyLife = (function () {
             const result = await intent.start();
             return {
                 success: true,
-                message: "短信编辑界面已打开",
+                message: "SMS compose screen opened",
                 phone_number: params.phone_number,
                 content_preview: params.message.length > 30 ? params.message.substring(0, 30) + "..." : params.message,
                 raw_result: result
@@ -745,7 +745,7 @@ const dailyLife = (function () {
             console.error(`发送短信失败: ${error.message}`);
             return {
                 success: false,
-                message: `发送短信失败: ${error.message}`,
+                message: `Failed to send SMS: ${error.message}`,
                 phone_number: params.phone_number
             };
         }
@@ -768,7 +768,7 @@ const dailyLife = (function () {
             const result = await intent.start();
             return {
                 success: true,
-                message: "已打开微信分享界面，请选择联系人并确认发送",
+                message: "WeChat share screen opened; choose a contact and confirm sending",
                 content_preview: params.message.length > 30 ? params.message.substring(0, 30) + "..." : params.message,
                 raw_result: result
             };
@@ -778,7 +778,7 @@ const dailyLife = (function () {
             console.error(error.stack);
             return {
                 success: false,
-                message: `调用微信发送消息失败: ${error.message}`,
+                message: `Failed to send message via WeChat: ${error.message}`,
                 content_preview: params.message ? (params.message.length > 30 ? params.message.substring(0, 30) + "..." : params.message) : ""
             };
         }
@@ -801,7 +801,7 @@ const dailyLife = (function () {
             const result = await intent.start();
             return {
                 success: true,
-                message: "已打开 QQ 分享界面，请选择联系人并确认发送",
+                message: "QQ share screen opened; choose a contact and confirm sending",
                 content_preview: params.message.length > 30 ? params.message.substring(0, 30) + "..." : params.message,
                 raw_result: result
             };
@@ -811,7 +811,7 @@ const dailyLife = (function () {
             console.error(error.stack);
             return {
                 success: false,
-                message: `调用 QQ 发送消息失败: ${error.message}`,
+                message: `Failed to send message via QQ: ${error.message}`,
                 content_preview: params.message ? (params.message.length > 30 ? params.message.substring(0, 30) + "..." : params.message) : ""
             };
         }
@@ -835,7 +835,7 @@ const dailyLife = (function () {
             const result = await intent.start();
             return {
                 success: true,
-                message: "已打开微信朋友圈发表界面，请确认内容并发送",
+                message: "WeChat Moments post screen opened; confirm the content and post",
                 content_preview: params.message.length > 30 ? params.message.substring(0, 30) + "..." : params.message,
                 raw_result: result
             };
@@ -845,7 +845,7 @@ const dailyLife = (function () {
             console.error(error.stack);
             return {
                 success: false,
-                message: `调用微信朋友圈失败: ${error.message}`,
+                message: `Failed to open WeChat Moments: ${error.message}`,
                 content_preview: params.message ? (params.message.length > 30 ? params.message.substring(0, 30) + "..." : params.message) : ""
             };
         }
@@ -875,7 +875,7 @@ const dailyLife = (function () {
             const result = await intent.start();
             return {
                 success: true,
-                message: isEmergency ? "紧急电话已拨打" : "拨号界面已打开",
+                message: isEmergency ? "Emergency call placed" : "Dialer opened",
                 phone_number: params.phone_number,
                 is_emergency: isEmergency,
                 raw_result: result
@@ -885,7 +885,7 @@ const dailyLife = (function () {
             console.error(`拨打电话失败: ${error.message}`);
             return {
                 success: false,
-                message: `拨打电话失败: ${error.message}`,
+                message: `Failed to make call: ${error.message}`,
                 phone_number: params.phone_number,
                 is_emergency: params.emergency === true
             };
@@ -916,7 +916,7 @@ const dailyLife = (function () {
             console.log(`back_flashlight_state 设置结果: ${JSON.stringify(backFlashlightResult)}`);
             return {
                 success: true,
-                message: `手电筒已${state === 'on' ? '打开' : '关闭'}`,
+                message: `Flashlight turned ${state === 'on' ? 'on' : 'off'}`,
                 state: state,
                 flash_state_result: flashStateResult,
                 back_flashlight_result: backFlashlightResult
@@ -926,7 +926,7 @@ const dailyLife = (function () {
             console.error(`手电筒操作失败: ${error.message}`);
             return {
                 success: false,
-                message: `手电筒操作失败: ${error.message}`,
+                message: `Flashlight operation failed: ${error.message}`,
                 state: params.state
             };
         }
@@ -957,15 +957,15 @@ const dailyLife = (function () {
             switch (action) {
                 case 'up':
                     keyCode = 'KEYCODE_VOLUME_UP';
-                    actionName = '增加';
+                    actionName = 'up';
                     break;
                 case 'down':
                     keyCode = 'KEYCODE_VOLUME_DOWN';
-                    actionName = '减小';
+                    actionName = 'down';
                     break;
                 case 'mute':
                     keyCode = 'KEYCODE_VOLUME_MUTE';
-                    actionName = '静音';
+                    actionName = 'mute';
                     count = 1; // Mute should only be pressed once
                     break;
                 default:
@@ -984,7 +984,7 @@ const dailyLife = (function () {
             }
             return {
                 success: true,
-                message: `音量${actionName}操作完成，共执行 ${count} 次`,
+                message: `Volume ${actionName} done, performed ${count} time(s)`,
                 action: action,
                 key_code: keyCode,
                 count: count,
@@ -995,7 +995,7 @@ const dailyLife = (function () {
             console.error(`音量调节失败: ${error.message}`);
             return {
                 success: false,
-                message: `音量调节失败: ${error.message}`,
+                message: `Volume adjustment failed: ${error.message}`,
                 action: params.action,
                 count: params.count || 1
             };
@@ -1016,7 +1016,7 @@ const dailyLife = (function () {
             const result = await Tools.System.shell(command);
             return {
                 success: true,
-                message: `Wi-Fi 已${state === 'on' ? '开启' : '关闭'}`,
+                message: `Wi-Fi turned ${state === 'on' ? 'on' : 'off'}`,
                 state: state,
                 raw_result: result
             };
@@ -1025,7 +1025,7 @@ const dailyLife = (function () {
             console.error(`Wi-Fi 操作失败: ${error.message}`);
             return {
                 success: false,
-                message: `Wi-Fi 操作失败: ${error.message}`,
+                message: `Wi-Fi operation failed: ${error.message}`,
                 state: params.state
             };
         }
@@ -1051,7 +1051,7 @@ const dailyLife = (function () {
             console.log(`截图已保存到: ${filePath}`);
             return {
                 success: true,
-                message: `截图已保存到 ${filePath}`,
+                message: `Screenshot saved to ${filePath}`,
                 file_path: filePath,
                 raw_result: result
             };
@@ -1060,7 +1060,7 @@ const dailyLife = (function () {
             console.error(`截图失败: ${error.message}`);
             return {
                 success: false,
-                message: `截图失败: ${error.message}`
+                message: `Screenshot failed: ${error.message}`
             };
         }
     }
@@ -1075,7 +1075,7 @@ const dailyLife = (function () {
             const result = await intent.start();
             return {
                 success: true,
-                message: "相机应用已打开",
+                message: "Camera app opened",
                 raw_result: result
             };
         }
@@ -1083,7 +1083,7 @@ const dailyLife = (function () {
             console.error(`打开相机失败: ${error.message}`);
             return {
                 success: false,
-                message: `打开相机失败: ${error.message}`
+                message: `Failed to open camera: ${error.message}`
             };
         }
     }
@@ -1102,15 +1102,15 @@ const dailyLife = (function () {
             switch (state) {
                 case 'on':
                     shellArg = 'yes';
-                    stateName = '开启';
+                    stateName = 'on';
                     break;
                 case 'off':
                     shellArg = 'no';
-                    stateName = '关闭';
+                    stateName = 'off';
                     break;
                 case 'auto':
                     shellArg = 'auto';
-                    stateName = '自动';
+                    stateName = 'auto';
                     break;
                 default:
                     throw new Error("Invalid state. Must be 'on', 'off', or 'auto'");
@@ -1120,7 +1120,7 @@ const dailyLife = (function () {
             const result = await Tools.System.shell(command);
             return {
                 success: true,
-                message: `深夜模式已设置为 ${stateName}`,
+                message: `Night mode set to ${stateName}`,
                 state: state,
                 raw_result: result
             };
@@ -1129,7 +1129,7 @@ const dailyLife = (function () {
             console.error(`深夜模式操作失败: ${error.message}`);
             return {
                 success: false,
-                message: `深夜模式操作失败: ${error.message}`,
+                message: `Night mode operation failed: ${error.message}`,
                 state: params.state
             };
         }
@@ -1307,16 +1307,16 @@ const dailyLife = (function () {
             // }
             // 返回所有测试结果
             return {
-                message: "日常生活功能测试完成",
+                message: "Daily life feature test complete",
                 test_results: results,
                 timestamp: new Date().toISOString(),
-                summary: "测试了各种日常生活功能，包括天气搜索、拨号和短信测试。请查看各功能的测试结果。"
+                summary: "Tested various daily life features, including weather search, dialing and SMS. See each feature's test result."
             };
         }
         catch (error) {
             return {
                 success: false,
-                message: `测试过程中发生错误: ${error.message}`
+                message: `Error during testing: ${error.message}`
             };
         }
     }
@@ -1372,24 +1372,24 @@ const dailyLife = (function () {
         }
     }
     return {
-        get_current_date: async (params) => await daily_wrap(get_current_date, params, "获取日期时间成功", "获取日期时间失败"),
-        device_status: async (params) => await daily_wrap(device_status, params, "获取设备状态成功", "获取设备状态失败"),
-        search_weather: async (params) => await daily_wrap(search_weather, params, "获取天气信息成功", "获取天气信息失败"),
-        set_reminder: async (params) => await daily_wrap(set_reminder, params, "设置提醒成功", "设置提醒失败"),
-        schedule_one_time_task: async (params) => await daily_wrap(schedule_one_time_task, params, "一次性定时任务创建成功", "一次性定时任务创建失败"),
-        set_alarm: async (params) => await daily_wrap(set_alarm, params, "设置闹钟成功", "设置闹钟失败"),
-        send_message: async (params) => await daily_wrap(send_message, params, "发送短信成功", "发送短信失败"),
-        wechat_send_message: async (params) => await daily_wrap(wechat_send_message, params, "调用微信发送消息成功", "调用微信发送消息失败"),
-        qq_send_message: async (params) => await daily_wrap(qq_send_message, params, "调用 QQ 发送消息成功", "调用 QQ 发送消息失败"),
-        wechat_post_moments: async (params) => await daily_wrap(wechat_post_moments, params, "调用微信朋友圈成功", "调用微信朋友圈失败"),
-        make_phone_call: async (params) => await daily_wrap(make_phone_call, params, "拨打电话成功", "拨打电话失败"),
-        toggle_flashlight: async (params) => await daily_wrap(toggle_flashlight, params, "手电筒操作成功", "手电筒操作失败"),
-        adjust_volume: async (params) => await daily_wrap(adjust_volume, params, "音量调节成功", "音量调节失败"),
-        toggle_wifi: async (params) => await daily_wrap(toggle_wifi, params, "Wi-Fi 操作成功", "Wi-Fi 操作失败"),
-        take_screenshot: async (params) => await daily_wrap(take_screenshot, params, "截图成功", "截图失败"),
-        take_photo: async (params) => await daily_wrap(take_photo, params, "打开相机成功", "打开相机失败"),
-        toggle_dark_mode: async (params) => await daily_wrap(toggle_dark_mode, params, "深夜模式操作成功", "深夜模式操作失败"),
-        main: async (params) => await daily_wrap(main, params, "主函数执行成功", "主函数执行失败")
+        get_current_date: async (params) => await daily_wrap(get_current_date, params, "Got date and time", "Failed to get date and time"),
+        device_status: async (params) => await daily_wrap(device_status, params, "Got device status", "Failed to get device status"),
+        search_weather: async (params) => await daily_wrap(search_weather, params, "Got weather information", "Failed to get weather information"),
+        set_reminder: async (params) => await daily_wrap(set_reminder, params, "Reminder set", "Failed to set reminder"),
+        schedule_one_time_task: async (params) => await daily_wrap(schedule_one_time_task, params, "One-time scheduled task created", "Failed to create one-time scheduled task"),
+        set_alarm: async (params) => await daily_wrap(set_alarm, params, "Alarm set", "Failed to set alarm"),
+        send_message: async (params) => await daily_wrap(send_message, params, "SMS sent", "Failed to send SMS"),
+        wechat_send_message: async (params) => await daily_wrap(wechat_send_message, params, "Sent message via WeChat", "Failed to send message via WeChat"),
+        qq_send_message: async (params) => await daily_wrap(qq_send_message, params, "Sent message via QQ", "Failed to send message via QQ"),
+        wechat_post_moments: async (params) => await daily_wrap(wechat_post_moments, params, "Opened WeChat Moments", "Failed to open WeChat Moments"),
+        make_phone_call: async (params) => await daily_wrap(make_phone_call, params, "Call placed", "Failed to make call"),
+        toggle_flashlight: async (params) => await daily_wrap(toggle_flashlight, params, "Flashlight operation succeeded", "Flashlight operation failed"),
+        adjust_volume: async (params) => await daily_wrap(adjust_volume, params, "Volume adjusted", "Volume adjustment failed"),
+        toggle_wifi: async (params) => await daily_wrap(toggle_wifi, params, "Wi-Fi operation succeeded", "Wi-Fi operation failed"),
+        take_screenshot: async (params) => await daily_wrap(take_screenshot, params, "Screenshot taken", "Screenshot failed"),
+        take_photo: async (params) => await daily_wrap(take_photo, params, "Camera opened", "Failed to open camera"),
+        toggle_dark_mode: async (params) => await daily_wrap(toggle_dark_mode, params, "Night mode operation succeeded", "Night mode operation failed"),
+        main: async (params) => await daily_wrap(main, params, "Main function succeeded", "Main function failed")
     };
 })();
 //逐个导出
