@@ -268,7 +268,7 @@ object LocaleUtils {
         val locale =
                 Locale.forLanguageTag(normalizedCode)
                         .takeIf { it.language.isNotBlank() }
-                        ?: return normalizedCode
+                        ?: return LanguageCodes.ENGLISH
         val language = locale.language.lowercase(Locale.ROOT)
 
         val languageOnlyMatch =
@@ -285,6 +285,7 @@ object LocaleUtils {
             return sameLanguageVariants.first()
         }
 
-        return normalizedCode
+        // Unsupported languages fall back to English instead of the Chinese default resources.
+        return LanguageCodes.ENGLISH
     }
 }
