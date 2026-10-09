@@ -363,7 +363,7 @@ const codeRunner = (function () {
         }
         const setup = await executeTerminalCommand(`python3 -m venv ${venvDir}`);
         if (setup.exitCode !== 0 || hasError(setup.output)) {
-            throw new Error(`创建持久 venv 失败：\n${setup.output}`);
+            throw new Error(`Failed to create persistent venv:\n${setup.output}`);
         }
         return { pythonBin, pipBin };
     }
@@ -375,27 +375,27 @@ const codeRunner = (function () {
             .map(s => s.trim())
             .filter(s => s.length > 0);
         if (!pkgs.length)
-            throw new Error("请提供要安装的包列表（用 | 分隔）packages");
+            throw new Error("Provide the list of packages to install (separated by |) in packages");
         const upgradeFlag = params.upgrade ? "-U" : "";
         const { pythonBin } = await ensurePersistentVenv();
         // Fallback: use python -m pip to avoid missing pip executable shims
         const r2 = await executeTerminalCommand(`${pythonBin} -m pip install ${upgradeFlag} ${pkgs.join(" ")}`.trim());
         if (r2.exitCode !== 0 || hasError(r2.output)) {
-            throw new Error(`安装依赖失败：\n${r2.output}`);
+            throw new Error(`Failed to install dependencies:\n${r2.output}`);
         }
         return `Installed with pip:\n${r2.output}`.trim();
     }
     async function ensureNodeAvailable() {
         const nodeCheckResult = await executeTerminalCommand("node --version");
         if (nodeCheckResult.exitCode !== 0 || hasError(nodeCheckResult.output)) {
-            throw new Error("Node.js 不可用，请确保已安装 Node.js");
+            throw new Error("Node.js is unavailable; make sure Node.js is installed");
         }
     }
     async function ensurePersistentNodeWorkspace() {
         await ensureNodeAvailable();
         const createDirResult = await executeTerminalCommand(`mkdir -p ${NODE_WORKSPACE_DIR}`);
         if (createDirResult.exitCode !== 0 || hasError(createDirResult.output)) {
-            throw new Error(`创建 Node 工作目录失败:\n${createDirResult.output}`);
+            throw new Error(`Failed to create Node working directory:\n${createDirResult.output}`);
         }
         const hasPackageJson = await executeTerminalCommand(`[ -f ${NODE_WORKSPACE_DIR}/package.json ] && echo OK || echo NO`);
         if (!hasPackageJson.output.includes("OK")) {
@@ -406,7 +406,7 @@ const codeRunner = (function () {
 }
 EOF`);
             if (initResult.exitCode !== 0 || hasError(initResult.output)) {
-                throw new Error(`初始化 Node 工作目录失败:\n${initResult.output}`);
+                throw new Error(`Failed to initialize Node working directory:\n${initResult.output}`);
             }
         }
         return { workspaceDir: NODE_WORKSPACE_DIR };
@@ -418,13 +418,13 @@ EOF`);
             .map(s => s.trim())
             .filter(s => s.length > 0);
         if (!pkgs.length)
-            throw new Error("请提供要安装的包列表（用 | 分隔）packages");
+            throw new Error("Provide the list of packages to install (separated by |) in packages");
         const { workspaceDir } = await ensurePersistentNodeWorkspace();
         const saveFlag = params.save_dev ? "-D" : "--save";
         const packageArgs = pkgs.map(p => `'${escapeForShell(p)}'`).join(" ");
         const result = await executeTerminalCommand(`cd ${workspaceDir} && pnpm add ${saveFlag} ${packageArgs}`);
         if (result.exitCode !== 0 || hasError(result.output)) {
-            throw new Error(`安装 pnpm 依赖失败:\n${result.output}`);
+            throw new Error(`Failed to install pnpm dependencies:\n${result.output}`);
         }
         return `Installed with pnpm in ${workspaceDir}:\n${result.output}`.trim();
     }
@@ -576,9 +576,9 @@ EOF`);
             cpp: await testCpp()
         };
         // Format results for display
-        let summary = "代码执行器功能测试结果：\n";
+        let summary = "Code runner feature test results:\n";
         for (const [lang, result] of Object.entries(results)) {
-            summary += `${lang}: ${result.success ? '✅ 成功' : '❌ 失败'} - ${result.message}\n`;
+            summary += `${lang}: ${result.success ? '✅ passed' : '❌ failed'} - ${result.message}\n`;
         }
         return summary;
     }
@@ -586,16 +586,16 @@ EOF`);
     async function testJavaScript() {
         try {
             // 测试简单的JS代码
-            const script = "console.log('JavaScript 运行正常'); const testVar = 42; return '测试值: ' + testVar;";
+            const script = "console.log('JavaScript runs OK'); const testVar = 42; return 'Test value: ' + testVar;";
             const result = await executeJavaScript(script);
-            const expectedOutput = `JavaScript 运行正常\nReturn value: "测试值: 42"`;
+            const expectedOutput = `JavaScript runs OK\nReturn value: "Test value: 42"`;
             if (result !== expectedOutput) {
-                return { success: false, message: `JavaScript执行器测试失败: 期望 "${expectedOutput}", 实际 "${result}"` };
+                return { success: false, message: `JavaScript runner test failed: expected "${expectedOutput}", got "${result}"` };
             }
-            return { success: true, message: "JavaScript执行器测试成功" };
+            return { success: true, message: "JavaScript runner test passed" };
         }
         catch (error) {
-            return { success: false, message: `JavaScript执行器测试失败: ${error.message}` };
+            return { success: false, message: `JavaScript runner test failed: ${error.message}` };
         }
     }
     // 测试Python执行功能  
@@ -604,21 +604,21 @@ EOF`);
             // 检查Python是否可用
             const pythonCheckResult = await executeTerminalCommand("python3 --version");
             if (pythonCheckResult.exitCode !== 0 || hasError(pythonCheckResult.output)) {
-                return { success: false, message: "Python不可用，请确保已安装Python" };
+                return { success: false, message: "Python is unavailable; make sure Python is installed" };
             }
             // 测试简单的Python代码
-            const script = "print('Python运行正常')";
+            const script = "print('Python runs OK')";
             const tempPyFile = "/tmp/test_python.py";
             await executeTerminalCommand(`cat <<'EOF' > ${tempPyFile}\n${script}\nEOF`);
             const runResult = await executeTerminalCommand(`python3 ${tempPyFile}`);
             await executeTerminalCommand(`rm -f ${tempPyFile}`);
-            if (runResult.exitCode !== 0 || hasError(runResult.output) || !runResult.output.includes("Python运行正常")) {
-                return { success: false, message: `Python执行器测试失败: ${runResult.output}` };
+            if (runResult.exitCode !== 0 || hasError(runResult.output) || !runResult.output.includes("Python runs OK")) {
+                return { success: false, message: `Python runner test failed: ${runResult.output}` };
             }
-            return { success: true, message: "Python执行器测试成功" };
+            return { success: true, message: "Python runner test passed" };
         }
         catch (error) {
-            return { success: false, message: `Python执行器测试失败: ${error.message}` };
+            return { success: false, message: `Python runner test failed: ${error.message}` };
         }
     }
     // 测试Ruby执行功能
@@ -627,21 +627,21 @@ EOF`);
             // 检查Ruby是否可用
             const rubyCheckResult = await executeTerminalCommand("ruby --version");
             if (rubyCheckResult.exitCode !== 0 || hasError(rubyCheckResult.output)) {
-                return { success: false, message: "Ruby不可用，请确保已安装Ruby" };
+                return { success: false, message: "Ruby is unavailable; make sure Ruby is installed" };
             }
             // 测试简单的Ruby代码
-            const script = "puts 'Ruby运行正常'";
+            const script = "puts 'Ruby runs OK'";
             const tempRbFile = "/tmp/test_ruby.rb";
             await executeTerminalCommand(`cat <<'EOF' > ${tempRbFile}\n${script}\nEOF`);
             const runResult = await executeTerminalCommand(`ruby ${tempRbFile}`);
             await executeTerminalCommand(`rm -f ${tempRbFile}`);
-            if (runResult.exitCode !== 0 || hasError(runResult.output) || !runResult.output.includes("Ruby运行正常")) {
-                return { success: false, message: `Ruby执行器测试失败: ${runResult.output}` };
+            if (runResult.exitCode !== 0 || hasError(runResult.output) || !runResult.output.includes("Ruby runs OK")) {
+                return { success: false, message: `Ruby runner test failed: ${runResult.output}` };
             }
-            return { success: true, message: "Ruby执行器测试成功" };
+            return { success: true, message: "Ruby runner test passed" };
         }
         catch (error) {
-            return { success: false, message: `Ruby执行器测试失败: ${error.message}` };
+            return { success: false, message: `Ruby runner test failed: ${error.message}` };
         }
     }
     // 测试Go执行功能
@@ -650,14 +650,14 @@ EOF`);
             // 检查Go是否可用
             const goCheckResult = await executeTerminalCommand("go version");
             if (goCheckResult.exitCode !== 0 || hasError(goCheckResult.output)) {
-                return { success: false, message: "Go不可用，请确保已安装Go" };
+                return { success: false, message: "Go is unavailable; make sure Go is installed" };
             }
             // 测试简单的Go代码
             const script = `
 package main
 import "fmt"
 func main() {
-  fmt.Println("Go运行正常")
+  fmt.Println("Go runs OK")
 }`;
             const tempGoDir = "/tmp/test_go_project";
             const tempGoFile = `${tempGoDir}/main.go`;
@@ -667,17 +667,17 @@ func main() {
             const compileResult = await executeTerminalCommand(`cd ${tempGoDir} && go build -o main main.go`);
             if (compileResult.exitCode !== 0 || hasError(compileResult.output)) {
                 await executeTerminalCommand(`rm -rf ${tempGoDir}`);
-                return { success: false, message: `Go 编译失败: ${compileResult.output}` };
+                return { success: false, message: `Go compilation failed: ${compileResult.output}` };
             }
             const runResult = await executeTerminalCommand(tempGoExec);
             await executeTerminalCommand(`rm -rf ${tempGoDir}`);
-            if (runResult.exitCode !== 0 || hasError(runResult.output) || !runResult.output.includes("Go运行正常")) {
-                return { success: false, message: `Go 执行失败: ${runResult.output}` };
+            if (runResult.exitCode !== 0 || hasError(runResult.output) || !runResult.output.includes("Go runs OK")) {
+                return { success: false, message: `Go execution failed: ${runResult.output}` };
             }
-            return { success: true, message: "Go执行器测试成功" };
+            return { success: true, message: "Go runner test passed" };
         }
         catch (error) {
-            return { success: false, message: `Go执行器测试失败: ${error.message}` };
+            return { success: false, message: `Go runner test failed: ${error.message}` };
         }
     }
     // 检查并配置Rust环境
@@ -685,21 +685,21 @@ func main() {
         // 在有效目录中运行，避免 "Could not locate working directory" 错误
         let rustCheckResult = await executeTerminalCommand("cd /tmp && rustc --version");
         if (rustCheckResult.exitCode === 0 && !hasError(rustCheckResult.output)) {
-            return { success: true, message: "Rust环境已配置" };
+            return { success: true, message: "Rust environment is configured" };
         }
         // 如果未配置默认工具链，则尝试设置
         if (rustCheckResult.output.includes("no default is configured")) {
             const setupResult = await executeTerminalCommand('export RUSTUP_DIST_SERVER="https://mirrors.ustc.edu.cn/rust-static" && export RUSTUP_UPDATE_ROOT="https://mirrors.ustc.edu.cn/rust-static/rustup" && rustup default stable');
             if (setupResult.exitCode !== 0 || hasError(setupResult.output)) {
-                return { success: false, message: `运行 'rustup default stable' 失败: ${setupResult.output}` };
+                return { success: false, message: `Running 'rustup default stable' failed: ${setupResult.output}` };
             }
             // 再次检查
             rustCheckResult = await executeTerminalCommand("cd /tmp && rustc --version");
             if (rustCheckResult.exitCode === 0 && !hasError(rustCheckResult.output)) {
-                return { success: true, message: "Rust环境已自动配置" };
+                return { success: true, message: "Rust environment configured automatically" };
             }
         }
-        return { success: false, message: `Rust环境检查失败: ${rustCheckResult.output}` };
+        return { success: false, message: `Rust environment check failed: ${rustCheckResult.output}` };
     }
     // 测试Rust执行功能
     async function testRust() {
@@ -711,7 +711,7 @@ func main() {
             // 测试简单的Rust代码
             const script = `
 fn main() {
-  println!("Rust运行正常");
+  println!("Rust runs OK");
 }`;
             const tempRustDir = "/tmp/test_rust_project";
             const tempRustSrcDir = `${tempRustDir}/src`;
@@ -730,18 +730,18 @@ edition = "2021"
             const compileResult = await executeTerminalCommand(`cd ${tempRustDir} && ${CARGO_MIRROR_ENV} && cargo build --release`);
             if (compileResult.exitCode !== 0 || hasError(compileResult.output)) {
                 await executeTerminalCommand(`rm -rf ${tempRustDir}`);
-                return { success: false, message: `Rust 编译失败: ${compileResult.output}` };
+                return { success: false, message: `Rust compilation failed: ${compileResult.output}` };
             }
             const execPath = `${tempRustDir}/target/release/test_rust`;
             const runResult = await executeTerminalCommand(execPath);
             await executeTerminalCommand(`rm -rf ${tempRustDir}`);
-            if (runResult.exitCode !== 0 || hasError(runResult.output) || !runResult.output.includes("Rust运行正常")) {
-                return { success: false, message: `Rust 执行失败: ${runResult.output}` };
+            if (runResult.exitCode !== 0 || hasError(runResult.output) || !runResult.output.includes("Rust runs OK")) {
+                return { success: false, message: `Rust execution failed: ${runResult.output}` };
             }
-            return { success: true, message: "Rust执行器测试成功" };
+            return { success: true, message: "Rust runner test passed" };
         }
         catch (error) {
-            return { success: false, message: `Rust执行器测试失败: ${error.message}` };
+            return { success: false, message: `Rust runner test failed: ${error.message}` };
         }
     }
     // 测试C执行功能
@@ -750,13 +750,13 @@ edition = "2021"
             // 检查gcc是否可用
             const gccCheckResult = await executeTerminalCommand("gcc --version");
             if (gccCheckResult.exitCode !== 0 || hasError(gccCheckResult.output)) {
-                return { success: false, message: "GCC不可用，请确保已安装gcc" };
+                return { success: false, message: "GCC is unavailable; make sure gcc is installed" };
             }
             // 测试简单的C代码
             const script = `
 #include <stdio.h>
 int main() {
-  printf("C运行正常\\n");
+  printf("C runs OK\\n");
   return 0;
 }`;
             const tempCFile = "/tmp/test_c.c";
@@ -765,17 +765,17 @@ int main() {
             const compileResult = await executeTerminalCommand(`gcc -O3 -march=native -fopenmp ${tempCFile} -o ${tempCExec}`);
             if (compileResult.exitCode !== 0 || hasError(compileResult.output)) {
                 await executeTerminalCommand(`rm -f ${tempCFile} ${tempCExec}`);
-                return { success: false, message: `C 编译失败: ${compileResult.output}` };
+                return { success: false, message: `C compilation failed: ${compileResult.output}` };
             }
             const runResult = await executeTerminalCommand(tempCExec);
             await executeTerminalCommand(`rm -f ${tempCFile} ${tempCExec}`);
-            if (runResult.exitCode !== 0 || hasError(runResult.output) || !runResult.output.includes("C运行正常")) {
-                return { success: false, message: `C 执行失败: ${runResult.output}` };
+            if (runResult.exitCode !== 0 || hasError(runResult.output) || !runResult.output.includes("C runs OK")) {
+                return { success: false, message: `C execution failed: ${runResult.output}` };
             }
-            return { success: true, message: "C执行器测试成功" };
+            return { success: true, message: "C runner test passed" };
         }
         catch (error) {
-            return { success: false, message: `C执行器测试失败: ${error.message}` };
+            return { success: false, message: `C runner test failed: ${error.message}` };
         }
     }
     // 测试C++执行功能
@@ -784,13 +784,13 @@ int main() {
             // 检查g++是否可用
             const gppCheckResult = await executeTerminalCommand("g++ --version");
             if (gppCheckResult.exitCode !== 0 || hasError(gppCheckResult.output)) {
-                return { success: false, message: "G++不可用，请确保已安装g++" };
+                return { success: false, message: "G++ is unavailable; make sure g++ is installed" };
             }
             // 测试简单的C++代码
             const script = `
 #include <iostream>
 int main() {
-  std::cout << "C++运行正常" << std::endl;
+  std::cout << "C++ runs OK" << std::endl;
   return 0;
 }`;
             const tempCppFile = "/tmp/test_cpp.cpp";
@@ -799,41 +799,41 @@ int main() {
             const compileResult = await executeTerminalCommand(`g++ -O3 -march=native -fopenmp ${tempCppFile} -o ${tempCppExec}`);
             if (compileResult.exitCode !== 0 || hasError(compileResult.output)) {
                 await executeTerminalCommand(`rm -f ${tempCppFile} ${tempCppExec}`);
-                return { success: false, message: `C++ 编译失败: ${compileResult.output}` };
+                return { success: false, message: `C++ compilation failed: ${compileResult.output}` };
             }
             const runResult = await executeTerminalCommand(tempCppExec);
             await executeTerminalCommand(`rm -f ${tempCppFile} ${tempCppExec}`);
-            if (runResult.exitCode !== 0 || hasError(runResult.output) || !runResult.output.includes("C++运行正常")) {
-                return { success: false, message: `C++ 执行失败: ${runResult.output}` };
+            if (runResult.exitCode !== 0 || hasError(runResult.output) || !runResult.output.includes("C++ runs OK")) {
+                return { success: false, message: `C++ execution failed: ${runResult.output}` };
             }
-            return { success: true, message: "C++执行器测试成功" };
+            return { success: true, message: "C++ runner test passed" };
         }
         catch (error) {
-            return { success: false, message: `C++执行器测试失败: ${error.message}` };
+            return { success: false, message: `C++ runner test failed: ${error.message}` };
         }
     }
     async function run_javascript_es5(params) {
         const script = params.script;
         if (!script || script.trim() === "") {
-            throw new Error("请提供要执行的脚本内容");
+            throw new Error("Provide the script content to run");
         }
         return executeJavaScript(script);
     }
     async function run_javascript_file(params) {
         const filePath = params.file_path;
         if (!filePath || filePath.trim() === "") {
-            throw new Error("请提供要执行的 JavaScript 文件路径");
+            throw new Error("Provide the JavaScript file path to run");
         }
         const fileResult = await Tools.Files.read(filePath);
         if (!fileResult || !fileResult.content) {
-            throw new Error(`无法读取文件: ${filePath}`);
+            throw new Error(`Unable to read file: ${filePath}`);
         }
         return executeJavaScript(fileResult.content);
     }
     async function run_javascript_node(params) {
         const script = params.script;
         if (!script || script.trim() === "") {
-            throw new Error("请提供要执行的 JavaScript 脚本内容");
+            throw new Error("Provide the JavaScript script content to run");
         }
         const { workspaceDir } = await ensurePersistentNodeWorkspace();
         const nodeFlags = params.node_flags || "";
@@ -846,7 +846,7 @@ int main() {
                 return result.output.trim();
             }
             else {
-                throw new Error(`JavaScript (Node.js) 脚本执行失败:\n${result.output}`);
+                throw new Error(`JavaScript (Node.js) script execution failed:\n${result.output}`);
             }
         }
         finally {
@@ -856,13 +856,13 @@ int main() {
     async function run_javascript_node_file(params) {
         const filePath = params.file_path;
         if (!filePath || filePath.trim() === "") {
-            throw new Error("请提供要执行的 JavaScript 文件路径");
+            throw new Error("Provide the JavaScript file path to run");
         }
         const { workspaceDir } = await ensurePersistentNodeWorkspace();
         const escapedPath = escapeForShell(filePath);
         const fileExistsResult = await executeTerminalCommand(`test -f '${escapedPath}'`);
         if (fileExistsResult.exitCode !== 0 || hasError(fileExistsResult.output)) {
-            throw new Error(`JavaScript 文件不存在或路径错误: ${filePath}`);
+            throw new Error(`JavaScript file does not exist or the path is wrong: ${filePath}`);
         }
         const nodeFlags = params.node_flags || "";
         const result = await executeTerminalCommand(`cd ${workspaceDir} && NODE_PATH=${workspaceDir}/node_modules node ${nodeFlags} '${escapedPath}'`.trim());
@@ -870,13 +870,13 @@ int main() {
             return result.output.trim();
         }
         else {
-            throw new Error(`JavaScript (Node.js) 文件执行失败:\n${result.output}`);
+            throw new Error(`JavaScript (Node.js) file execution failed:\n${result.output}`);
         }
     }
     async function run_python(params) {
         const script = params.script;
         if (!script || script.trim() === "") {
-            throw new Error("请提供要执行的 Python 脚本内容");
+            throw new Error("Provide the Python script content to run");
         }
         // Use persistent venv interpreter
         const { pythonBin } = await ensurePersistentVenv();
@@ -891,7 +891,7 @@ int main() {
                 return result.output.trim();
             }
             else {
-                throw new Error(`Python 脚本执行失败:\n${result.output}`);
+                throw new Error(`Python script execution failed:\n${result.output}`);
             }
         }
         finally {
@@ -901,12 +901,12 @@ int main() {
     async function run_python_file(params) {
         const filePath = params.file_path;
         if (!filePath || filePath.trim() === "") {
-            throw new Error("请提供要执行的 Python 文件路径");
+            throw new Error("Provide the Python file path to run");
         }
         const escapedPath = escapeForShell(filePath);
         const fileExistsResult = await executeTerminalCommand(`test -f '${escapedPath}'`);
         if (fileExistsResult.exitCode !== 0 || hasError(fileExistsResult.output)) {
-            throw new Error(`Python 文件不存在或路径错误: ${filePath}`);
+            throw new Error(`Python file does not exist or the path is wrong: ${filePath}`);
         }
         // Use persistent venv interpreter
         const { pythonBin } = await ensurePersistentVenv();
@@ -917,13 +917,13 @@ int main() {
             return result.output.trim();
         }
         else {
-            throw new Error(`Python 文件执行失败:\n${result.output}`);
+            throw new Error(`Python file execution failed:\n${result.output}`);
         }
     }
     async function run_ruby(params) {
         const script = params.script;
         if (!script || script.trim() === "") {
-            throw new Error("请提供要执行的 Ruby 脚本内容");
+            throw new Error("Provide the Ruby script content to run");
         }
         const rubyFlags = params.ruby_flags || "";
         const tempFilePath = "/tmp/temp_script.rb";
@@ -934,7 +934,7 @@ int main() {
                 return result.output.trim();
             }
             else {
-                throw new Error(`Ruby 脚本执行失败:\n${result.output}`);
+                throw new Error(`Ruby script execution failed:\n${result.output}`);
             }
         }
         finally {
@@ -944,11 +944,11 @@ int main() {
     async function run_ruby_file(params) {
         const filePath = params.file_path;
         if (!filePath || filePath.trim() === "") {
-            throw new Error("请提供要执行的 Ruby 文件路径");
+            throw new Error("Provide the Ruby file path to run");
         }
         const fileExistsResult = await executeTerminalCommand(`test -f ${filePath}`);
         if (fileExistsResult.exitCode !== 0 || hasError(fileExistsResult.output)) {
-            throw new Error(`Ruby 文件不存在或路径错误: ${filePath}`);
+            throw new Error(`Ruby file does not exist or the path is wrong: ${filePath}`);
         }
         const rubyFlags = params.ruby_flags || "";
         const result = await executeTerminalCommand(`ruby ${rubyFlags} ${filePath}`);
@@ -956,13 +956,13 @@ int main() {
             return result.output.trim();
         }
         else {
-            throw new Error(`Ruby 文件执行失败:\n${result.output}`);
+            throw new Error(`Ruby file execution failed:\n${result.output}`);
         }
     }
     async function run_go(params) {
         const script = params.script;
         if (!script || script.trim() === "") {
-            throw new Error("请提供要执行的 Go 代码内容");
+            throw new Error("Provide the Go code to run");
         }
         const buildFlags = params.build_flags || "";
         const tempDirPath = "/tmp/temp_go";
@@ -972,14 +972,14 @@ int main() {
             await executeTerminalCommand(`cat <<'EOF' > ${tempFilePath}\n${script}\nEOF`);
             const compileResult = await executeTerminalCommand(`cd ${tempDirPath} && go build ${buildFlags} -o main main.go`);
             if (compileResult.exitCode !== 0 || hasError(compileResult.output)) {
-                throw new Error(`Go 代码编译失败:\n${compileResult.output}`);
+                throw new Error(`Go code compilation failed:\n${compileResult.output}`);
             }
             const result = await executeTerminalCommand(`${tempDirPath}/main`);
             if (result.exitCode === 0 && !hasError(result.output)) {
                 return result.output.trim();
             }
             else {
-                throw new Error(`Go 代码执行失败:\n${result.output}`);
+                throw new Error(`Go code execution failed:\n${result.output}`);
             }
         }
         finally {
@@ -989,25 +989,25 @@ int main() {
     async function run_go_file(params) {
         const filePath = params.file_path;
         if (!filePath || filePath.trim() === "") {
-            throw new Error("请提供要执行的 Go 文件路径");
+            throw new Error("Provide the Go file path to run");
         }
         const fileExistsResult = await executeTerminalCommand(`test -f ${filePath}`);
         if (fileExistsResult.exitCode !== 0 || hasError(fileExistsResult.output)) {
-            throw new Error(`Go 文件不存在或路径错误: ${filePath}`);
+            throw new Error(`Go file does not exist or the path is wrong: ${filePath}`);
         }
         const buildFlags = params.build_flags || "";
         const tempExecPath = "/tmp/temp_go_exec";
         try {
             const compileResult = await executeTerminalCommand(`go build ${buildFlags} -o ${tempExecPath} ${filePath}`);
             if (compileResult.exitCode !== 0 || hasError(compileResult.output)) {
-                throw new Error(`Go 文件编译失败:\n${compileResult.output}`);
+                throw new Error(`Go file compilation failed:\n${compileResult.output}`);
             }
             const result = await executeTerminalCommand(tempExecPath);
             if (result.exitCode === 0 && !hasError(result.output)) {
                 return result.output.trim();
             }
             else {
-                throw new Error(`Go 文件执行失败:\n${result.output}`);
+                throw new Error(`Go file execution failed:\n${result.output}`);
             }
         }
         finally {
@@ -1017,7 +1017,7 @@ int main() {
     async function run_rust(params) {
         const script = params.script;
         if (!script || script.trim() === "") {
-            throw new Error("请提供要执行的 Rust 代码内容");
+            throw new Error("Provide the Rust code to run");
         }
         const rustConfig = await ensureRustConfigured();
         if (!rustConfig.success) {
@@ -1040,7 +1040,7 @@ edition = "2021"
             await executeTerminalCommand(`cat <<'EOF' > ${tempDirPath}/src/main.rs\n${script}\nEOF`);
             const compileResult = await executeTerminalCommand(`cd ${tempDirPath} && ${CARGO_MIRROR_ENV} && cargo build ${cargoFlags}`);
             if (compileResult.exitCode !== 0 || hasError(compileResult.output)) {
-                throw new Error(`Rust 代码编译失败:\n${compileResult.output}`);
+                throw new Error(`Rust code compilation failed:\n${compileResult.output}`);
             }
             const execPath = `${tempDirPath}/target/${buildMode}/temp_rust_script`;
             const result = await executeTerminalCommand(execPath, 30000);
@@ -1048,7 +1048,7 @@ edition = "2021"
                 return result.output.trim();
             }
             else {
-                throw new Error(`Rust 代码执行失败:\n${result.output}`);
+                throw new Error(`Rust code execution failed:\n${result.output}`);
             }
         }
         finally {
@@ -1058,11 +1058,11 @@ edition = "2021"
     async function run_rust_file(params) {
         const filePath = params.file_path;
         if (!filePath || filePath.trim() === "") {
-            throw new Error("请提供要执行的 Rust 文件路径");
+            throw new Error("Provide the Rust file path to run");
         }
         const fileExistsResult = await executeTerminalCommand(`test -f ${filePath}`);
         if (fileExistsResult.exitCode !== 0 || hasError(fileExistsResult.output)) {
-            throw new Error(`Rust 文件不存在或路径错误: ${filePath}`);
+            throw new Error(`Rust file does not exist or the path is wrong: ${filePath}`);
         }
         const rustConfig = await ensureRustConfigured();
         if (!rustConfig.success) {
@@ -1084,13 +1084,13 @@ edition = "2021"
             await executeTerminalCommand(`cat <<'EOF' > ${tempDirPath}/Cargo.toml\n${cargoToml}\nEOF`);
             const readResult = await executeTerminalCommand(`cat ${filePath}`);
             if (readResult.exitCode !== 0 || hasError(readResult.output)) {
-                throw new Error(`无法读取文件: ${filePath}`);
+                throw new Error(`Unable to read file: ${filePath}`);
             }
             const fileContent = readResult.output;
             await executeTerminalCommand(`cat <<'EOF' > ${tempDirPath}/src/main.rs\n${fileContent}\nEOF`);
             const compileResult = await executeTerminalCommand(`cd ${tempDirPath} && ${CARGO_MIRROR_ENV} && cargo build ${cargoFlags}`);
             if (compileResult.exitCode !== 0 || hasError(compileResult.output)) {
-                throw new Error(`Rust 文件编译失败:\n${compileResult.output}`);
+                throw new Error(`Rust file compilation failed:\n${compileResult.output}`);
             }
             const execPath = `${tempDirPath}/target/${buildMode}/temp_rust_script`;
             const result = await executeTerminalCommand(execPath, 30000);
@@ -1098,7 +1098,7 @@ edition = "2021"
                 return result.output.trim();
             }
             else {
-                throw new Error(`Rust 项目执行失败:\n${result.output}`);
+                throw new Error(`Rust project execution failed:\n${result.output}`);
             }
         }
         finally {
@@ -1108,7 +1108,7 @@ edition = "2021"
     async function run_c(params) {
         const script = params.script;
         if (!script || script.trim() === "") {
-            throw new Error("请提供要执行的 C 代码内容");
+            throw new Error("Provide the C code to run");
         }
         const compileFlags = params.compile_flags || "-O3 -march=native -fopenmp";
         const tempFilePath = "/tmp/temp_script.c";
@@ -1117,14 +1117,14 @@ edition = "2021"
             await executeTerminalCommand(`cat <<'EOF' > ${tempFilePath}\n${script}\nEOF`);
             const compileResult = await executeTerminalCommand(`gcc ${compileFlags} ${tempFilePath} -o ${tempExecPath}`);
             if (compileResult.exitCode !== 0 || hasError(compileResult.output)) {
-                throw new Error(`C 代码编译失败:\n${compileResult.output}`);
+                throw new Error(`C code compilation failed:\n${compileResult.output}`);
             }
             const result = await executeTerminalCommand(tempExecPath);
             if (result.exitCode === 0 && !hasError(result.output)) {
                 return result.output.trim();
             }
             else {
-                throw new Error(`C 代码执行失败:\n${result.output}`);
+                throw new Error(`C code execution failed:\n${result.output}`);
             }
         }
         finally {
@@ -1134,25 +1134,25 @@ edition = "2021"
     async function run_c_file(params) {
         const filePath = params.file_path;
         if (!filePath || filePath.trim() === "") {
-            throw new Error("请提供要执行的 C 文件路径");
+            throw new Error("Provide the C file path to run");
         }
         const fileExistsResult = await executeTerminalCommand(`test -f ${filePath}`);
         if (fileExistsResult.exitCode !== 0 || hasError(fileExistsResult.output)) {
-            throw new Error(`C 文件不存在或路径错误: ${filePath}`);
+            throw new Error(`C file does not exist or the path is wrong: ${filePath}`);
         }
         const compileFlags = params.compile_flags || "-O3 -march=native -fopenmp";
         const tempExecPath = "/tmp/temp_c_exec";
         try {
             const compileResult = await executeTerminalCommand(`gcc ${compileFlags} ${filePath} -o ${tempExecPath}`);
             if (compileResult.exitCode !== 0 || hasError(compileResult.output)) {
-                throw new Error(`C 文件编译失败:\n${compileResult.output}`);
+                throw new Error(`C file compilation failed:\n${compileResult.output}`);
             }
             const result = await executeTerminalCommand(tempExecPath);
             if (result.exitCode === 0 && !hasError(result.output)) {
                 return result.output.trim();
             }
             else {
-                throw new Error(`C 文件执行失败:\n${result.output}`);
+                throw new Error(`C file execution failed:\n${result.output}`);
             }
         }
         finally {
@@ -1162,7 +1162,7 @@ edition = "2021"
     async function run_cpp(params) {
         const script = params.script;
         if (!script || script.trim() === "") {
-            throw new Error("请提供要执行的 C++ 代码内容");
+            throw new Error("Provide the C++ code to run");
         }
         const compileFlags = params.compile_flags || "-O3 -march=native -fopenmp";
         const tempFilePath = "/tmp/temp_script.cpp";
@@ -1171,14 +1171,14 @@ edition = "2021"
             await executeTerminalCommand(`cat <<'EOF' > ${tempFilePath}\n${script}\nEOF`);
             const compileResult = await executeTerminalCommand(`g++ ${compileFlags} ${tempFilePath} -o ${tempExecPath}`);
             if (compileResult.exitCode !== 0 || hasError(compileResult.output)) {
-                throw new Error(`C++ 代码编译失败:\n${compileResult.output}`);
+                throw new Error(`C++ code compilation failed:\n${compileResult.output}`);
             }
             const result = await executeTerminalCommand(tempExecPath);
             if (result.exitCode === 0 && !hasError(result.output)) {
                 return result.output.trim();
             }
             else {
-                throw new Error(`C++ 代码执行失败:\n${result.output}`);
+                throw new Error(`C++ code execution failed:\n${result.output}`);
             }
         }
         finally {
@@ -1188,25 +1188,25 @@ edition = "2021"
     async function run_cpp_file(params) {
         const filePath = params.file_path;
         if (!filePath || filePath.trim() === "") {
-            throw new Error("请提供要执行的 C++ 文件路径");
+            throw new Error("Provide the C++ file path to run");
         }
         const fileExistsResult = await executeTerminalCommand(`test -f ${filePath}`);
         if (fileExistsResult.exitCode !== 0 || hasError(fileExistsResult.output)) {
-            throw new Error(`C++ 文件不存在或路径错误: ${filePath}`);
+            throw new Error(`C++ file does not exist or the path is wrong: ${filePath}`);
         }
         const compileFlags = params.compile_flags || "-O3 -march=native -fopenmp";
         const tempExecPath = "/tmp/temp_cpp_exec";
         try {
             const compileResult = await executeTerminalCommand(`g++ ${compileFlags} ${filePath} -o ${tempExecPath}`);
             if (compileResult.exitCode !== 0 || hasError(compileResult.output)) {
-                throw new Error(`C++ 文件编译失败:\n${compileResult.output}`);
+                throw new Error(`C++ file compilation failed:\n${compileResult.output}`);
             }
             const result = await executeTerminalCommand(tempExecPath);
             if (result.exitCode === 0 && !hasError(result.output)) {
                 return result.output.trim();
             }
             else {
-                throw new Error(`C++ 文件执行失败:\n${result.output}`);
+                throw new Error(`C++ file execution failed:\n${result.output}`);
             }
         }
         finally {
